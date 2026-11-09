@@ -2,7 +2,7 @@ const {chromium}=require('playwright');const fs=require('node:fs');const path=re
 const root=path.resolve(__dirname,'..');const results=path.join(root,'test-results');fs.mkdirSync(results,{recursive:true});
 (async()=>{const browser=await chromium.launch({...(process.env.CHROMIUM_PATH?{executablePath:process.env.CHROMIUM_PATH}:fs.existsSync('/usr/bin/chromium')?{executablePath:'/usr/bin/chromium'}:{}),headless:true});const context=await browser.newContext({viewport:{width:1280,height:900},reducedMotion:'reduce'});const page=await context.newPage();const errors=[];page.on('pageerror',e=>errors.push(e.message));
 await page.route('https://spot-match.test/**',route=>{const name=new URL(route.request().url()).pathname.slice(1)||'index.html';if(!/^[a-z-]+\.(html|css|js)$/.test(name))return route.fulfill({status:404,body:''});const contentType=name.endsWith('.js')?'application/javascript':name.endsWith('.css')?'text/css':'text/html';return route.fulfill({contentType,body:fs.readFileSync(path.join(root,'dist',name))});});
-await page.goto('https://spot-match.test/',{waitUntil:'load'});await page.evaluate(()=>{localStorage.removeItem('spotmatch-learning-v1');learningProgress={};libraryHome()});assert.equal(await page.locator('[data-course]').count(),7);
+await page.goto('https://spot-match.test/?library=full',{waitUntil:'load'});await page.evaluate(()=>{localStorage.removeItem('spotmatch-learning-v1');learningProgress={};libraryHome()});assert.equal(await page.locator('[data-course]').count(),7);
 let rounds=0;
 for(const course of ['events','stories','meaning']){
  await page.locator(`[data-course="${course}"]`).click();assert.equal(await page.locator('[data-learning-game]').count(),20);

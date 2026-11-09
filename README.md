@@ -1,5 +1,11 @@
 # Spot & Match
 
+The default home is a simple playroom: three activity groups with four cards each. One card click opens an activity immediately. The new front door features twelve different kinds of play: gardening, building a bridge, setting a picnic table, constructing a necklace, rearranging a story train, making a story scene, visual drumming, directing a puppet, planning a map route, using toy traffic signals, moving clouds, and optional seated movement or watching. There are no intro, course-selection, or session-length screens before these games.
+
+Child-facing text is brief and tied to the action. Larger original SVG scenes show the activity itself. Parent tips and the earlier research are optional. The Grown-ups area separates getting started, support/research (including the full ADHD/ADD guide), and additional activities. Original courses, progress keys, and evidence limits are retained. The fuller catalogue can also be opened with `?library=full`; the legacy browser suites exercise that supported view. The new Playroom suite checks the default experience.
+
+New playroom participation uses `spotmatch-playroom-v1`, separately from earlier progress. Pausing preserves the current in-memory scene while the page remains open. There is no saved symptom, concentration, reaction-time, or therapeutic outcome score. Movement is optional and seated; no generated audio, dragging, eye contact, or fixed play duration is required.
+
 Seven original prereading courses and six supportive pathways: 205 prereading/support games plus 20 optional wellbeing activities. The app generates no voice. Words and Meanings, Who Did What?, and Sound Explorers require adult support throughout. Includes a grown-up guide with research references and accessibility considerations.
 
 Live course: https://spot-and-match-visual-course.blossomingchip1.chatgpt.site (access depends on the site's sharing settings).
@@ -106,7 +112,7 @@ The Focus Trail browser suite completes 20 games and 60 explorations, checks cha
 
 ## Deploy or integrate
 
-Serve the contents of `dist/` on any static web host. Keep `index.html`, `style.css`, `app.js`, `interactive.js`, `learning-data.js`, `learning-art.js`, `learning.js`, `adult-data.js`, `adult-art.js`, `adult-games.js`, `friendly-art.js`, `friendly-ui.js`, `friendly.css`, `picture-library.js`, `vocabulary-variety.js`, `pathways-data.js`, `pathways.js`, `pathways.css`, `calm-data.js`, `calm.js`, `calm.css`, `focus-data.js`, `focus.js`, and `focus.css` together. No server API, database, or secret is required. An iframe can embed the deployed course when your host's framing policy allows it. This repository does not modify the existing Sites deployment or its access settings.
+Serve the contents of `dist/` on any static web host. Keep `index.html`, `style.css`, `app.js`, `interactive.js`, `learning-data.js`, `learning-art.js`, `learning.js`, `adult-data.js`, `adult-art.js`, `adult-games.js`, `friendly-art.js`, `friendly-ui.js`, `friendly.css`, `picture-library.js`, `vocabulary-variety.js`, `pathways-data.js`, `pathways.js`, `pathways.css`, `calm-data.js`, `calm.js`, `calm.css`, `focus-data.js`, `focus.js`, `focus.css`, `playroom-data.js`, `playroom-art.js`, `playroom.js`, and `playroom.css` together. No server API, database, or secret is required. An iframe can embed the deployed course when your host's framing policy allows it. This repository does not modify the existing Sites deployment or its access settings.
 
 ## Educational scope
 

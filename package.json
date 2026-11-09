@@ -2,11 +2,11 @@
   "name": "spot-and-match",
   "version": "1.0.0",
   "private": true,
-  "description": "Prereading courses, supportive pathways, Calm Garden and 20 research-informed Focus Trail activities with ADHD/ADD parent guidance.",
+  "description": "A simple playroom with 12 varied one-click activities, optional parent research, and the preserved original courses.",
   "scripts": {
     "start": "node scripts/serve.cjs",
-    "test": "node tests/browser.cjs && node tests/new-courses.cjs && node tests/adult-courses.cjs && node tests/friendly-experience.cjs && node tests/pictures-and-variety.cjs && node tests/support-pathways.cjs && node tests/calm-garden.cjs && node tests/focus-trail.cjs",
-    "check": "node --check dist/app.js && node --check dist/interactive.js && node --check dist/learning-data.js && node --check dist/learning-art.js && node --check dist/learning.js && node --check dist/adult-data.js && node --check dist/adult-art.js && node --check dist/adult-games.js && node --check dist/friendly-art.js && node --check dist/friendly-ui.js && node --check dist/picture-library.js && node --check dist/vocabulary-variety.js && node --check dist/pathways-data.js && node --check dist/pathways.js && node --check dist/calm-data.js && node --check dist/calm.js && node --check dist/focus-data.js && node --check dist/focus.js"
+    "test": "node tests/browser.cjs && node tests/new-courses.cjs && node tests/adult-courses.cjs && node tests/friendly-experience.cjs && node tests/pictures-and-variety.cjs && node tests/support-pathways.cjs && node tests/calm-garden.cjs && node tests/focus-trail.cjs && node tests/playroom.cjs",
+    "check": "node --check dist/app.js && node --check dist/interactive.js && node --check dist/learning-data.js && node --check dist/learning-art.js && node --check dist/learning.js && node --check dist/adult-data.js && node --check dist/adult-art.js && node --check dist/adult-games.js && node --check dist/friendly-art.js && node --check dist/friendly-ui.js && node --check dist/picture-library.js && node --check dist/vocabulary-variety.js && node --check dist/pathways-data.js && node --check dist/pathways.js && node --check dist/calm-data.js && node --check dist/calm.js && node --check dist/focus-data.js && node --check dist/focus.js && node --check dist/playroom-data.js && node --check dist/playroom-art.js && node --check dist/playroom.js"
   },
   "engines": {
     "node": ">=20"
