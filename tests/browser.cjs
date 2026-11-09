@@ -11,8 +11,8 @@ const results=path.join(root,'test-results');fs.mkdirSync(results,{recursive:tru
  // Serve a controlled fixture through Playwright routing; no external server or live-site access.
  await page.route('https://spot-match.test/**',route=>{
   const name=new URL(route.request().url()).pathname.slice(1)||'index.html';
-  if(!['index.html','style.css','app.js','interactive.js','learning-data.js','learning-art.js','learning.js'].includes(name))return route.fulfill({status:404,body:''});
-  const types={'index.html':'text/html','style.css':'text/css','app.js':'application/javascript','interactive.js':'application/javascript','learning-data.js':'application/javascript','learning-art.js':'application/javascript','learning.js':'application/javascript'};
+  if(!['index.html','style.css','app.js','interactive.js','learning-data.js','learning-art.js','learning.js','adult-data.js','adult-art.js','adult-games.js'].includes(name))return route.fulfill({status:404,body:''});
+  const types={'index.html':'text/html','style.css':'text/css','app.js':'application/javascript','interactive.js':'application/javascript','learning-data.js':'application/javascript','learning-art.js':'application/javascript','learning.js':'application/javascript','adult-data.js':'application/javascript','adult-art.js':'application/javascript','adult-games.js':'application/javascript'};
   return route.fulfill({status:200,contentType:types[name],body:fs.readFileSync(path.join(root,'dist',name))});
  });
  await page.goto('https://spot-match.test/',{waitUntil:'load'});

@@ -1,6 +1,6 @@
 # Spot & Match
 
-Four voice-free prereading courses with 85 games: visual discrimination, everyday event sequences, picture stories, and picture meanings. Includes a grown-up guide with research references and accessibility considerations.
+Seven prereading courses with 145 games. The app generates no voice. Words and Meanings, Who Did What?, and Sound Explorers require adult support throughout. Includes a grown-up guide with research references and accessibility considerations.
 
 Live course: https://spot-and-match-visual-course.blossomingchip1.chatgpt.site (access depends on the site's sharing settings).
 
@@ -25,7 +25,7 @@ npm test
 
 On Linux, browser system dependencies may also be needed; use `npx playwright install --with-deps chromium` on a machine where system package installation is permitted. The tests automatically use `/usr/bin/chromium` when present. Set `CHROMIUM_PATH` to use another installed Chromium executable.
 
-Tests load the local source through Playwright's request routing, without accessing the live site's authentication. They complete all 85 games and 305 rounds, check progress persistence and guide controls, check mobile viewport overflow, test new-course errors, hints, undo, and selective progress reset, and capture desktop/mobile screenshots in `test-results/`. They fail on uncaught page JavaScript errors. They do not establish educational effectiveness or fully audit accessibility.
+Tests load the local source through Playwright's request routing, without accessing the live site's authentication. They complete all 145 games and 485 rounds, check progress persistence and guide controls, check mobile viewport overflow, test errors, hints, undo, selective progress reset, and the adult-prompt gate, and capture desktop/mobile screenshots in `test-results/`. They fail on uncaught page JavaScript errors. They do not establish educational effectiveness or fully audit accessibility.
 
 `npm run check` checks application JavaScript syntax.
 
@@ -35,14 +35,25 @@ Tests load the local source through Playwright's request routing, without access
 2. **First, Then — 20 games, three rounds each.** Familiar event sequences, beginnings and endings, missing actions, and repairing mixed-up routines.
 3. **Picture Stories — 20 games, three rounds each.** Connecting a character’s goal, problem, helpful action, and outcome.
 4. **Pictures Have Meaning — 20 games, three rounds each.** Recognizing objects across drawing styles, connecting related objects, uses, scenes, and choosing two items for a purpose.
+5. **Words and Meanings — 20 games, three adult-supported rounds each.** Vocabulary, actions, attributes, categories, and descriptions.
+6. **Who Did What? — 20 games, three adult-supported rounds each.** Sentence comprehension, actors and receivers, positions, grammar contrasts, and linked instructions.
+7. **Sound Explorers — 20 games, three adult-supported rounds each.** Spoken-English syllables, rhyme, phoneme identification, blending, and segmentation.
 
 Each course includes a problem description, learning goal, guidance on who might benefit, evidence limits, adaptations, and practical exercises. The new courses use original vector illustrations, not photographs. Some abstract tasks need an adult to demonstrate and explain the idea using accessible language.
 
-All activities are untimed. No generated speech, microphone, or dragging is required. Event pictures and options remain visible. Visual-course progress is saved under `spotmatch-v1`; the three additional courses use `spotmatch-learning-v1`. Each course can be reset independently. Progress records practice, not mastery. No child name or diagnosis is collected. The page requests fonts from Google Fonts; system-font fallbacks are provided.
+All activities are untimed. No generated speech, microphone, or dragging is required. Event pictures and options remain visible. Visual-course progress is saved under `spotmatch-v1`; the six additional courses use `spotmatch-learning-v1`. Each course can be reset independently. Progress records practice, not mastery. No child name or diagnosis is collected. The page requests fonts from Google Fonts; system-font fallbacks are provided.
+
+## Adult support is required for courses 5–7
+
+An adult stays throughout, models the language or sounds, and supplies a written-on-screen prompt using their own voice or the appropriate accessible language. The child's controls remain closed until the adult confirms that they have given the prompt. The app does not record, recognize, or generate speech. Completion is labeled adult-supported practice, not independent assessment.
+
+For Words and Meanings and Who Did What?, use speech, sign, or the child's established AAC system. English grammatical contrasts need thoughtful adaptation to other languages, including signed languages.
+
+Sound Explorers requires access to the intended spoken-English examples. Adults name pictures consistently, use speech sounds rather than letter names, and avoid adding “uh” to consonants. Syllable counts, rhymes, and phonemes can vary with pronunciation and dialect; adapt or skip unsuitable examples rather than treating differences as errors. Deaf and hard-of-hearing children may need a different language-accessible pathway planned with their team. Sound games are not a prerequisite for print, letter–sound teaching, reading instruction, or AAC.
 
 ## Deploy or integrate
 
-Serve the contents of `dist/` on any static web host. Keep `index.html`, `style.css`, `app.js`, and `interactive.js`, `learning-data.js`, `learning-art.js`, and `learning.js` together. No server API, database, or secret is required. An iframe can embed the deployed course when your host's framing policy allows it. This repository does not modify the existing Sites deployment or its access settings.
+Serve the contents of `dist/` on any static web host. Keep `index.html`, `style.css`, `app.js`, `interactive.js`, `learning-data.js`, `learning-art.js`, `learning.js`, `adult-data.js`, `adult-art.js`, and `adult-games.js` together. No server API, database, or secret is required. An iframe can embed the deployed course when your host's framing policy allows it. This repository does not modify the existing Sites deployment or its access settings.
 
 ## Educational scope
 

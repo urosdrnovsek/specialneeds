@@ -2,11 +2,11 @@
   "name": "spot-and-match",
   "version": "1.0.0",
   "private": true,
-  "description": "Four voice-free prereading courses with 85 games.",
+  "description": "Seven prereading courses with 145 games, including three adult-supported language and sound courses.",
   "scripts": {
     "start": "node scripts/serve.cjs",
-    "test": "node tests/browser.cjs && node tests/new-courses.cjs",
-    "check": "node --check dist/app.js && node --check dist/interactive.js && node --check dist/learning-data.js && node --check dist/learning-art.js && node --check dist/learning.js"
+    "test": "node tests/browser.cjs && node tests/new-courses.cjs && node tests/adult-courses.cjs",
+    "check": "node --check dist/app.js && node --check dist/interactive.js && node --check dist/learning-data.js && node --check dist/learning-art.js && node --check dist/learning.js && node --check dist/adult-data.js && node --check dist/adult-art.js && node --check dist/adult-games.js"
   },
   "engines": {
     "node": ">=20"
