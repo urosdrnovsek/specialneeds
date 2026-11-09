@@ -1,6 +1,6 @@
 # Spot & Match
 
-Seven prereading courses with 145 games. The app generates no voice. Words and Meanings, Who Did What?, and Sound Explorers require adult support throughout. Includes a grown-up guide with research references and accessibility considerations.
+Seven original prereading courses and six supportive pathways: 205 games in total. The app generates no voice. Words and Meanings, Who Did What?, and Sound Explorers require adult support throughout. Includes a grown-up guide with research references and accessibility considerations.
 
 Live course: https://spot-and-match-visual-course.blossomingchip1.chatgpt.site (access depends on the site's sharing settings).
 
@@ -25,7 +25,9 @@ npm test
 
 On Linux, browser system dependencies may also be needed; use `npx playwright install --with-deps chromium` on a machine where system package installation is permitted. The tests automatically use `/usr/bin/chromium` when present. Set `CHROMIUM_PATH` to use another installed Chromium executable.
 
-Tests load the local source through Playwright's request routing, without accessing the live site's authentication. They complete all 145 games and 485 rounds, check progress persistence and guide controls, check mobile viewport overflow, test errors, hints, undo, selective progress reset, immediate access without confirmation steps, and capture desktop/mobile screenshots in `test-results/`. Additional checks exercise 45 naming targets across replays and validate curated sound examples, distinct pictures, and SVG syntax. They fail on uncaught page JavaScript errors. They do not establish educational effectiveness or fully audit accessibility.
+Tests load the local source through Playwright's request routing, without accessing the live site's authentication. They complete the original 145 games and 485 rounds, check progress persistence and guide controls, check mobile viewport overflow, test errors, hints, undo, selective progress reset, immediate access without confirmation steps, and capture desktop/mobile screenshots in `test-results/`. Additional checks exercise 45 naming targets across replays and validate curated sound examples, distinct pictures, and SVG syntax. They fail on uncaught page JavaScript errors. They do not establish educational effectiveness or fully audit accessibility.
+
+The support-pathway suite completes all 60 new games and 180 rounds, audits 540 replay task definitions, checks unique choices and SVG syntax, tests keyboard input and mobile layouts, and verifies separate progress storage/reset.
 
 `npm run check` checks application JavaScript syntax.
 
@@ -65,9 +67,26 @@ The first five vocabulary games cycle through 45 everyday nouns across replays. 
 
 Simple visual matching, sorting, pairing, and visual-search games now use eight object shapes. More narrowly targeted games keep their controlled shapes and features.
 
+## Research-informed support pathways
+
+Six optional pathways each include ten games and three explorations per game:
+
+1. **Words, Actions & Little Stories:** language difficulties; vocabulary, sentence meaning, and narrative.
+2. **Discover the Sounds in Words:** dyslexia risk; spoken word awareness, syllables, blending, segmentation, and sound changes.
+3. **Make Meaning Together:** autism; meaningful actions, causes, inferences, and shared stories.
+4. **Small Steps, Meaningful Learning:** intellectual disability or broader developmental delays; familiar meanings, explicit models, and generalisation.
+5. **Sounds & Stories, Every Way to Answer:** speech difficulties; language and literacy participation without required speech.
+6. **I Can Choose, Explore & Tell:** motor difficulties; comfortable access to language and literacy tasks.
+
+Every pathway includes detailed descriptions of possible needs, goals, adaptations, evidence limits, research links, and offline exercises. Choose by observed need rather than diagnosis. Adult support is needed throughout. Sound activities need adult speech; no audio is generated. The games are research-informed designs, not evaluated treatments, diagnostic tests, or prerequisites for reading instruction or AAC.
+
+Interactions include revisable picture choices, select-then-place, visible sequencing, pebbles, illustrated book navigation, creative story composition, and open-ended shared discussion. Open-ended activities have no automatic correct-answer score. Optional adult observations distinguish target-skill support and access needs; completion indicates exploration, not mastery. Keyboard focus is maintained after updates. External switch and gaze hardware compatibility has not been validated.
+
+New progress uses `spotmatch-support-v1`, independently of the original course keys. Resetting support pathways preserves original progress. No names, diagnoses, microphone input, or remote child progress are collected. Larger pictures use the existing `spotmatch-comfort` preference.
+
 ## Deploy or integrate
 
-Serve the contents of `dist/` on any static web host. Keep `index.html`, `style.css`, `app.js`, `interactive.js`, `learning-data.js`, `learning-art.js`, `learning.js`, `adult-data.js`, `adult-art.js`, `adult-games.js`, `friendly-art.js`, `friendly-ui.js`, `friendly.css`, `picture-library.js`, and `vocabulary-variety.js` together. No server API, database, or secret is required. An iframe can embed the deployed course when your host's framing policy allows it. This repository does not modify the existing Sites deployment or its access settings.
+Serve the contents of `dist/` on any static web host. Keep `index.html`, `style.css`, `app.js`, `interactive.js`, `learning-data.js`, `learning-art.js`, `learning.js`, `adult-data.js`, `adult-art.js`, `adult-games.js`, `friendly-art.js`, `friendly-ui.js`, `friendly.css`, `picture-library.js`, `vocabulary-variety.js`, `pathways-data.js`, `pathways.js`, and `pathways.css` together. No server API, database, or secret is required. An iframe can embed the deployed course when your host's framing policy allows it. This repository does not modify the existing Sites deployment or its access settings.
 
 ## Educational scope
 
