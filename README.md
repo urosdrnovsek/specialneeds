@@ -1,6 +1,6 @@
 # Spot & Match
 
-Seven original prereading courses and six supportive pathways: 205 games in total. The app generates no voice. Words and Meanings, Who Did What?, and Sound Explorers require adult support throughout. Includes a grown-up guide with research references and accessibility considerations.
+Seven original prereading courses and six supportive pathways: 205 prereading/support games plus 20 optional wellbeing activities. The app generates no voice. Words and Meanings, Who Did What?, and Sound Explorers require adult support throughout. Includes a grown-up guide with research references and accessibility considerations.
 
 Live course: https://spot-and-match-visual-course.blossomingchip1.chatgpt.site (access depends on the site's sharing settings).
 
@@ -84,9 +84,19 @@ Interactions include revisable picture choices, select-then-place, visible seque
 
 New progress uses `spotmatch-support-v1`, independently of the original course keys. Resetting support pathways preserves original progress. No names, diagnoses, microphone input, or remote child progress are collected. Larger pictures use the existing `spotmatch-comfort` preference.
 
+## The Little Calm Garden
+
+Twenty optional adult-supported activities: six focus games, five relaxation activities, eight gentle yoga-inspired movement invitations, and a personal routine builder. Focus games offer fewer choices, hints, revisable answers, and explicit rule changes without a timer. Wellbeing activities have no correctness, movement, concentration, or relaxation score. Watching, imagining, declining, and finishing early are valid choices.
+
+All movement defaults to a seated version. Supported standing is optional where offered; Seated Cat remains seated. No inversions, single-leg balance, forced stretches, floor transfers, or breath holds are included. Adults follow existing movement restrictions and established supports; individual adaptation may need a therapist or qualified instructor. Ordinary breathing is self-paced with manual flower controls, a pause, and a watch-only alternative. Reduced motion removes the visual transition. No microphone, voice generation, camera, or movement monitoring is used.
+
+The parent guide links NCCIH guidance and reviews on ADHD and autism, noting mixed findings, study limitations, and lack of evaluation of our activities. These activities do not establish improved general attention, reading, or treatment outcomes. Only explored activity indices are stored under `spotmatch-calm-v1`; reset affects this section alone.
+
+The Calm Garden browser suite checks every activity, seated/standing/watch choices, optional exits, manual breathing/pause, changing focus rules, keyboard use, reduced motion, local persistence, and mobile layout. Existing progress keys are preserved.
+
 ## Deploy or integrate
 
-Serve the contents of `dist/` on any static web host. Keep `index.html`, `style.css`, `app.js`, `interactive.js`, `learning-data.js`, `learning-art.js`, `learning.js`, `adult-data.js`, `adult-art.js`, `adult-games.js`, `friendly-art.js`, `friendly-ui.js`, `friendly.css`, `picture-library.js`, `vocabulary-variety.js`, `pathways-data.js`, `pathways.js`, and `pathways.css` together. No server API, database, or secret is required. An iframe can embed the deployed course when your host's framing policy allows it. This repository does not modify the existing Sites deployment or its access settings.
+Serve the contents of `dist/` on any static web host. Keep `index.html`, `style.css`, `app.js`, `interactive.js`, `learning-data.js`, `learning-art.js`, `learning.js`, `adult-data.js`, `adult-art.js`, `adult-games.js`, `friendly-art.js`, `friendly-ui.js`, `friendly.css`, `picture-library.js`, `vocabulary-variety.js`, `pathways-data.js`, `pathways.js`, `pathways.css`, `calm-data.js`, `calm.js`, and `calm.css` together. No server API, database, or secret is required. An iframe can embed the deployed course when your host's framing policy allows it. This repository does not modify the existing Sites deployment or its access settings.
 
 ## Educational scope
 
