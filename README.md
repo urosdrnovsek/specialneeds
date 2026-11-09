@@ -25,7 +25,7 @@ npm test
 
 On Linux, browser system dependencies may also be needed; use `npx playwright install --with-deps chromium` on a machine where system package installation is permitted. The tests automatically use `/usr/bin/chromium` when present. Set `CHROMIUM_PATH` to use another installed Chromium executable.
 
-Tests load the local source through Playwright's request routing, without accessing the live site's authentication. They complete all 145 games and 485 rounds, check progress persistence and guide controls, check mobile viewport overflow, test errors, hints, undo, selective progress reset, and the adult-prompt gate, and capture desktop/mobile screenshots in `test-results/`. They fail on uncaught page JavaScript errors. They do not establish educational effectiveness or fully audit accessibility.
+Tests load the local source through Playwright's request routing, without accessing the live site's authentication. They complete all 145 games and 485 rounds, check progress persistence and guide controls, check mobile viewport overflow, test errors, hints, undo, selective progress reset, immediate access without confirmation steps, and capture desktop/mobile screenshots in `test-results/`. They fail on uncaught page JavaScript errors. They do not establish educational effectiveness or fully audit accessibility.
 
 `npm run check` checks application JavaScript syntax.
 
@@ -43,17 +43,23 @@ Each course includes a problem description, learning goal, guidance on who might
 
 All activities are untimed. No generated speech, microphone, or dragging is required. Event pictures and options remain visible. Visual-course progress is saved under `spotmatch-v1`; the six additional courses use `spotmatch-learning-v1`. Each course can be reset independently. Progress records practice, not mastery. No child name or diagnosis is collected. The page requests fonts from Google Fonts; system-font fallbacks are provided.
 
-## Adult support is required for courses 5–7
+## Playing together in courses 5–7
 
-An adult stays throughout, models the language or sounds, and supplies a written-on-screen prompt using their own voice or the appropriate accessible language. The child's controls remain closed until the adult confirms that they have given the prompt. The app does not record, recognize, or generate speech. Completion is labeled adult-supported practice, not independent assessment.
+These courses are marked “Play together.” An adult reads, signs, or models the short instruction using the appropriate accessible language; Sound Explorers needs an adult to supply spoken English examples. The activity opens immediately; there is no confirmation step. A short invitation appears above the pictures, with extra guidance in optional grown-up notes. The app does not record, recognize, or generate speech. Completion is labeled adult-supported practice, not independent assessment.
 
 For Words and Meanings and Who Did What?, use speech, sign, or the child's established AAC system. English grammatical contrasts need thoughtful adaptation to other languages, including signed languages.
 
 Sound Explorers requires access to the intended spoken-English examples. Adults name pictures consistently, use speech sounds rather than letter names, and avoid adding “uh” to consonants. Syllable counts, rhymes, and phonemes can vary with pronunciation and dialect; adapt or skip unsuitable examples rather than treating differences as errors. Deaf and hard-of-hearing children may need a different language-accessible pathway planned with their team. Sound games are not a prerequisite for print, letter–sound teaching, reading instruction, or AAC.
 
+## A gentler play experience
+
+The library uses illustrated course cards and simple invitations. Course goals, who may benefit, evidence limits, and adaptations remain available in the expandable grown-up section. Games have larger pictures, optional help, and no adult-confirmation gate. Completion celebrates exploration; detailed practice notes are tucked into an optional grown-up section. Existing progress keys are preserved.
+
+In the grown-up guide, “A little more room” enables larger pictures and wider choice spacing. This preference is stored under `spotmatch-comfort`. Reduced-motion preferences are respected. The illustrations are original SVG artwork, so they remain sharp at different sizes and are available without image downloads.
+
 ## Deploy or integrate
 
-Serve the contents of `dist/` on any static web host. Keep `index.html`, `style.css`, `app.js`, `interactive.js`, `learning-data.js`, `learning-art.js`, `learning.js`, `adult-data.js`, `adult-art.js`, and `adult-games.js` together. No server API, database, or secret is required. An iframe can embed the deployed course when your host's framing policy allows it. This repository does not modify the existing Sites deployment or its access settings.
+Serve the contents of `dist/` on any static web host. Keep `index.html`, `style.css`, `app.js`, `interactive.js`, `learning-data.js`, `learning-art.js`, `learning.js`, `adult-data.js`, `adult-art.js`, `adult-games.js`, `friendly-art.js`, `friendly-ui.js`, and `friendly.css` together. No server API, database, or secret is required. An iframe can embed the deployed course when your host's framing policy allows it. This repository does not modify the existing Sites deployment or its access settings.
 
 ## Educational scope
 

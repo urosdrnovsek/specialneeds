@@ -11,8 +11,8 @@ const results=path.join(root,'test-results');fs.mkdirSync(results,{recursive:tru
  // Serve a controlled fixture through Playwright routing; no external server or live-site access.
  await page.route('https://spot-match.test/**',route=>{
   const name=new URL(route.request().url()).pathname.slice(1)||'index.html';
-  if(!['index.html','style.css','app.js','interactive.js','learning-data.js','learning-art.js','learning.js','adult-data.js','adult-art.js','adult-games.js'].includes(name))return route.fulfill({status:404,body:''});
-  const types={'index.html':'text/html','style.css':'text/css','app.js':'application/javascript','interactive.js':'application/javascript','learning-data.js':'application/javascript','learning-art.js':'application/javascript','learning.js':'application/javascript','adult-data.js':'application/javascript','adult-art.js':'application/javascript','adult-games.js':'application/javascript'};
+  if(!['index.html','style.css','app.js','interactive.js','learning-data.js','learning-art.js','learning.js','adult-data.js','adult-art.js','adult-games.js','friendly-art.js','friendly-ui.js','friendly.css'].includes(name))return route.fulfill({status:404,body:''});
+  const types={'index.html':'text/html','style.css':'text/css','app.js':'application/javascript','interactive.js':'application/javascript','learning-data.js':'application/javascript','learning-art.js':'application/javascript','learning.js':'application/javascript','adult-data.js':'application/javascript','adult-art.js':'application/javascript','adult-games.js':'application/javascript','friendly-art.js':'application/javascript','friendly-ui.js':'application/javascript','friendly.css':'text/css'};
   return route.fulfill({status:200,contentType:types[name],body:fs.readFileSync(path.join(root,'dist',name))});
  });
  await page.goto('https://spot-match.test/',{waitUntil:'load'});
@@ -29,7 +29,7 @@ const results=path.join(root,'test-results');fs.mkdirSync(results,{recursive:tru
    if(g===23){let turns=await page.evaluate(()=>(current.target.dir-current.built.dir+4)%4);for(let t=0;t<turns;t++)await page.locator('[data-turn="1"]').click();await page.locator('#check-work').click();await page.locator('#interactive-next').click();}
    if(g===24){const i=await page.evaluate(()=>current.changed);await page.locator(`[data-changed="${i}"]`).click();await page.locator('#interactive-next').click();}
   }
-  assert.match(await page.locator('.completion-stat').innerText(),/5/);
+  assert.match(await page.locator('.completion-stat').textContent(),/5/);
   await page.locator('#back').click();
  }
  assert.equal(await page.evaluate(()=>Object.keys(JSON.parse(localStorage.getItem('spotmatch-v1'))).length),25);
