@@ -1,0 +1,46 @@
+const {chromium}=require('playwright');
+const assert=require('node:assert/strict');
+const path=require('node:path');
+const fs=require('node:fs');
+const root=path.resolve(__dirname,'..');
+const results=path.join(root,'test-results');fs.mkdirSync(results,{recursive:true});
+(async()=>{
+ const browser=await chromium.launch({...(process.env.CHROMIUM_PATH?{executablePath:process.env.CHROMIUM_PATH}:fs.existsSync('/usr/bin/chromium')?{executablePath:'/usr/bin/chromium'}:{}),headless:true});
+ const context=await browser.newContext({viewport:{width:1280,height:900},reducedMotion:'reduce'});
+ const page=await context.newPage();const errors=[];page.on('pageerror',e=>errors.push(e.message));
+ // Serve a controlled fixture through Playwright routing; no external server or live-site access.
+ await page.route('https://spot-match.test/**',route=>{
+  const name=new URL(route.request().url()).pathname.slice(1)||'index.html';
+  if(!['index.html','style.css','app.js','interactive.js'].includes(name))return route.fulfill({status:404,body:''});
+  const types={'index.html':'text/html','style.css':'text/css','app.js':'application/javascript','interactive.js':'application/javascript'};
+  return route.fulfill({status:200,contentType:types[name],body:fs.readFileSync(path.join(root,'dist',name))});
+ });
+ await page.goto('https://spot-match.test/',{waitUntil:'load'});
+ await page.evaluate(()=>{localStorage.removeItem('spotmatch-v1');home()});
+ assert.equal(await page.locator('[data-game]').count(),25);
+ for(let g=0;g<25;g++){
+  await page.locator(`[data-game="${g}"]`).click();
+  await page.locator('#begin').click();
+  for(let r=0;r<5;r++){
+   if(g<20){const i=await page.evaluate(()=>current.choices.findIndex(c=>c.match));await page.locator(`[data-choice="${i}"]`).click();await page.locator('#next').click();}
+   if(g===20){for(let j=0;j<4;j++){const i=await page.evaluate(()=>current.homes.indexOf(current.tokens[current.position].shape));await page.locator(`[data-home="${i}"]`).click();}await page.locator('#interactive-next').click();}
+   if(g===21){for(let p=0;p<3;p++){const ids=await page.evaluate(pair=>current.cards.map((c,i)=>c.pair===pair?i:-1).filter(i=>i>=0),p);for(const i of ids)await page.locator(`[data-pair="${i}"]`).click();}await page.locator('#interactive-next').click();}
+   if(g===22){const t=await page.evaluate(()=>current.target);await page.locator(`[data-color="${t.color}"]`).click();await page.locator(`[data-dots="${t.dots}"]`).click();await page.locator('#check-work').click();await page.locator('#interactive-next').click();}
+   if(g===23){let turns=await page.evaluate(()=>(current.target.dir-current.built.dir+4)%4);for(let t=0;t<turns;t++)await page.locator('[data-turn="1"]').click();await page.locator('#check-work').click();await page.locator('#interactive-next').click();}
+   if(g===24){const i=await page.evaluate(()=>current.changed);await page.locator(`[data-changed="${i}"]`).click();await page.locator('#interactive-next').click();}
+  }
+  assert.match(await page.locator('.completion-stat').innerText(),/5/);
+  await page.locator('#back').click();
+ }
+ assert.equal(await page.evaluate(()=>Object.keys(JSON.parse(localStorage.getItem('spotmatch-v1'))).length),25);
+ await page.reload();assert.match(await page.locator('.progress-label').innerText(),/25 of 25/);
+ await page.screenshot({path:path.join(results,'course-desktop.png'),fullPage:true});
+ await page.setViewportSize({width:390,height:844});
+ assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth),true,'mobile home fits viewport');
+ for(const g of [20,21,22,23,24]){await page.locator(`[data-game="${g}"]`).click();await page.locator('#begin').click();assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth),true,`mobile game ${g+1} fits viewport`);await page.locator('#interactive-hint').click();await page.locator('#back').click();}
+ await page.screenshot({path:path.join(results,'course-mobile.png'),fullPage:true});
+ await page.locator('#guideNav').click();assert.equal(await page.locator('#guide').evaluate(e=>e.open),true);await page.locator('#guide .close').click();
+ assert.deepEqual(errors,[]);
+ console.log(JSON.stringify({browser:await browser.version(),games:25,rounds:125,mobileWidth:390,progressPersistence:'passed',guide:'passed',pageErrors:errors},null,2));
+ await browser.close();
+})().catch(e=>{console.error(e);process.exit(1)});
