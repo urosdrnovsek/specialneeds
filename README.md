@@ -94,9 +94,19 @@ The parent guide links NCCIH guidance and reviews on ADHD and autism, noting mix
 
 The Calm Garden browser suite checks every activity, seated/standing/watch choices, optional exits, manual breathing/pause, changing focus rules, keyboard use, reduced motion, local persistence, and mobile layout. Existing progress keys are preserved.
 
+## The Little Focus Trail: ADHD and ADD support
+
+Twenty additional adult-supported games practise comparing a choice with a visible goal, checking a selection, gathering items using a picture checklist, following two or three steps, classifying with a stated rule, explicitly switching rules, requesting help, and choosing a practical plan. Choose one exploration or a small set of three. Models and plans remain visible; two-choice versions are available for comparison tasks. Choices can be revised before checking. No timer, speed score, hidden-card memory requirement, stillness or eye-contact requirement is used.
+
+A break preserves the current in-memory task, selections, and position while the page remains open. Return, stop, or choose a familiar rest/movement/communication break. Breaks are never earned or withheld. Whole-session resume after reload is not supported. Only explored game indices are persisted under `spotmatch-focus-v1`; no symptom, concentration, reaction-time, or diagnostic data is collected. Resetting this section leaves other course progress intact.
+
+The expanded ADHD/ADD parent section explains inattentive ADHD, possible barriers to participation, external supports, practical parent examples, transfer to real activities, and evidence limits. It links NIMH, CDC, NICE, AAP parent information, the Westwood et al. 2023 cognitive-training meta-analysis, and a structured-exercise review. Each game links its supporting principle and evidence limits. These are research-informed designs, not evaluated ADHD treatments, clinical attention tests, or substitutes for parent training, educational support, or appropriate care. Cognitive-training gains do not establish general everyday improvement. The Calm Garden parent guide links directly to this expanded section.
+
+The Focus Trail browser suite completes 20 games and 60 explorations, checks changing targets and rules, SVG validity, two/three-choice controls, revising selections, pausing and returning without losing state, one-exploration mode, keyboard operation, mobile layouts, persistence, and selective reset.
+
 ## Deploy or integrate
 
-Serve the contents of `dist/` on any static web host. Keep `index.html`, `style.css`, `app.js`, `interactive.js`, `learning-data.js`, `learning-art.js`, `learning.js`, `adult-data.js`, `adult-art.js`, `adult-games.js`, `friendly-art.js`, `friendly-ui.js`, `friendly.css`, `picture-library.js`, `vocabulary-variety.js`, `pathways-data.js`, `pathways.js`, `pathways.css`, `calm-data.js`, `calm.js`, and `calm.css` together. No server API, database, or secret is required. An iframe can embed the deployed course when your host's framing policy allows it. This repository does not modify the existing Sites deployment or its access settings.
+Serve the contents of `dist/` on any static web host. Keep `index.html`, `style.css`, `app.js`, `interactive.js`, `learning-data.js`, `learning-art.js`, `learning.js`, `adult-data.js`, `adult-art.js`, `adult-games.js`, `friendly-art.js`, `friendly-ui.js`, `friendly.css`, `picture-library.js`, `vocabulary-variety.js`, `pathways-data.js`, `pathways.js`, `pathways.css`, `calm-data.js`, `calm.js`, `calm.css`, `focus-data.js`, `focus.js`, and `focus.css` together. No server API, database, or secret is required. An iframe can embed the deployed course when your host's framing policy allows it. This repository does not modify the existing Sites deployment or its access settings.
 
 ## Educational scope
 
