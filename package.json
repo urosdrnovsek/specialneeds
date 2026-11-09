@@ -2,11 +2,11 @@
   "name": "spot-and-match",
   "version": "1.0.0",
   "private": true,
-  "description": "A simple playroom with 12 varied one-click activities, optional parent research, and the preserved original courses.",
+  "description": "An adult-led library of eight skills and 22 guided courses, purposeful child activities, and touch/pen/mouse dragging with tap and keyboard alternatives.",
   "scripts": {
     "start": "node scripts/serve.cjs",
-    "test": "node tests/browser.cjs && node tests/new-courses.cjs && node tests/adult-courses.cjs && node tests/friendly-experience.cjs && node tests/pictures-and-variety.cjs && node tests/support-pathways.cjs && node tests/calm-garden.cjs && node tests/focus-trail.cjs && node tests/playroom.cjs",
-    "check": "node --check dist/app.js && node --check dist/interactive.js && node --check dist/learning-data.js && node --check dist/learning-art.js && node --check dist/learning.js && node --check dist/adult-data.js && node --check dist/adult-art.js && node --check dist/adult-games.js && node --check dist/friendly-art.js && node --check dist/friendly-ui.js && node --check dist/picture-library.js && node --check dist/vocabulary-variety.js && node --check dist/pathways-data.js && node --check dist/pathways.js && node --check dist/calm-data.js && node --check dist/calm.js && node --check dist/focus-data.js && node --check dist/focus.js && node --check dist/playroom-data.js && node --check dist/playroom-art.js && node --check dist/playroom.js"
+    "test": "node tests/browser.cjs && node tests/new-courses.cjs && node tests/adult-courses.cjs && node tests/friendly-experience.cjs && node tests/pictures-and-variety.cjs && node tests/support-pathways.cjs && node tests/calm-garden.cjs && node tests/focus-trail.cjs && node tests/playroom.cjs && node tests/useful-courses.cjs && node tests/touch-play.cjs",
+    "check": "node --check dist/app.js && node --check dist/interactive.js && node --check dist/learning-data.js && node --check dist/learning-art.js && node --check dist/learning.js && node --check dist/adult-data.js && node --check dist/adult-art.js && node --check dist/adult-games.js && node --check dist/friendly-art.js && node --check dist/friendly-ui.js && node --check dist/picture-library.js && node --check dist/vocabulary-variety.js && node --check dist/pathways-data.js && node --check dist/pathways.js && node --check dist/calm-data.js && node --check dist/calm.js && node --check dist/focus-data.js && node --check dist/focus.js && node --check dist/playroom-data.js && node --check dist/playroom-art.js && node --check dist/playroom.js && node --check dist/skill-library-data.js && node --check dist/skill-library.js && node --check dist/touch-play.js && node --check dist/play-adventures.js && node --check dist/course-drag.js"
   },
   "engines": {
     "node": ">=20"
