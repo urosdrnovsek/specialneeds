@@ -33,7 +33,7 @@ const sentenceCourseGames=[
  ['In, on, under','position','Understand a spatial relationship.'],
  ['Beside or behind?','treeposition','Understand position relative to a tree.'],
  ['Around the chair','chairposition','Apply position words with a different object.'],
- ['One ball or balls?','plural','Understand singular and plural in a sentence.'],
+ ['One—or more than one?','plural','Understand singular and plural in a sentence.'],
  ['Two little clues','attributes','Combine two attributes in one description.'],
  ['Holding or not holding','negative','Understand a sentence with “not.”'],
  ['Pushing or pulling','pushpull','Distinguish two related actions.'],

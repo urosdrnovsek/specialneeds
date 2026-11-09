@@ -63,8 +63,8 @@ function pictureIcon(id,variant=0){
 }
 function learnPicture(p,variant=0){
  if(typeof p==='string')return pictureIcon(p,variant);
- if(p.scene)return routinePicture(p.scene,p.stage,variant);
- if(p.story)return storyPicture(p.story,p.stage,variant);
+ if(p.scene!==undefined)return routinePicture(p.scene,p.stage,variant);
+ if(p.story!==undefined)return storyPicture(p.story,p.stage,variant);
  if(p.location)return locationPicture(p.location,p.object,variant);
  return pictureIcon(p.icon,variant);
 }

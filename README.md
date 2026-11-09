@@ -25,7 +25,7 @@ npm test
 
 On Linux, browser system dependencies may also be needed; use `npx playwright install --with-deps chromium` on a machine where system package installation is permitted. The tests automatically use `/usr/bin/chromium` when present. Set `CHROMIUM_PATH` to use another installed Chromium executable.
 
-Tests load the local source through Playwright's request routing, without accessing the live site's authentication. They complete all 145 games and 485 rounds, check progress persistence and guide controls, check mobile viewport overflow, test errors, hints, undo, selective progress reset, immediate access without confirmation steps, and capture desktop/mobile screenshots in `test-results/`. They fail on uncaught page JavaScript errors. They do not establish educational effectiveness or fully audit accessibility.
+Tests load the local source through Playwright's request routing, without accessing the live site's authentication. They complete all 145 games and 485 rounds, check progress persistence and guide controls, check mobile viewport overflow, test errors, hints, undo, selective progress reset, immediate access without confirmation steps, and capture desktop/mobile screenshots in `test-results/`. Additional checks exercise 45 naming targets across replays and validate curated sound examples, distinct pictures, and SVG syntax. They fail on uncaught page JavaScript errors. They do not establish educational effectiveness or fully audit accessibility.
 
 `npm run check` checks application JavaScript syntax.
 
@@ -57,9 +57,17 @@ The library uses illustrated course cards and simple invitations. Course goals, 
 
 In the grown-up guide, “A little more room” enables larger pictures and wider choice spacing. This preference is stored under `spotmatch-comfort`. Reduced-motion preferences are respected. The illustrations are original SVG artwork, so they remain sharp at different sizes and are available without image downloads.
 
+## Picture and vocabulary variety
+
+The picture library includes detailed cutlery, kitchen objects, clothing, foods, toys, tools, and animals. Similar concepts keep distinct drawings where needed: spoon/fork, cleaning brush/paintbrush, book/paper/drawing, and lamp/flashlight. No word labels are printed on the child’s picture choices.
+
+The first five vocabulary games cycle through 45 everyday nouns across replays. Size, quantity, object, and giving activities also vary examples while keeping the target skill. Sound Explorers uses three curated sets of examples rather than substituting arbitrary words: syllable counts, rhymes, and first/last phonemes stay tied to each intended spoken word. Counts and rhymes still need adaptation for the child’s pronunciation and dialect. Replays cycle locally using `spotmatch-picture-visits`; existing completion records are preserved.
+
+Simple visual matching, sorting, pairing, and visual-search games now use eight object shapes. More narrowly targeted games keep their controlled shapes and features.
+
 ## Deploy or integrate
 
-Serve the contents of `dist/` on any static web host. Keep `index.html`, `style.css`, `app.js`, `interactive.js`, `learning-data.js`, `learning-art.js`, `learning.js`, `adult-data.js`, `adult-art.js`, `adult-games.js`, `friendly-art.js`, `friendly-ui.js`, and `friendly.css` together. No server API, database, or secret is required. An iframe can embed the deployed course when your host's framing policy allows it. This repository does not modify the existing Sites deployment or its access settings.
+Serve the contents of `dist/` on any static web host. Keep `index.html`, `style.css`, `app.js`, `interactive.js`, `learning-data.js`, `learning-art.js`, `learning.js`, `adult-data.js`, `adult-art.js`, `adult-games.js`, `friendly-art.js`, `friendly-ui.js`, `friendly.css`, `picture-library.js`, and `vocabulary-variety.js` together. No server API, database, or secret is required. An iframe can embed the deployed course when your host's framing policy allows it. This repository does not modify the existing Sites deployment or its access settings.
 
 ## Educational scope
 
