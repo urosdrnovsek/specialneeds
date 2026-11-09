@@ -11,12 +11,12 @@ const results=path.join(root,'test-results');fs.mkdirSync(results,{recursive:tru
  // Serve a controlled fixture through Playwright routing; no external server or live-site access.
  await page.route('https://spot-match.test/**',route=>{
   const name=new URL(route.request().url()).pathname.slice(1)||'index.html';
-  if(!['index.html','style.css','app.js','interactive.js'].includes(name))return route.fulfill({status:404,body:''});
-  const types={'index.html':'text/html','style.css':'text/css','app.js':'application/javascript','interactive.js':'application/javascript'};
+  if(!['index.html','style.css','app.js','interactive.js','learning-data.js','learning-art.js','learning.js'].includes(name))return route.fulfill({status:404,body:''});
+  const types={'index.html':'text/html','style.css':'text/css','app.js':'application/javascript','interactive.js':'application/javascript','learning-data.js':'application/javascript','learning-art.js':'application/javascript','learning.js':'application/javascript'};
   return route.fulfill({status:200,contentType:types[name],body:fs.readFileSync(path.join(root,'dist',name))});
  });
  await page.goto('https://spot-match.test/',{waitUntil:'load'});
- await page.evaluate(()=>{localStorage.removeItem('spotmatch-v1');home()});
+ await page.evaluate(()=>{localStorage.removeItem('spotmatch-v1');home();openLearningCourse('visual')});
  assert.equal(await page.locator('[data-game]').count(),25);
  for(let g=0;g<25;g++){
   await page.locator(`[data-game="${g}"]`).click();
@@ -33,7 +33,7 @@ const results=path.join(root,'test-results');fs.mkdirSync(results,{recursive:tru
   await page.locator('#back').click();
  }
  assert.equal(await page.evaluate(()=>Object.keys(JSON.parse(localStorage.getItem('spotmatch-v1'))).length),25);
- await page.reload();assert.match(await page.locator('.progress-label').innerText(),/25 of 25/);
+ await page.reload();await page.locator('[data-course="visual"]').click();assert.match(await page.locator('.progress-label').innerText(),/25 of 25/);
  await page.screenshot({path:path.join(results,'course-desktop.png'),fullPage:true});
  await page.setViewportSize({width:390,height:844});
  assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth),true,'mobile home fits viewport');

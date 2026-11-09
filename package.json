@@ -2,11 +2,11 @@
   "name": "spot-and-match",
   "version": "1.0.0",
   "private": true,
-  "description": "A voice-free visual discrimination course with 25 games.",
+  "description": "Four voice-free prereading courses with 85 games.",
   "scripts": {
     "start": "node scripts/serve.cjs",
-    "test": "node tests/browser.cjs",
-    "check": "node --check dist/app.js && node --check dist/interactive.js"
+    "test": "node tests/browser.cjs && node tests/new-courses.cjs",
+    "check": "node --check dist/app.js && node --check dist/interactive.js && node --check dist/learning-data.js && node --check dist/learning-art.js && node --check dist/learning.js"
   },
   "engines": {
     "node": ">=20"
