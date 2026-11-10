@@ -168,3 +168,10 @@ The default guided course now goes from correct-answer feedback straight into th
 Every guided activity has a visible Why we’re playing explanation underneath, based on its specific teaching goal. The home page offers a one-click starter course or resumes the first unexplored activity of the last course, while retaining all eight skill categories and course-goal pages.
 
 `tests/course-flow.cjs` exercises the actual default Shape spotter path, a full six-activity course with matching/sorting/pairs, transitions between picture/vocabulary/support engines, wrong-answer retry, Pause/Resume, stopping during feedback, browser Back, course completion, restored keyboard focus, and mobile layout. Individual-engine regression fixtures deliberately pause at task boundaries using the `spotmatch-course-flow=manual` test preference, so they can inspect completion records; the default course flow is tested separately.
+
+
+### Supported character poses
+
+Sleeping scenes use a separate closed-eye head resting on a pillow, with the body under a duvet. Sitting animals have bent legs and a supporting seat. Shared action scenes use one pair of arms with hands placed against the held prop; pouring, handwashing, and shoe brushing include the person and supporting furniture. Story scenes place wheelchairs beside the bed during sleep.
+
+`tests/natural-scenes.cjs` checks pillow/head and blanket/mattress contact in all four animal illustrations, seats, valid action SVGs, and all twelve story sleepers. The 96 canonical story panels and sleeping/seated character sheets were visually reviewed; automated contact and syntax checks supplement that review, rather than measuring how recognisable a picture is to a child.

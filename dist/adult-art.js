@@ -42,7 +42,7 @@ function adultPicture(p,v=0){
  }
  if(p.type==='actor'){
   let b='',actor=p.actor||'bear',action=p.action||'sit',object=p.object||'ball';
-  if(action==='sleep'){b+=adultIcon('bed',64,71,120,v)+`<g transform="translate(87 59) rotate(-20 30 30)">${adultIcon(actor,0,0,65)}</g>`;}
+  if(action==='sleep'){b+=typeof friendlyBedScene==='function'?friendlyBedScene(actor,v):adultIcon('bed',49,65,147,v);}
   else if(action==='sit'){b+=adultIcon('chair',72,68,105,v)+animalBody(actor,49,18,.58);}
   else if(action==='jump'){b+=animalBody(actor,61,1,.62)+'<path d="M69 128L69 107M64 114L69 107L74 114M128 128L128 107M123 114L128 107L133 114" stroke="#92a483" stroke-width="3" fill="none"/>';}
   else if(action==='pour'){b+=adultIcon('cup',128,84,76,v)+`<g transform="rotate(25 91 64)">${adultIcon('pitcher',40,20,83,v)}</g><path d="M116 66Q146 71 154 102" stroke="#7eaab7" stroke-width="5" fill="none" stroke-dasharray="5 5"/>`;}
