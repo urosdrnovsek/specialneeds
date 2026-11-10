@@ -56,7 +56,7 @@ The support-pathway suite completes all 60 new games and 180 rounds, audits 540 
 
 Each course includes a problem description, learning goal, guidance on who might benefit, evidence limits, adaptations, and practical exercises. The new courses use original vector illustrations, not photographs. Some abstract tasks need an adult to demonstrate and explain the idea using accessible language.
 
-All activities are untimed. No generated speech, microphone, or dragging is required. Event pictures and options remain visible. Visual-course progress is saved under `spotmatch-v1`; the six additional courses use `spotmatch-learning-v1`. Each course can be reset independently. Progress records practice, not mastery. No child name or diagnosis is collected. The page requests fonts from Google Fonts; system-font fallbacks are provided.
+All activities are untimed. No generated speech, microphone, or dragging is required. Event pictures and options remain visible. Visual-course progress is saved under `spotmatch-v1`; the six additional courses use `spotmatch-learning-v1`. Each course can be reset independently. Progress records practice, not mastery. No child name or diagnosis is collected. The app uses device fonts and makes no external font requests, so font-service outages cannot block startup.
 
 ## Playing together in courses 5–7
 
@@ -131,3 +131,6 @@ These games provide practice opportunities, not a diagnostic assessment, vision 
 Correct taps or drops now get brief positive feedback and advance after about 0.9 seconds. Ordering, collecting, counting, and building tasks check automatically when complete; mistakes remain available for immediate retry. No Check/Let’s see/Next sequence is needed. Open topic choices finish after one choice and retain its picture on the completion screen. The drop area visibly holds the chosen trains, animals, or picnic picture, including when revised or checked.
 
 Stories and movement remain self-paced. Finishing a story or an open plan uses one action. Automatic progress can be paused in play; Getting started offers an optional step-by-step preference. The `?flow=manual` URL is also available for assisted practice and baseline regression testing. No answer deadline or speed score is introduced. `tests/quick-play.cjs` checks the default flow across the course engines; `tests/choice-stays.cjs` checks retained touch/mouse drops, keyboard/tap, revision, cancellation, and resetting.
+
+
+`tests/startup.cjs` deliberately stalls external font services and verifies that the home page, skill/course navigation, first game, and automatic next round still work.
