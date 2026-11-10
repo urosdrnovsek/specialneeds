@@ -109,7 +109,7 @@ The Calm Garden browser suite checks every activity, seated/standing/watch choic
 
 ## The Little Focus Trail: ADHD and ADD support
 
-Twenty additional adult-supported games practise comparing a choice with a visible goal, checking a selection, gathering items using a picture checklist, following two or three steps, classifying with a stated rule, explicitly switching rules, requesting help, and choosing a practical plan. Choose one exploration or a small set of three. Models and plans remain visible; two-choice versions are available for comparison tasks. Choices can be revised before checking. No timer, speed score, hidden-card memory requirement, stillness or eye-contact requirement is used.
+Twenty additional adult-supported games practise comparing a choice with a visible goal, checking a selection, gathering items using a picture checklist, following two or three steps, classifying with a stated rule, explicitly switching rules, requesting help, and choosing a practical plan. Choose one exploration or a small set of three. Models and plans remain visible; two-choice versions are available for comparison tasks. Incorrect choices remain editable; correct completed tasks receive brief feedback and advance automatically. No timer, speed score, hidden-card memory requirement, stillness or eye-contact requirement is used.
 
 A break preserves the current in-memory task, selections, and position while the page remains open. Return, stop, or choose a familiar rest/movement/communication break. Breaks are never earned or withheld. Whole-session resume after reload is not supported. Only explored game indices are persisted under `spotmatch-focus-v1`; no symptom, concentration, reaction-time, or diagnostic data is collected. Resetting this section leaves other course progress intact.
 
@@ -124,3 +124,10 @@ Serve the contents of `dist/` on any static web host. Keep `index.html`, `style.
 ## Educational scope
 
 These games provide practice opportunities, not a diagnostic assessment, vision therapy, or a proven treatment for dyslexia. Transfer to reading and everyday tasks needs evaluation. Choose activities by observed need rather than diagnosis. Children with vision, motor, attention, or communication needs may need individualized adaptations. AAC access must never depend on completing the games. See the in-app guide for details and source links.
+
+
+### Faster answer flow
+
+Correct taps or drops now get brief positive feedback and advance after about 0.9 seconds. Ordering, collecting, counting, and building tasks check automatically when complete; mistakes remain available for immediate retry. No Check/Let’s see/Next sequence is needed. Open topic choices finish after one choice and retain its picture on the completion screen. The drop area visibly holds the chosen trains, animals, or picnic picture, including when revised or checked.
+
+Stories and movement remain self-paced. Finishing a story or an open plan uses one action. Automatic progress can be paused in play; Getting started offers an optional step-by-step preference. The `?flow=manual` URL is also available for assisted practice and baseline regression testing. No answer deadline or speed score is introduced. `tests/quick-play.cjs` checks the default flow across the course engines; `tests/choice-stays.cjs` checks retained touch/mouse drops, keyboard/tap, revision, cancellation, and resetting.

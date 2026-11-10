@@ -2,6 +2,7 @@
 // A small, activity-led front door. The original courses and their progress remain available.
 const prOldLibrary=libraryHome;
 const prInitialView=new URLSearchParams(location.search).get('library');
+const prInitialFlow=new URLSearchParams(location.search).get('flow');
 let prLibraryMode=prInitialView==='full';
 let prCategory='Make & build',prState=null;
 let prProgress={};try{const p=JSON.parse(localStorage.getItem('spotmatch-playroom-v1')||'{}');if(p&&typeof p==='object'&&!Array.isArray(p))prProgress=p;}catch{}
