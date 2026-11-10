@@ -175,3 +175,10 @@ Every guided activity has a visible Why we’re playing explanation underneath, 
 Sleeping scenes use a separate closed-eye head resting on a pillow, with the body under a duvet. Sitting animals have bent legs and a supporting seat. Shared action scenes use one pair of arms with hands placed against the held prop; pouring, handwashing, and shoe brushing include the person and supporting furniture. Story scenes place wheelchairs beside the bed during sleep.
 
 `tests/natural-scenes.cjs` checks pillow/head and blanket/mattress contact in all four animal illustrations, seats, valid action SVGs, and all twelve story sleepers. The 96 canonical story panels and sleeping/seated character sheets were visually reviewed; automated contact and syntax checks supplement that review, rather than measuring how recognisable a picture is to a child.
+
+
+### Parent and teacher support home
+
+The default home introduces support for children with special educational needs. Eight illustrated sections cover language, ADHD/ADD and attention, autism, early reading difficulties/dyslexia risk, developmental and intellectual disabilities, speech/communication, motor access, and comfort/movement. Each section links to two existing courses and two activities that open immediately inside their guided course. Expandable research previews pair adaptation ideas with existing literature links and open the corresponding full guidance section. A topic menu jumps directly to a support area; all eight skill categories remain available below. Returning users can resume their recent course.
+
+`npm run test:home` runs a DOM-only smoke test using LinkeDOM: loads the actual script sequence, renders all sections, follows all 16 course links and 16 activity links, opens all eight guidance sections, and checks the starter/resume and section-jump controls. This does not verify browser layout, touch interactions, or visual appearance. Browser QA for this update was unavailable because the Sites managed preview browser tool was not exposed in the session.
