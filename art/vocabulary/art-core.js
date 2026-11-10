@@ -1,0 +1,18 @@
+'use strict';
+const VocabArt={};
+const VA={ink:'#344957',blue:'#66afd0',teal:'#58b5a3',red:'#ed7d70',yellow:'#f5c75e',purple:'#b296cf',cream:'#fff4d9',wood:'#c99463',steel:'#b9cbd0',dark:'#526979',green:'#78b66c',white:'#fffefa'};
+VA.r=(x,y,w,h,fill=VA.blue,rx=8,stroke=VA.ink,sw=3)=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${rx}" fill="${fill}" stroke="${stroke}" stroke-width="${sw}"/>`;
+VA.e=(x,y,rx,ry,fill=VA.blue,stroke=VA.ink,sw=3)=>`<ellipse cx="${x}" cy="${y}" rx="${rx}" ry="${ry}" fill="${fill}" stroke="${stroke}" stroke-width="${sw}"/>`;
+VA.c=(x,y,r,fill=VA.blue,stroke=VA.ink,sw=3)=>VA.e(x,y,r,r,fill,stroke,sw);
+VA.p=(d,fill='none',stroke=VA.ink,sw=3)=>`<path d="${d}" fill="${fill}" stroke="${stroke}" stroke-width="${sw}"/>`;
+VA.l=(x1,y1,x2,y2,color=VA.ink,sw=4)=>`<path d="M${x1} ${y1}L${x2} ${y2}" fill="none" stroke="${color}" stroke-width="${sw}"/>`;
+VA.poly=(points,fill=VA.blue,stroke=VA.ink,sw=3)=>`<polygon points="${points}" fill="${fill}" stroke="${stroke}" stroke-width="${sw}"/>`;
+VA.g=(body,transform='')=>`<g${transform?` transform="${transform}"`:''}>${body}</g>`;
+VA.dots=(n,x,y,gap,r=4,fill=VA.ink)=>Array.from({length:n},(_,i)=>VA.c(x+i*gap,y,r,fill,'none',0)).join('');
+VA.wheel=(x,y,r=22)=>VA.c(x,y,r,VA.dark)+VA.c(x,y,r*.43,VA.steel)+VA.c(x,y,3,VA.ink);
+VA.shadow=()=>VA.e(120,218,88,8,'#243f4c18','none',0);
+VA.label=(text,x=120,y=130,size=16)=>`<text x="${x}" y="${y}" text-anchor="middle" font-family="sans-serif" font-size="${size}" fill="${VA.ink}">${String(text).replace(/&/g,'&amp;').replace(/</g,'&lt;')}</text>`;
+VA.book=(x=48,y=35,w=142,h=173,color=VA.red)=>VA.r(x,y,w,h,color,7)+VA.r(x+9,y+6,w-17,h-13,VA.cream,3)+VA.r(x,y,w-12,h-12,color,6)+VA.l(x+14,y+4,x+14,y+h-15,'#34495755',3);
+VA.bottle=(x=76,y=25,w=88,h=183,color=VA.blue)=>VA.p(`M${x+w*.28} ${y+24}V${y+45}Q${x} ${y+62} ${x} ${y+79}V${y+h-9}Q${x} ${y+h} ${x+10} ${y+h}H${x+w-10}Q${x+w} ${y+h} ${x+w} ${y+h-9}V${y+79}Q${x+w} ${y+62} ${x+w*.72} ${y+45}V${y+24}Z`,color)+VA.r(x+w*.24,y,w*.52,27,VA.dark,5)+VA.l(x+13,y+80,x+13,y+h-26,VA.white,5);
+VA.box=(x=40,y=62,w=160,h=130,color=VA.wood)=>VA.r(x,y,w,h,color,4)+VA.p(`M${x} ${y}l${w*.22} -25h${w*.77}l${-w*.01} 25Z`,'#e3b98a')+VA.l(x+w*.52,y,x+w*.52,y+h,'#9d714b',4);
+VA.leaf=(x=120,y=100,w=70,h=110,color=VA.green)=>VA.p(`M${x} ${y-h/2}Q${x+w} ${y} ${x} ${y+h/2}Q${x-w} ${y} ${x} ${y-h/2}Z`,color)+VA.l(x,y-h*.25,x,y+h*.65,VA.ink,3);

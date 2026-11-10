@@ -11,8 +11,8 @@ const results=path.join(root,'test-results');fs.mkdirSync(results,{recursive:tru
  // Serve a controlled fixture through Playwright routing; no external server or live-site access.
  await page.route('https://spot-match.test/**',route=>{
   const name=new URL(route.request().url()).pathname.slice(1)||'index.html';
-  if(!/^[a-z-]+\.(html|css|js)$/.test(name))return route.fulfill({status:404,body:''});
-  const types=new Proxy({},{get:(_,n)=>n.endsWith('.js')?'application/javascript':n.endsWith('.css')?'text/css':'text/html'});
+  if(!/^(?:[a-z-]+\.(?:html|css|js)|vocabulary\/pictures\/[a-z0-9-]+\.svg|vocabulary\/catalog\.json)$/.test(name))return route.fulfill({status:404,body:''});
+  const types=new Proxy({},{get:(_,n)=>n.endsWith('.js')?'application/javascript':n.endsWith('.css')?'text/css':n.endsWith('.svg')?'image/svg+xml':n.endsWith('.json')?'application/json':'text/html'});
   return route.fulfill({status:200,contentType:types[name],body:fs.readFileSync(path.join(root,'dist',name))});
  });
  await page.goto('https://spot-match.test/?library=full&flow=manual',{waitUntil:'load'});

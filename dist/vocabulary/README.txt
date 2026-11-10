@@ -1,0 +1,1 @@
+Original object illustrations for Spot & Match. Each object has one canonical ID; spelling variants and repeated category references do not increase the object count. Source vocabulary: the user-provided100-category everyday-word list. Images are original SVG artwork generated from the included source recipes, with no third-party font or image service.

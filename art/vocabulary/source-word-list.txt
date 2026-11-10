@@ -1,0 +1,350 @@
+100 OBJECT VOCABULARY CATEGORIES FOR CHILDREN
+100 categories | 20 words per category | 2,000 word entries
+
+A beginner-friendly vocabulary list for children learning a language.
+Some words repeat across categories to support learning in different contexts.
+Some later categories include harder words for older children.
+
+=================================================================
+HOME & EVERYDAY OBJECTS
+=================================================================
+
+001. Living Room
+Sofa, chair, table, rug, lamp, pillow, blanket, TV, remote, clock, shelf, book, picture, frame, curtain, window, door, basket, plant, vase.
+
+002. Bedroom
+Bed, pillow, blanket, sheet, mattress, teddy bear, lamp, clock, mirror, closet, drawer, desk, chair, rug, slippers, pajamas, book, toy, basket, hanger.
+
+003. Bathroom
+Sink, toilet, bathtub, shower, towel, soap, toothbrush, toothpaste, mirror, comb, brush, cup, sponge, shampoo, bottle, tap, mat, tissue, bin, bath toy.
+
+004. Kitchen
+Fridge, oven, stove, sink, tap, table, chair, cupboard, drawer, shelf, counter, microwave, toaster, kettle, blender, bin, clock, towel, sponge, apron.
+
+005. Dining Room
+Table, chair, plate, bowl, cup, glass, fork, spoon, knife, napkin, placemat, jug, tray, bottle, basket, candle, vase, tablecloth, salt shaker, pitcher.
+
+006. Doors & Windows
+Door, window, handle, lock, key, knob, hinge, frame, curtain, blind, screen, glass, bell, mat, step, gate, latch, wall, sill, shade.
+
+007. Furniture
+Chair, table, desk, sofa, bed, stool, bench, shelf, bookcase, cabinet, drawer, dresser, closet, nightstand, armchair, rocking chair, bunk bed, coffee table, cupboard, chest.
+
+008. Lights & Lamps
+Lamp, light, bulb, flashlight, lantern, candle, night-light, desk lamp, ceiling light, wall light, string lights, lamp shade, switch, plug, wire, battery, torch, headlamp, spotlight, streetlight.
+
+009. Cleaning Objects
+Broom, mop, bucket, sponge, brush, cloth, duster, vacuum, dustpan, soap, spray bottle, towel, bin, trash bag, gloves, wipes, detergent, dust brush, scrubber, paper towel.
+
+010. Storage & Containers
+Box, bag, basket, jar, bottle, can, bin, bucket, drawer, cupboard, shelf, chest, suitcase, backpack, pouch, tub, lunchbox, pencil case, toy box, container.
+
+=================================================================
+FOOD & KITCHEN OBJECTS
+=================================================================
+
+011. Fruits
+Apple, banana, orange, pear, peach, plum, grape, lemon, lime, mango, pineapple, melon, watermelon, strawberry, blueberry, raspberry, cherry, kiwi, coconut, fig.
+
+012. Vegetables
+Carrot, potato, tomato, onion, cucumber, pepper, broccoli, cabbage, lettuce, spinach, corn, pea, bean, pumpkin, mushroom, radish, beet, celery, zucchini, garlic.
+
+013. Bread & Bakery
+Bread, toast, bun, roll, bagel, muffin, cookie, cake, cupcake, donut, pancake, waffle, croissant, biscuit, cracker, pie, tart, pretzel, breadstick, brownie.
+
+014. Breakfast Foods
+Egg, toast, cereal, oatmeal, yogurt, banana, apple, pancake, waffle, muffin, bread, butter, jam, honey, cheese, milk, granola, porridge, bagel, fruit.
+
+015. Snacks
+Cookie, cracker, popcorn, chips, pretzel, nuts, raisin, banana, apple, grape, carrot stick, cheese stick, granola bar, biscuit, muffin, fruit cup, rice cake, sandwich, yogurt, smoothie.
+
+016. Drinks & Drink Containers
+Water, milk, juice, tea, cocoa, lemonade, smoothie, milkshake, cup, glass, mug, bottle, straw, jug, pitcher, carton, thermos, teapot, kettle, flask.
+
+017. Sweets & Desserts
+Cake, cupcake, cookie, candy, chocolate, ice cream, popsicle, pudding, jelly, donut, brownie, pie, tart, lollipop, marshmallow, waffle, biscuit, muffin, custard, pancake.
+
+018. Cooking Tools
+Pot, pan, spoon, spatula, whisk, ladle, tongs, peeler, grater, rolling pin, sieve, strainer, knife, cutting board, bowl, tray, timer, mitt, apron, measuring cup.
+
+019. Plates & Eating Tools
+Plate, bowl, cup, mug, glass, spoon, fork, knife, straw, napkin, tray, saucer, chopsticks, placemat, lunchbox, bottle, food container, serving spoon, pitcher, tablecloth.
+
+020. Food Packaging
+Box, bag, bottle, jar, can, carton, wrapper, packet, tub, cup, tray, lid, cap, label, paper bag, plastic bag, tin, basket, lunchbox, container.
+
+=================================================================
+CLOTHES & PERSONAL OBJECTS
+=================================================================
+
+021. Everyday Clothes
+Shirt, T-shirt, pants, jeans, shorts, skirt, dress, sweater, jacket, coat, hoodie, socks, underwear, pajamas, uniform, vest, leggings, cardigan, overalls, raincoat.
+
+022. Winter Clothes
+Coat, jacket, scarf, hat, gloves, mittens, boots, sweater, socks, hoodie, earmuffs, raincoat, thick pants, vest, wool hat, snow boots, snowsuit, thermal shirt, fleece, neck warmer.
+
+023. Summer Clothes
+T-shirt, shorts, dress, skirt, sandals, flip-flops, swimsuit, sun hat, cap, sunglasses, tank top, light shirt, swim shorts, beach shoes, sundress, sandals, beach towel, swim cap, light jacket, beach cover-up.
+
+024. Shoes & Footwear
+Shoe, sneaker, boot, sandal, slipper, flip-flop, rain boot, snow boot, sports shoe, school shoe, shoe lace, sole, heel, tongue, strap, buckle, sock, insole, shoe box, shoe rack.
+
+025. Hats & Headwear
+Hat, cap, sun hat, wool hat, helmet, crown, headband, hairband, hair clip, bow, ribbon, hood, earmuffs, party hat, cowboy hat, beanie, swim cap, costume hat, scarf, visor.
+
+026. Bags & Carrying Items
+Backpack, schoolbag, handbag, purse, wallet, suitcase, lunch bag, tote bag, sports bag, shopping bag, pencil case, pouch, basket, carrier, travel bag, beach bag, drawstring bag, duffel bag, bag strap, keychain.
+
+027. Jewelry & Accessories
+Ring, necklace, bracelet, earring, watch, belt, scarf, tie, bow tie, sunglasses, hair clip, hairband, ribbon, badge, pin, brooch, bracelet charm, locket, anklet, crown.
+
+028. Hair Care Objects
+Comb, brush, hairdryer, hairband, hair clip, ribbon, bow, headband, mirror, shampoo, conditioner, towel, spray bottle, hair tie, barrette, hairpin, scrunchie, hair roller, hairbrush, hair scissors.
+
+029. Washing & Bathing
+Soap, shampoo, sponge, towel, washcloth, bathtub, shower, tap, sink, bath mat, bucket, cup, bath toy, brush, shower cap, bathrobe, loofah, tissue, bottle, hand towel.
+
+030. Personal Everyday Items
+Toothbrush, toothpaste, comb, hairbrush, mirror, towel, tissue, handkerchief, water bottle, backpack, lunchbox, hat, watch, glasses, key, wallet, umbrella, notebook, pencil, phone.
+
+=================================================================
+SCHOOL & CREATIVE ACTIVITIES
+=================================================================
+
+031. Classroom Objects
+Desk, chair, board, clock, door, window, shelf, book, pencil, pen, eraser, ruler, bag, notebook, paper, marker, scissors, glue, bin, map.
+
+032. Writing Tools
+Pencil, pen, marker, crayon, chalk, highlighter, colored pencil, eraser, sharpener, ruler, pencil case, notebook, paper, ink, felt-tip pen, whiteboard marker, brush pen, stamp, pencil grip, pencil box.
+
+033. Paper & Books
+Paper, book, notebook, textbook, workbook, storybook, picture book, comic book, magazine, newspaper, diary, folder, envelope, card, bookmark, poster, calendar, notepad, sticker book, sketchbook.
+
+034. Arts & Crafts
+Paper, glue, scissors, tape, paint, brush, crayons, markers, pencils, stickers, clay, glitter, ribbon, string, cardboard, beads, stamps, sponge, colored paper, pom-pom.
+
+035. Painting Supplies
+Paint, brush, canvas, paper, palette, water cup, easel, sponge, apron, paint tray, watercolor, paint tube, jar, cloth, roller, paint pot, paint stick, dropper, mixing dish, paint bottle.
+
+036. Drawing Supplies
+Pencil, eraser, sharpener, paper, sketchbook, ruler, marker, crayon, colored pencil, pen, chalk, stencil, compass, drawing board, pencil case, sharpener box, tracing paper, notebook, drawing pad, highlighter.
+
+037. Cutting & Sticking
+Scissors, glue, tape, paper, cardboard, stickers, glue stick, ruler, ribbon, string, craft knife, hole punch, stapler, staple, paper clip, envelope, tissue paper, label, stamp, glue bottle.
+
+038. Music Class Objects
+Drum, tambourine, bell, triangle, maraca, xylophone, piano, guitar, flute, recorder, keyboard, microphone, speaker, music book, drumstick, whistle, cymbal, shaker, music stand, headphones.
+
+039. Math Learning Objects
+Ruler, number card, dice, abacus, calculator, counter, block, cube, bead, clock, coin, measuring tape, shape card, number puzzle, graph paper, pencil, notebook, scale, protractor, domino.
+
+040. School Organization
+Backpack, pencil case, lunchbox, water bottle, folder, binder, notebook, label, name tag, calendar, timetable, shelf, box, tray, bookcase, locker, hook, basket, desk organizer, clipboard.
+
+=================================================================
+TOYS, GAMES & PLAYTIME
+=================================================================
+
+041. Soft Toys
+Teddy bear, bunny, puppy, kitten, duck, elephant, monkey, lion, panda, dinosaur, doll, pillow, plush ball, toy mouse, toy frog, toy sheep, toy cow, toy horse, stuffed penguin, stuffed giraffe.
+
+042. Dolls & Doll Accessories
+Doll, dollhouse, doll bed, doll chair, doll clothes, doll shoes, doll hat, doll brush, doll stroller, doll blanket, doll bottle, doll bag, doll cup, doll plate, doll table, doll car, doll bath, doll pillow, doll dress, doll mirror.
+
+043. Building Toys
+Block, brick, cube, tile, stick, wheel, connector, building plate, toy door, toy window, toy roof, toy tree, toy figure, toy car, toy bridge, tower, castle, toy house, toy fence, building set.
+
+044. Toy Vehicles
+Toy car, toy bus, toy truck, toy train, toy plane, toy boat, toy helicopter, toy tractor, toy bike, toy scooter, toy fire truck, toy ambulance, toy taxi, toy van, toy rocket, toy ship, toy motorcycle, toy crane, toy digger, toy submarine.
+
+045. Board Games
+Board, dice, card, token, pawn, spinner, timer, game box, chess piece, checker, domino, marble, counter, playing card, puzzle, bingo card, bingo chip, game mat, scorecard, game tile.
+
+046. Puzzles
+Jigsaw puzzle, puzzle piece, shape puzzle, number puzzle, word puzzle, picture puzzle, maze, cube puzzle, block puzzle, matching card, puzzle board, puzzle box, wooden puzzle, floor puzzle, tangram, sliding puzzle, peg puzzle, animal puzzle, alphabet puzzle, sticker puzzle.
+
+047. Playground Equipment
+Slide, swing, seesaw, sandbox, climbing frame, ladder, monkey bars, tunnel, rope, bridge, playhouse, balance beam, climbing wall, trampoline, roundabout, play panel, stepping stone, spring rider, sand table, swing seat.
+
+048. Sandbox & Beach Toys
+Bucket, shovel, rake, sand mold, sandcastle, scoop, toy truck, toy boat, ball, cup, sieve, watering can, toy fish, shell, beach bucket, beach spade, sand wheel, toy digger, sand roller, sand brush.
+
+049. Pretend Play Toys
+Toy kitchen, toy food, toy phone, toy cash register, toy money, toy doctor kit, toy tool set, toy camera, toy microphone, toy shop, toy cart, toy stove, toy oven, toy plate, toy cup, toy broom, toy iron, costume, puppet, toy steering wheel.
+
+050. Party Toys & Fun Objects
+Balloon, bubble wand, bubble bottle, party hat, party horn, streamer, ribbon, confetti, paper crown, gift bag, present, party cup, party plate, party mask, whistle, toy drum, party banner, paper fan, piñata, glow stick.
+
+=================================================================
+SPORTS & OUTDOOR PLAY
+=================================================================
+
+051. Balls
+Football, basketball, tennis ball, volleyball, beach ball, baseball, golf ball, ping-pong ball, rugby ball, soccer ball, softball, bowling ball, bouncy ball, foam ball, rubber ball, plastic ball, medicine ball, handball, dodgeball, toy ball.
+
+052. Football Equipment
+Football, goal, net, cleat, sock, jersey, shorts, shin guard, whistle, cone, flag, water bottle, bib, ball pump, sports bag, training ladder, captain band, goalkeeper glove, scoreboard, medal.
+
+053. Basketball Equipment
+Basketball, hoop, net, backboard, court marker, jersey, shorts, sneakers, whistle, cone, ball pump, water bottle, sports bag, scoreboard, wristband, headband, training bib, medal, trophy, basketball stand.
+
+054. Swimming Objects
+Swimsuit, swim shorts, goggles, swim cap, towel, float, pool noodle, kickboard, pool ring, life jacket, flip-flops, pool toy, diving toy, beach ball, water bottle, swim bag, pool ladder, whistle, pool mat, flippers.
+
+055. Cycling Objects
+Bicycle, helmet, wheel, tire, pedal, handlebar, bell, seat, chain, brake, basket, light, reflector, lock, pump, water bottle, bike bag, bike rack, training wheel, bike stand.
+
+056. Running & Exercise
+Sneakers, socks, shorts, T-shirt, water bottle, stopwatch, whistle, cone, jump rope, mat, headband, wristband, towel, track marker, medal, bib, sports bag, hurdle, baton, training ladder.
+
+057. Rackets & Bats
+Tennis racket, badminton racket, table tennis paddle, baseball bat, cricket bat, hockey stick, golf club, tennis ball, shuttlecock, baseball, cricket ball, hockey puck, golf ball, net, glove, helmet, tee, racket bag, ball basket, grip.
+
+058. Garden Games
+Jump rope, ball, hoop, frisbee, kite, skipping rope, beanbag, cone, chalk, toy bowling pins, toy bowling ball, ring toss, water balloon, bubble wand, bubble bottle, lawn game, toy racket, sandbox bucket, toy hoop, toy parachute.
+
+059. Skating & Scooters
+Scooter, skateboard, roller skate, inline skate, helmet, knee pad, elbow pad, wrist guard, wheel, brake, handlebar, deck, shoe, strap, buckle, skate bag, ramp, cone, water bottle, reflector.
+
+060. Camping & Picnic
+Tent, sleeping bag, blanket, pillow, flashlight, lantern, backpack, bottle, cup, plate, spoon, fork, cooler, basket, picnic mat, folding chair, map, compass, raincoat, camping table.
+
+=================================================================
+NATURE, GARDEN & OUTDOOR THINGS
+=================================================================
+
+061. Garden Objects
+Flowerpot, watering can, shovel, rake, hose, bucket, gloves, wheelbarrow, garden chair, garden table, fence, gate, birdhouse, plant, flower, seed, soil, stone, garden bed, sprinkler.
+
+062. Trees & Tree Parts
+Tree, trunk, branch, leaf, root, bark, twig, seed, fruit, flower, cone, pine needle, acorn, nut, sapling, log, stump, stick, wood, tree ring.
+
+063. Flowers & Plant Parts
+Rose, tulip, daisy, sunflower, lily, violet, dandelion, poppy, stem, leaf, petal, root, seed, bud, thorn, flowerpot, soil, watering can, pollen, bouquet.
+
+064. Rocks & Ground
+Rock, stone, pebble, sand, soil, mud, clay, gravel, brick, chalk, crystal, shell, dust, dirt, boulder, cobblestone, tile, concrete block, stepping stone, gem.
+
+065. Weather Objects
+Umbrella, raincoat, rain boots, sun hat, sunglasses, scarf, gloves, mittens, snow boots, sled, fan, kite, thermometer, windmill, weather vane, snow shovel, ice cube, snowball, flashlight, rain gauge.
+
+066. Beach Finds
+Shell, pebble, sand, seaweed, driftwood, feather, rock, clam shell, mussel shell, sea glass, coral piece, sand dollar, snail shell, smooth stone, sea sponge, sea urchin shell, coconut, stick, tiny crab shell, scallop shell.
+
+067. Things in the Sky
+Sun, moon, star, cloud, rainbow, airplane, helicopter, kite, balloon, bird, rocket, satellite, comet, planet, snowflake, raindrop, hailstone, parachute, hot-air balloon, shooting star.
+
+068. Forest Finds
+Leaf, stick, twig, branch, log, rock, pebble, pinecone, acorn, mushroom, moss, fern, bark, feather, seed, nut, flower, berry, pine needle, tree stump.
+
+069. Water & River Objects
+Water, river stone, pebble, shell, sand, mud, reed, lily pad, leaf, stick, log, water plant, boat, paddle, bridge, rope, fishing rod, bucket, net, life jacket.
+
+070. Outdoor Structures
+Fence, gate, bridge, bench, shed, treehouse, birdhouse, greenhouse, tent, swing, slide, sandbox, fountain, statue, path, steps, sign, mailbox, wall, lamp post.
+
+=================================================================
+TRANSPORT & TRAVEL OBJECTS
+=================================================================
+
+071. Cars & Car Parts
+Car, wheel, tire, door, window, seat, seatbelt, steering wheel, mirror, light, horn, trunk, hood, key, bumper, engine, windshield, wiper, dashboard, car mat.
+
+072. Bicycles & Bike Parts
+Bike, wheel, tire, pedal, chain, seat, handlebar, brake, bell, basket, light, reflector, helmet, lock, pump, spoke, frame, mudguard, bike stand, training wheel.
+
+073. Public Transport
+Bus, train, tram, taxi, subway, ferry, ticket, seat, window, door, handle, rail, map, sign, stop button, platform, bench, timetable, station clock, ticket machine.
+
+074. Aircraft & Flying Objects
+Airplane, helicopter, hot-air balloon, glider, rocket, drone, wing, propeller, cockpit, seat, seatbelt, window, wheel, tail, engine, parachute, luggage, boarding pass, pilot helmet, toy plane.
+
+075. Boats & Water Transport
+Boat, ship, canoe, kayak, ferry, raft, sailboat, motorboat, submarine, paddle, oar, sail, anchor, rope, life jacket, life ring, deck, cabin, flag, steering wheel.
+
+076. Trains & Railways
+Train, engine, carriage, wheel, track, rail, station, platform, ticket, seat, door, window, signal, bridge, tunnel, barrier, clock, sign, train driver hat, suitcase.
+
+077. Road Signs & Street Objects
+Stop sign, traffic light, crossing, sidewalk, road, curb, cone, barrier, streetlight, signpost, speed sign, parking meter, bus stop, bench, mailbox, drain, bicycle lane sign, road mirror, bollard, road marking.
+
+078. Travel Bags & Items
+Suitcase, backpack, handbag, passport, ticket, map, camera, water bottle, hat, sunglasses, towel, pillow, luggage tag, travel bag, wallet, key, umbrella, neck pillow, charger, guidebook.
+
+079. Airport Objects
+Airplane, suitcase, trolley, passport, ticket, boarding pass, gate sign, seat, screen, conveyor belt, luggage tag, backpack, security tray, scanner, map, counter, window, door, clock, luggage scale.
+
+080. Car Garage Objects
+Car, bicycle, tire, wheel, pump, toolbox, wrench, screwdriver, hammer, oil can, sponge, bucket, hose, shelf, ladder, broom, brush, flashlight, gloves, workbench.
+
+=================================================================
+TECHNOLOGY, TOOLS & EQUIPMENT
+=================================================================
+
+081. Phones & Tablets
+Phone, tablet, screen, button, charger, cable, case, camera, speaker, microphone, headphone, earbud, stand, battery, plug, socket, stylus, cover, screen protector, phone holder.
+
+082. Computers
+Computer, laptop, monitor, keyboard, mouse, screen, printer, speaker, microphone, webcam, charger, cable, desk, chair, USB stick, mouse pad, headphone, power button, computer case, touchpad.
+
+083. Television & Movie Objects
+Television, remote, screen, speaker, projector, movie ticket, popcorn box, cinema seat, curtain, DVD, DVD player, camera, microphone, headphone, cable, plug, TV stand, lamp, movie poster, popcorn bucket.
+
+084. Cameras & Photos
+Camera, lens, flash, tripod, photo, picture, frame, photo album, memory card, battery, charger, camera bag, strap, button, screen, printer, photo paper, selfie stick, camera cover, photo book.
+
+085. Musical Instruments
+Piano, guitar, drum, flute, violin, trumpet, bell, tambourine, xylophone, maraca, recorder, harmonica, keyboard, cymbal, ukulele, shaker, triangle, harp, cello, drumstick.
+
+086. Simple Hand Tools
+Hammer, screwdriver, wrench, pliers, saw, ruler, tape measure, level, clamp, file, brush, chisel, spanner, mallet, scissors, toolbox, work gloves, hand drill, scraper, putty knife.
+
+087. Building & Repair Materials
+Wood, brick, stone, tile, nail, screw, bolt, nut, washer, hinge, rope, wire, tape, glue, paint, sandpaper, pipe, board, plank, metal sheet.
+
+088. Electric & Battery Objects
+Battery, charger, cable, plug, socket, switch, bulb, lamp, flashlight, remote, clock, fan, speaker, headphone, mouse, keyboard, radio, power bank, battery case, extension cord.
+
+089. Measuring Objects
+Ruler, tape measure, scale, thermometer, clock, stopwatch, measuring cup, measuring spoon, jug, protractor, compass, measuring tape, kitchen scale, timer, rain gauge, height chart, measuring stick, spirit level, meter stick, speedometer.
+
+090. Safety & Protection Objects
+Helmet, gloves, goggles, mask, safety vest, life jacket, knee pad, elbow pad, seatbelt, reflector, flashlight, first-aid kit, bandage, fire extinguisher, safety cone, traffic barrier, hard hat, whistle, safety sign, protective apron.
+
+=================================================================
+COMMUNITY, CELEBRATIONS & SPECIAL PLACES
+=================================================================
+
+091. Supermarket Objects
+Shopping cart, basket, shelf, bag, bottle, box, carton, can, jar, apple, banana, bread, milk, eggs, checkout, scanner, receipt, price tag, cash register, trolley.
+
+092. Restaurant & Café Objects
+Table, chair, menu, plate, bowl, cup, glass, fork, spoon, knife, napkin, tray, teapot, mug, straw, jug, bottle, salt shaker, pepper shaker, bill.
+
+093. Doctor & Hospital Objects
+Bandage, thermometer, stethoscope, mask, gloves, bed, pillow, blanket, chair, desk, scale, medicine bottle, cotton ball, first-aid box, tissue, wheelchair, crutch, plaster, eye chart, bandage roll.
+
+094. Dentist Objects
+Toothbrush, toothpaste, dental floss, mirror, dental chair, mask, gloves, cup, sink, light, tray, tooth model, tooth chart, bib, water sprayer, dental pick, suction tube, cotton roll, toothpaste tube, mouthwash bottle.
+
+095. Library Objects
+Book, shelf, chair, table, desk, computer, library card, bookmark, magazine, newspaper, picture book, dictionary, atlas, book cart, bookcase, reading lamp, clock, sign, notebook, book bag.
+
+096. Post Office & Mail
+Letter, envelope, stamp, mailbox, postcard, package, parcel, box, label, tape, paper, pen, bag, scale, receipt, address sticker, delivery bag, stamp pad, counter, parcel cart.
+
+097. Birthday Party Objects
+Cake, candle, balloon, present, gift bag, ribbon, bow, card, party hat, plate, cup, napkin, tablecloth, banner, streamer, confetti, balloon string, party horn, cupcake, piñata.
+
+098. Holiday Decorations
+Star, bell, ribbon, bow, candle, lights, ornament, wreath, gift box, garland, paper chain, banner, lantern, party hat, flag, flower, decoration ball, stocking, snowflake decoration, table centerpiece.
+
+099. Farm Tools & Objects
+Tractor, wheelbarrow, bucket, shovel, rake, pitchfork, hose, watering can, fence, gate, barn, hay bale, basket, feed bowl, milk pail, gloves, boots, ladder, cart, trough.
+
+100. Park & Playground Objects
+Bench, tree, flower, path, trash bin, sign, fountain, slide, swing, seesaw, sandbox, climbing frame, bicycle rack, picnic table, water tap, fence, gate, lamp post, bridge, statue.
+
+=================================================================
+END OF LIST
+=================================================================
