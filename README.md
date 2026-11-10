@@ -1,6 +1,6 @@
 # Spot & Match
 
-The default home is an **adult-led skill library**: eight skills, each with two or three goal-oriented courses (22 courses in total). Choose a skill, choose a course, review its need and goal, then start an activity directly. Courses include materials, modelling tips, a flexible activity progression, real-life practice, observations, evidence links, and a downloadable plain-text practice plan. Optional parent notes remember useful supports and an offline-practice checkbox; these are not assessment scores. Course context and a way back remain available during play, and completion can launch the next course activity. Skills and courses have bookmarkable routes; browser Back restores the skill/course hierarchy. Saved practice plans contain only public curriculum content, not parent notes or child data.
+The default home is an **adult-led skill library**: eight skills, each with two to four goal-oriented courses (23 courses in total). Choose a skill, choose a course, review its need and goal, then start an activity directly. Courses include materials, modelling tips, a flexible activity progression, real-life practice, observations, evidence links, and a downloadable plain-text practice plan. Optional parent notes remember useful supports and an offline-practice checkbox; these are not assessment scores. Course context and a way back remain available during play, and completion can launch the next course activity. Skills and courses have bookmarkable routes; browser Back restores the skill/course hierarchy. Saved practice plans contain only public curriculum content, not parent notes or child data.
 
 The skills are looking/comparing; words/understanding; sequences/stories; spoken sound awareness; attention/planning; comfort/movement; everyday meaning/play; and communication/access. Free play remains optional (`?library=playroom`); the original fuller catalogue is also retained (`?library=full`). Neither replaces the adult-led default. Prior course progress and the ADHD/ADD research guide are preserved. Parent course notes use `spotmatch-course-notes-v1`, separately from earlier progress.
 
@@ -27,7 +27,7 @@ Open http://127.0.0.1:3000. Set `PORT` to change the port and `HOST` to change t
 
 ## Browser tests
 
-The default adult-led route is covered by `tests/useful-courses.cjs`: all 22 course overviews and direct launches, valid previews, course return/next activity, browser Back, bookmarked reload, downloadable plans, saved notes, and responsive layout. `tests/touch-play.cjs` uses Chromium touch events plus mouse and keyboard to exercise object placement, meal preparation, swaps, routes, scene changes, original-course drag interactions, cancellation, invalid drops, and tap alternatives. The old course suites use the supported fuller-library route; `tests/playroom.cjs` covers optional free play.
+The default adult-led route is covered by `tests/useful-courses.cjs`: all 23 course overviews and direct launches, valid previews, course return/next activity, browser Back, bookmarked reload, downloadable plans, saved notes, and responsive layout. `tests/touch-play.cjs` uses Chromium touch events plus mouse and keyboard to exercise object placement, meal preparation, swaps, routes, scene changes, original-course drag interactions, cancellation, invalid drops, and tap alternatives. The old course suites use the supported fuller-library route; `tests/playroom.cjs` covers optional free play.
 
 
 ```sh
@@ -134,3 +134,17 @@ Stories and movement remain self-paced. Finishing a story or an open plan uses o
 
 
 `tests/startup.cjs` deliberately stalls external font services and verifies that the home page, skill/course navigation, first game, and automatic next round still work.
+
+
+### Illustrated picture adventures and practical help
+
+The story skill now includes a 24-activity Picture Adventures course: four-picture sequencing, assembling scene puzzles, packing from a visible list, comparing actions in complete scenes, and directing a story with a chosen character/scenery. Correct completed tasks move on automatically. Pictures actually remain in their destination after touch/mouse drops; tapping and keyboard placement remain available. Wrong arrangements stay editable. Open storytelling remains self-paced, and completed stories can be saved as a four-panel SVG.
+
+The picture library has 24 authored storylines, 12 character designs (including children using wheelchairs), and 8 scenery arrangements. These make 2,304 four-picture story combinations, or 9,216 composed scene variants. This count describes combinations of reusable original artwork, not 9,216 separately hand-drawn pictures. Art renders locally with no image/font service. Each storyline has four illustrated actions; parent captions describe the depicted action.
+
+“A Helping Hand” now visibly retains the selected support and launches a real supported picture puzzle: a persistent example, two pieces already placed, or a turn-taking invitation. Help and break choices have compact illustrated cards; their destination is visible alongside the choices on a phone.
+
+`tests/helpful-hands.cjs` reproduces the reported activity using actual Chromium touch events and mouse dragging, checks retained artwork, cancellation, keyboard selection, and applies all three supports to completed puzzles. `tests/worlds.cjs` plays all 24 adventures through five mechanics with touch/mouse/tap/keyboard, checks actual artwork after placement, retries, completion, download, leaving mid-feedback, mobile layout, and the picture gallery. Artwork was exhaustively checked for valid SVG and unique scene bodies across all 9,216 combinations; all 96 canonical story panels were visually reviewed. Physical iOS/Android hardware has not been tested. The app is supplementary educational play, not an evaluated clinical intervention.
+
+
+Default activities now finish after one successful task, rather than forcing three or five near-identical rounds. Repetition is optional. The assisted step-by-step preference retains the longer original practice sets. In guided courses there is one clearly labelled next activity, a return to the course, and direct replay; the old unrelated next-game action no longer competes with course navigation. Picture Adventures alternates five mechanics without adjacent repeats.

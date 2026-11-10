@@ -12,28 +12,28 @@ for(const key of ['words','sentences','sounds'])for(let i=0;i<20;i++){
  const s=await page.evaluate(()=>({mode:adultState.mode,answer:adultState.answer,options:adultState.options}));
  if(s.mode==='counter')for(let n=0;n<s.answer[0];n++)await page.locator('#adultAdd').click();
  else for(const id of s.answer){await page.locator(`[data-adult-choice="${s.options.findIndex(o=>o.id===id)}"]`).click();}
- await settle();assert.equal(await page.evaluate(()=>adultState.answered),true,`adult ${key}/${i}`);assert.equal(await page.locator('#adultNext').isVisible(),false);await advance();assert.equal(await page.evaluate(()=>adultState.round),1);tested++;
+ await settle();assert.equal(await page.evaluate(()=>adultState.answered),true,`adult ${key}/${i}`);assert.equal(await page.locator('#adultNext').isVisible(),false);await advance();assert.equal(await page.evaluate(()=>adultState.round),1);assert.equal(await page.locator('#adultAgain').count(),1,'one task must finish, not repeat');tested++;
 }
 for(const key of ['events','stories','meaning'])for(let i=0;i<20;i++){
  await page.evaluate(([k,i])=>{activeLearningCourse=k;learningIntro(i);document.querySelector('#learningBegin').click();},[key,i]);await settle();
  const s=await page.evaluate(()=>({mode:learningState.mode,answer:learningState.answer,options:learningState.options}));
  if(s.mode==='repair'){await page.locator('[data-slot="0"]').click();await page.locator('[data-slot="1"]').click();}
  else for(const id of s.answer)await page.locator(`[data-learning-choice="${s.options.findIndex(o=>o.id===id)}"]`).click();
- await settle();assert.equal(await page.evaluate(()=>learningState.answered),true,`learning ${key}/${i}`);assert.equal(await page.locator('#learningNext').isVisible(),false);await advance();assert.equal(await page.evaluate(()=>learningState.round),1);tested++;
+ await settle();assert.equal(await page.evaluate(()=>learningState.answered),true,`learning ${key}/${i}`);assert.equal(await page.locator('#learningNext').isVisible(),false);await advance();assert.equal(await page.evaluate(()=>learningState.round),1);assert.equal(await page.locator('#learningAgain').count(),1);tested++;
 }
 for(const key of ['language','dyslexia','autism','development','speech','motor'])for(let i=0;i<10;i++){
  await page.evaluate(([k,i])=>{senActive=k;senIntro(i);document.querySelector('#senBegin').click();},[key,i]);await settle();const t=await page.evaluate(()=>senState.task);
  if(t.mode==='counter')for(let n=0;n<t.answer[0];n++)await page.locator('#senAdd').click();
- else if(t.mode==='book'){for(let n=1;n<t.pages.length;n++)await page.locator('#senPageNext').click();await page.locator('#senPageNext').click();await settle();assert.equal(await page.evaluate(()=>senState.round),1);tested++;continue;}
+ else if(t.mode==='book'){for(let n=1;n<t.pages.length;n++)await page.locator('#senPageNext').click();await page.locator('#senPageNext').click();await settle();assert.equal(await page.evaluate(()=>senState.round),1);assert.equal(await page.locator('#senAgain').count(),1);tested++;continue;}
  else if(t.mode==='activate'){await page.locator('#senActivate').click();await settle();await page.locator('#senCheck').click();}
  else if(t.mode==='compose'){for(let n=0;n<3;n++)await page.locator(`[data-compose="${n}:0"]`).click();await page.locator('#senCheck').click();}
  else{if(t.mode==='place')await page.locator('#senPick').click();const ids=t.mode==='explore'?[t.options[0].id]:t.answer;for(const id of ids)await page.locator(`[data-sen-choice="${t.options.findIndex(o=>o.id===id)}"]`).tap();}
- await settle();if(!['activate','compose','explore'].includes(t.mode))assert.equal(await page.evaluate(()=>senState.done),true,`sen ${key}/${i}`);await advance();if(['activate','compose','explore'].includes(t.mode))assert.match(await page.locator('h1').innerText(),/Lovely exploring/);else assert.equal(await page.evaluate(()=>senState.round),1,`advance ${key}/${i}`);tested++;
+ await settle();if(!['activate','compose','explore'].includes(t.mode))assert.equal(await page.evaluate(()=>senState.done),true,`sen ${key}/${i}`);await advance();if(['activate','compose','explore'].includes(t.mode))assert.match(await page.locator('h1').innerText(),/Lovely exploring/);else{assert.equal(await page.evaluate(()=>senState.round),1,`advance ${key}/${i}`);assert.equal(await page.locator('#senAgain').count(),1);}tested++;
 }
 for(let i=0;i<20;i++){
  await page.evaluate(i=>{focusIntro(i);document.querySelector('#focusThree').click();},i);await settle();const t=await page.evaluate(()=>focusState.task);
  if(t.mode==='plan'){for(let r=0;r<3;r++)await page.locator(`[data-focus-plan="${r}:0"]`).tap();await page.locator('#focusCheck').tap();}
- else{const ids=t.mode==='open'?[t.options[0].id]:t.answer;for(const id of ids)await page.locator(`[data-focus-choice="${id}"]`).tap();if(t.mode==='open')await page.locator('#focusCheck').tap();}
+ else{const ids=t.mode==='open'?[t.options[0].id]:t.answer;for(const id of ids)await page.locator(`[data-focus-choice="${id}"]`).tap();if(t.mode==='open'){await page.locator('#focusCheck').tap();if(await page.locator('.world-play').count()){assert.equal(await page.evaluate(()=>worldState.mode),'puzzle');tested++;continue;}}}
  await settle();if(!['open','plan'].includes(t.mode)){assert.equal(await page.evaluate(()=>focusState.done),true,`focus ${i}`);await advance();}assert.equal(await page.evaluate(()=>focusState.round),1);tested++;
 }
 // Original visual, sorting, pairs, constructing, turning, and spot-the-change engines.
@@ -45,7 +45,7 @@ for(let g=0;g<25;g++){
  else if(g===22){const t=await page.evaluate(()=>current.target);await page.locator(`[data-color="${t.color}"]`).tap();await page.locator(`[data-dots="${t.dots}"]`).tap();}
  else if(g===23){while(await page.evaluate(()=>current.built.dir!==current.target.dir))await page.locator('[data-turn="1"]').tap();}
  else await page.locator(`[data-changed="${await page.evaluate(()=>current.changed)}"]`).tap();
- await settle();assert.equal(await page.evaluate(()=>answered),true,`visual ${g}`);await advance();assert.equal(await page.evaluate(()=>round),1);tested++;
+ await settle();assert.equal(await page.evaluate(()=>answered),true,`visual ${g}`);await advance();assert.equal(await page.evaluate(()=>round),1);assert.equal(await page.locator('#again').count(),1);tested++;
 }
 // Open preferences keep the chosen picture on their completion screen.
 await launch('communicate',0);await settle();await drag('[data-sen-choice="0"]','#senChoiceHome');assert.equal(await page.locator('.sen-choice-caption').innerText(),'Trains');await advance();assert.equal(await page.locator('#quickChosenTopic .sen-choice-caption').innerText(),'Trains');await advance();assert.equal(await page.locator('#quickChosenTopic').count(),1);
@@ -56,7 +56,7 @@ await page.evaluate(()=>QuickPlay.resume());
 for(const i of await page.evaluate(()=>calmActivities.flatMap((d,i)=>['find','match','clue','rule','path'].includes(d.mode)?[i]:[]))){
  await page.evaluate(i=>calmOpen(i),i);await settle();const mode=await page.evaluate(()=>calmActivities[calmState.index].mode);
  if(mode==='path'){for(let n=0;n<3;n++)await page.locator(`[data-calm-home="${n}"]`).tap();await settle();await advance();assert.equal(await page.locator('#calmAgain').count(),1);}
- else for(let r=0;r<3;r++){const n=await page.evaluate(()=>calmModel(calmState).answer);await page.locator(`[data-calm-choice="${n}"]`).tap();await settle();assert.equal(await page.evaluate(()=>calmState.found),true);assert.equal(await page.locator('#calmCheck').isVisible(),false);await advance();if(r<2)assert.equal(await page.evaluate(()=>calmState.step),r+1);else assert.equal(await page.locator('#calmAgain').count(),1);}
+ else for(let r=0;r<1;r++){const n=await page.evaluate(()=>calmModel(calmState).answer);await page.locator(`[data-calm-choice="${n}"]`).tap();await settle();assert.equal(await page.evaluate(()=>calmState.found),true);assert.equal(await page.locator('#calmCheck').isVisible(),false);await advance();assert.equal(await page.locator('#calmAgain').count(),1);}
  tested++;
 }
 for(const i of await page.evaluate(()=>calmActivities.flatMap((d,i)=>['breath','pose','rest','hands'].includes(d.mode)?[i]:[]))){await page.evaluate(i=>calmOpen(i),i);await advance();assert.equal(await page.locator('#calmFinish').count(),1);}
