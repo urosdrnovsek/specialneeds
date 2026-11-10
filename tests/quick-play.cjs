@@ -73,5 +73,5 @@ for(const id of ['bridge','train','beads','map','traffic']){
 }
 for(const id of ['studio','puppet','clouds','stretch']){await page.evaluate(id=>prStart(id),id);await advance();assert.equal(await page.locator('.pr-board').count(),1,id);}
 // Leaving during feedback must cancel the old activity's pending transition.
-await launch('communicate',0);await settle();await page.locator('[data-sen-choice="0"]').tap();await page.evaluate(()=>skillHome());await advance();assert.equal(await page.locator('[data-skill]').count(),8);
+await launch('communicate',0);await settle();await page.locator('[data-sen-choice="0"]').tap();await page.evaluate(()=>skillHome());await advance();assert.equal(await page.locator('[data-support]').count(),8);
 assert.deepEqual(errors,[]);console.log(JSON.stringify({automaticActivityTypes:tested,openPreference:'one choice, retained on completion',wrongAnswer:'retry without checking',pause:'waits for child',pageErrors:errors}));await browser.close();})().catch(e=>{console.error(e);process.exit(1)});
