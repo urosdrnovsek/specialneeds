@@ -191,11 +191,11 @@ The home now shows one grid of eight illustrated choices, switched between suppo
 The updated DOM-only home test covers all support routes, direct games, course links, research, reload/return navigation, skill view, and resuming. It also checks that the default home does not render the detailed game/research lists. Syntax and DOM checks pass. Browser layout and touch QA were unavailable for this redesign because the Sites managed browser tool was not exposed; updated browser fixtures are retained for use when that tool is available.
 
 
-### Eight early-reading starter courses
+### Early-reading starter courses
 
-The existing support home stays compact. Early Reading offers letter forms and blending directly, with all eight new courses in an expandable list. Language, autism, developmental, speech, attention, and motor-access areas link to relevant courses. The existing sound skill is now “Letters, sounds & early reading.” There are 32 guided courses in total.
+The existing support home stays compact. Early Reading offers letter forms and blending directly, with all eight new courses in an expandable list. Language, autism, developmental, speech, attention, and motor-access areas link to relevant courses. The existing sound skill is now “Letters, sounds & early reading.” There are 36 guided courses in total.
 
-The new collection contains 24 games and 73 short challenges:
+The early-reading collection contains 12 courses, 36 games and 110 short challenges:
 
 | Course | Games |
 | --- | --- |
@@ -207,6 +207,10 @@ The new collection contains 24 games and 73 short challenges:
 | New words, familiar tools | New signs in Noodle Street; Names for the tiny space potatoes; Two letters, one travelling sound |
 | Words become familiar | The shop that keeps moving; Read it, then let the cat do it; A little book with very silly guests |
 | Read something that matters | You are the story director; A note for a muddled friend; What happens on the next page? |
+| Letters that look alike | Bubble post: b or d?; The tail detectives; Post without the paint |
+| Letter details & neighbour sounds | Robot’s round-part repair shop; The arch-shaped garage; Neighbour sounds at the garden gate |
+| Keep every sound in the word | Who rides at the front or the back?; The every-sound express; One cup, a crowd of cups! |
+| Read, arrange & repair | The jumbled sentence carriages; Which little scene fits?; Robot printed the wrong label! |
 
 These are English starter examples using selected letters and short words, not a complete alphabet/phonics programme or an evaluated intervention. An adult models sounds, blending, and unfamiliar helper words. There is no recorded voice or speech recognition. Each game exposes the spellings used and a grown-up cue. Pages and parcels record shared practice; built words and selected pictures are separate response types. No independent-reading, diagnostic, or mastery score is produced. Progress stores explored activities and response types locally, without a child name or recorded voice.
 
@@ -217,3 +221,12 @@ Games support tap/keyboard alternatives and the shared touch/pen/mouse drag laye
 Validation: `npm run test:reading` runs default and manual DOM tests covering every game/challenge, wrong-answer retries, retained tile drops and moves, undo, slider progress, course progression, pause/resume, cancellation on stop, deep links, research return, and distinct shared-practice records. `npm run test:home` checks all existing support/skill navigation and added course links. Syntax checks include the new scripts. Static SVG illustrations were rasterised and visually reviewed across all 32 setting/state variants and the meaning/action/creature result drawings; XML/uniqueness checks supplement that review.
 
 `npm run test:reading:browser` is a browser QA fixture for actual touch drops, mouse swaps, keyboard interaction, pause/stop, and responsive layouts. It was not executed in this session: the Sites managed browser tool was unavailable. DOM/drop-callback and static-art checks do not verify browser layout, physical touch, pronunciation, retention, or educational effectiveness.
+
+
+### Optional letter-colour cues and further early reading
+
+Four added courses provide 12 games and 37 challenges around b/d, p/q, m/n, n/u, m/w, taught sound contrasts, word edges, adjacent consonants, plural endings, sentence order and meaning. They appear inside the existing support and skill categories. One newly featured Early Reading game is Bubble post.
+
+A consistent dark-colour palette is optional and stored only as a browser display preference. Colour changes do not reset placed tiles or alter answers. Letter form, stem/curve diagrams, labels and text remain available; the Plain post game deliberately uses ordinary dark print regardless of the stored colour preference. Colour is a practical prompt whose effectiveness in this app has not been evaluated, not a dyslexia treatment. Reversals alone do not diagnose dyslexia. Parent guidance links to W3C colour accessibility guidance and IDA information alongside the existing reading evidence. Adjacent consonants remain separate phonemes, and the plural-ending cue distinguishes /s/ in cats/cups from /z/ in dogs. English q is explained as a letter-form exercise, normally taught with u for spelling.
+
+`reading-more-data.js`, `reading-more.js` and `reading-more.css` extend the existing engine without changing the compact home. DOM checks exercise all 110 reading challenges, retained moves, retries, automatic/manual pacing, research navigation and the colour toggle. Additional checks verify at least 4.5:1 contrast for the letter palette against the actual light tile backgrounds and that plain-print practice stays neutral. The new vector letter models were rasterised and visually reviewed in coloured and plain versions. Live browser layout and physical touch testing remain unverified in this session; the retained browser fixture adds the new letter-house drag, colour toggle and sentence-building checks for later execution.
