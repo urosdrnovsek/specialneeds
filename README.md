@@ -189,3 +189,31 @@ The default home introduces support for children with special educational needs.
 The home now shows one grid of eight illustrated choices, switched between support needs and skills. It removes the duplicate topic menu, full support articles, repeated skills grid, and large resource banners. A recent-course resume strip appears only when useful. Support cards open bookmarkable `#support/<id>` pages with two immediately playable activities, two course links, and collapsed research/adaptation guidance. The full guidance returns to the chosen support area. Course pages lead with the goal and activities; setup guidance is expandable below the activity list.
 
 The updated DOM-only home test covers all support routes, direct games, course links, research, reload/return navigation, skill view, and resuming. It also checks that the default home does not render the detailed game/research lists. Syntax and DOM checks pass. Browser layout and touch QA were unavailable for this redesign because the Sites managed browser tool was not exposed; updated browser fixtures are retained for use when that tool is available.
+
+
+### Eight early-reading starter courses
+
+The existing support home stays compact. Early Reading offers letter forms and blending directly, with all eight new courses in an expandable list. Language, autism, developmental, speech, attention, and motor-access areas link to relevant courses. The existing sound skill is now “Letters, sounds & early reading.” There are 32 guided courses in total.
+
+The new collection contains 24 games and 73 short challenges:
+
+| Course | Games |
+| --- | --- |
+| Getting to know letters | Robot’s wobbly letter workshop; Post for the penguin; Letters in silly outfits |
+| Letters carry sounds | Snake’s disappearing disguise; Special sound delivery; The forgetful robot’s visitors |
+| Hear it, move it, build it | Duck’s sound stepping stones; Pack the sound boxes; One tiny change, one new word |
+| Join the sounds | The slippery sound slide; Build a bridge for a very small duck; Read the ridiculous parcel |
+| Word builders | The word machine has hiccups; Labels for a mixed-up shop; Robot ate a letter! |
+| New words, familiar tools | New signs in Noodle Street; Names for the tiny space potatoes; Two letters, one travelling sound |
+| Words become familiar | The shop that keeps moving; Read it, then let the cat do it; A little book with very silly guests |
+| Read something that matters | You are the story director; A note for a muddled friend; What happens on the next page? |
+
+These are English starter examples using selected letters and short words, not a complete alphabet/phonics programme or an evaluated intervention. An adult models sounds, blending, and unfamiliar helper words. There is no recorded voice or speech recognition. Each game exposes the spellings used and a grown-up cue. Pages and parcels record shared practice; built words and selected pictures are separate response types. No independent-reading, diagnostic, or mastery score is produced. Progress stores explored activities and response types locally, without a child name or recorded voice.
+
+Games support tap/keyboard alternatives and the shared touch/pen/mouse drag layer. Range sliders support native pointer input and Arrow/End keys. Correct screen responses advance after brief feedback, then continue through the course. Pause/Resume and Finish for now control pending reading transitions. Assisted manual pacing has a visible next-challenge/next-activity control. Normal reading/curriculum guidance remains available for adults. Keep AAC and movement supports; tracing and clear spoken output are not required.
+
+`reading-data.js` holds course metadata, English word/grapheme banks, teaching notes, and sources. `reading.js` contains the interactions and evidence/guidance panels. `reading-art.js` supplies eight original storybook settings with variants and completion details, plus meaning-specific results in the engine. Course-flow integration uses the existing route and progress system.
+
+Validation: `npm run test:reading` runs default and manual DOM tests covering every game/challenge, wrong-answer retries, retained tile drops and moves, undo, slider progress, course progression, pause/resume, cancellation on stop, deep links, research return, and distinct shared-practice records. `npm run test:home` checks all existing support/skill navigation and added course links. Syntax checks include the new scripts. Static SVG illustrations were rasterised and visually reviewed across all 32 setting/state variants and the meaning/action/creature result drawings; XML/uniqueness checks supplement that review.
+
+`npm run test:reading:browser` is a browser QA fixture for actual touch drops, mouse swaps, keyboard interaction, pause/stop, and responsive layouts. It was not executed in this session: the Sites managed browser tool was unavailable. DOM/drop-callback and static-art checks do not verify browser layout, physical touch, pronunciation, retention, or educational effectiveness.
