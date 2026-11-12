@@ -35,7 +35,7 @@ function readingScene(theme,state={}){
   for(let row=0;row<2;row++)for(let col=0;col<3;col++)b+=rect(59+col*66,41+row*51,55,42,'#e9d5ac',4);
   // Separate compartment dividers keep the sorting wall readable without text.
   b+=`<path d="M59 92H249M124 42V140M190 42V140" stroke="#bc9c76" stroke-width="8"/>`+envelope(v?69:139,57,42)+envelope(v?203:73,108,42);
-  content=friend(v?'cat':'rabbit',271,235,86,'hold')+counter(361,167,'#b6cbb1')+parcel(397,108,94,59)+envelope(433,174,74);
+  content=friend(v?'cat':'rabbit',271,235,86,'hold')+counter(361,167,'#b6cbb1')+parcel(397,108,94,59)+envelope(505,135,47);
   content+=`<g transform="translate(59 187)">${rect(0,0,154,45,'#d6a16e',9)}<path d="M-7 15h-16v-28" stroke="#9a7855" stroke-width="8" fill="none" stroke-linecap="round"/><circle cx="24" cy="51" r="11" fill="#6c8184"/><circle cx="130" cy="51" r="11" fill="#6c8184"/></g>`+parcel(74,143,67,45,'#b7c9b8')+parcel(142,135,57,53,'#d8b8c9');
   if(done)content+=`<g transform="translate(445 70)"><path d="M0 38Q28 50 43 29" stroke="#c3a17d" stroke-width="10" fill="none" stroke-linecap="round"/><circle cx="-7" cy="20" r="24" fill="#e3bc75"/><path d="M-28 18q21-27 40 0q-28 25-40 0" stroke="#b68c58" stroke-width="3" fill="none"/></g>`+confetti(417,56);
  }else if(theme==='garden'){

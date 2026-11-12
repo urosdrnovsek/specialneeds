@@ -57,8 +57,8 @@ function pictureIcon(id,variant=0){
  default:b=circle(60,60,37,green)+circle(60,60,18,gold);
  }
  let body=`<g stroke="${learningInk}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">${b}</g>`;
- if(variant===3)body=body.replace(/fill="[^"]*"/g,'fill="#fffdf6"');
- if(variant===4)body=body.replace(/fill="[^"]*"/g,`fill="${learningInk}"`);
+ if(variant===3)body=body.replace(/fill="(?!none)[^"]*"/g,'fill="#fffdf6"');
+ if(variant===4)body=body.replace(/fill="(?!none)[^"]*"/g,`fill="${learningInk}"`);
  return `<svg viewBox="0 0 120 120" aria-hidden="true">${body}</svg>`;
 }
 function learnPicture(p,variant=0){
@@ -68,7 +68,7 @@ function learnPicture(p,variant=0){
  if(p.location)return locationPicture(p.location,p.object,variant);
  return pictureIcon(p.icon,variant);
 }
-function iconGroup(id,x,y,w=80,variant=0){return `<svg x="${x}" y="${y}" width="${w}" height="${w}" viewBox="0 0 120 120">${svgBody(pictureIcon(id,variant))}</svg>`}
+function iconGroup(id,x,y,w=80,variant=0){const image=pictureIcon(id,variant),view=image.match(/viewBox="([^"]+)"/)?.[1]||'0 0 120 120';return `<svg x="${x}" y="${y}" width="${w}" height="${w}" viewBox="${view}">${svgBody(image)}</svg>`}
 function character(x=22,y=87,happy=true){return `<g transform="translate(${x} ${y})"><ellipse cx="30" cy="58" rx="25" ry="28" fill="#d6aa87"/><circle cx="30" cy="22" r="23" fill="#e8c5a4"/><circle cx="12" cy="4" r="9" fill="#e8c5a4"/><circle cx="48" cy="4" r="9" fill="#e8c5a4"/><circle cx="22" cy="20" r="2.5" fill="#355447"/><circle cx="38" cy="20" r="2.5" fill="#355447"/><path d="${happy?'M22 29Q30 38 38 29':'M22 35Q30 27 38 35'}" stroke="#355447" stroke-width="2" fill="none"/></g>`}
 function sceneFrame(body){return `<svg viewBox="0 0 240 180" aria-hidden="true"><rect x="0" y="0" width="240" height="180" rx="17" fill="#f2f4e8"/><path d="M0 147H240" stroke="#d7dfc8" stroke-width="2"/>${body}</svg>`}
 function routinePicture(index,stage,v=0){
@@ -82,6 +82,28 @@ function routinePicture(index,stage,v=0){
  else if(d.id==='spill'){body=iconGroup(stage===0?'spill':stage===1?'cloth':'tray',65,45,115,v);if(stage===1)body+=iconGroup('spill',135,95,60,v);}
  else if(d.id==='car'){body=iconGroup(stage===0?'brokenwheel':'car',65,48,115,v);if(stage===1)body+=iconGroup('wheel',15,82,65,v);if(stage===2)body+='<path d="M28 89H55M18 106H45" stroke="#96aa91" stroke-width="4"/>';}
  else {body=iconGroup(step.icon,65,39,115,v);if(step.with)body+=iconGroup(step.with,147,95,65,v);if(step.person)body+=character(8,57,stage===2);}
+ // Each action frame shows the tool touching its target, with supported final objects.
+ const pot='<path d="M89 109H151L142 151H98Z" fill="#cf946b" stroke="#355447" stroke-width="3"/><ellipse cx="120" cy="109" rx="31" ry="7" fill="#886545"/>';
+ const watered=iconGroup('wateringcan',121,20,92,v)+pot+'<path d="M130 52Q119 70 119 103M139 58Q133 80 130 104" fill="none" stroke="#80b9c9" stroke-width="4" stroke-dasharray="6 5"/>';
+ if(d.id==='plant')body=stage===0?pot+'<ellipse cx="120" cy="107" rx="6" ry="4" fill="#ddb653"/>':stage===1?watered:iconGroup('sprout',72,48,105,v);
+ if(d.id==='flower'&&stage===1)body=watered;
+ if(d.id==='cup'&&stage===1)body=iconGroup('fullcup',66,65,95,v)+'<g transform="rotate(-25 170 50)">'+iconGroup('pitcher',139,9,75,v)+'</g><path d="M140 32Q112 48 113 92" stroke="#8cb9c1" stroke-width="5" fill="none"/>';
+ if(d.id==='shoes'&&stage===1)body=iconGroup('boot',105,65,95,v)+iconGroup('brush',71,77,83,v);
+ if(d.id==='gift'&&stage===1)body=iconGroup('loosebox',65,40,115,v)+iconGroup('tape',132,55,54,v);
+ if(d.id==='bird'&&stage===2)body=iconGroup('fullbowl',112,66,94,v)+iconGroup('bird',30,65,85,v);
+ if(d.id==='car'&&stage===1)body=iconGroup('car',65,48,115,v)+iconGroup('wheel',135,118,26,v);
+ if(d.id==='dress'&&stage>0){body='<g transform="translate(48 40) scale(.66)">'+friendlyAnimal('bear',stage===2?'hold':'stand').replaceAll(friendlyPalette.bear.shirt,'#72988a')+'</g>';body+='<path d="M86 102V128M77 110h5M91 110h5" stroke="#355447" stroke-width="2"/>';if(stage===2)body+=iconGroup('umbrella',49,5,137,v);}
+ if(d.id==='wash'){body=iconGroup('hands',65,39,115,v);if(stage===0)body+='<path d="M111 117l13 5M129 101l7 6M111 92l5 6" stroke="#967153" stroke-width="7" stroke-linecap="round"/>';if(stage===1)body+='<path d="M105 14v66M122 20v59M140 12v67" stroke="#89bdca" stroke-width="4" stroke-dasharray="7 6"/>';if(stage===2)body+=iconGroup('cloth',108,91,67,v);}
+ if(d.id==='picnic'&&stage===1)body=iconGroup('basket',67,46,116,v)+iconGroup('apple',97,65,53,v)+'<path d="M84 112H166L155 146H95Z" fill="#c78a63" stroke="#355447" stroke-width="2"/><path d="M92 123h64M98 135h52" stroke="#f0d1a0" stroke-width="3"/>';
+ if(d.id==='bedtime'&&stage>0){body=friendlyBedScene('bear',v);if(stage===2)body+=iconGroup('clock',174,15,49,v);}
+ if(d.id==='draw'&&stage===1)body=iconGroup('paper',65,39,115,v)+'<path d="M100 112q21-12 38 0" stroke="#7e9b73" stroke-width="5" fill="none"/>'+iconGroup('paintbrush',118,48,84,v);
+ if(d.id==='door'&&stage===1)body=iconGroup('lock',85,49,102,v)+'<g transform="rotate(-30 119 107)">'+iconGroup('key',58,61,80,v)+'</g>';
+ if(d.id==='kite'&&stage===2)body=iconGroup('tree',92,39,123,v)+iconGroup('kite',88,25,80,v);
+ if(d.id==='snack'&&stage===1)body=iconGroup('apple',65,45,110,v)+'<path d="M109 10v48M128 14v43M145 9v48" stroke="#89bdca" stroke-width="4" stroke-dasharray="7 5"/>';
+ if(d.id==='snack'&&stage===2)body=iconGroup('apple',84,66,76,v)+iconGroup('bowl',65,70,115,v);
+ if(d.id==='tidy'&&stage===1)body=iconGroup('basket',65,42,120,v)+iconGroup('blocks',85,61,77,v)+'<path d="M82 111H168L155 147H95Z" fill="#c78a63" stroke="#355447" stroke-width="2"/><path d="M94 123h63M99 136h51" stroke="#f0d1a0" stroke-width="3"/>';
+ if(d.id==='repair'&&stage===1)body=iconGroup('tornpaper',65,39,115,v)+'<path d="M106 96L137 96M106 125H136" stroke="#e4c77d" stroke-width="11" opacity=".9"/>';
+ if(d.id==='sunny'&&stage===2)body=character(60,59,true)+iconGroup('hat',54,20,74,v)+iconGroup('basket',139,97,57,v);
  return sceneFrame(body);
 }
 function storyPicture(index,stage,v=0){
@@ -90,6 +112,22 @@ function storyPicture(index,stage,v=0){
  if(stage===1){b+=iconGroup(d.obstacle,88,57,98,v)+iconGroup(d.goal,177,16,50,v);}
  if(stage===2){b+=iconGroup(d.tool,83,40,105,v)+iconGroup(d.obstacle,178,91,52,v);}
  if(stage===3){b+=iconGroup(d.outcome,93,45,107,v)+'<path d="M190 22L193 33L204 36L193 39L190 50L187 39L176 36L187 33Z" fill="#d9b85b"/>';}
+ if(stage===2){
+  const routine={0:1,4:2,9:13,10:5,11:4,12:18,13:6,15:7,19:11}[index];
+  if(routine!==undefined)return routinePicture(routine,1,v);
+  if(index===1)b=character(6,75,false)+'<path d="M78 124H226V159H78Z" fill="#91bac4"/>'+iconGroup('bridge',77,47,143,v)+iconGroup('carrot',201,83,35,v);
+  if(index===2)b=character(6,75,false)+iconGroup('basket',107,81,82,v)+iconGroup('umbrella',80,9,137,v)+iconGroup('rain',178,40,51,v);
+  if(index===3)b=character(6,75,false)+iconGroup('box',128,71,86,v)+'<path d="M105 88L183 91L162 126Z" fill="#f3df98" opacity=".65"/>'+iconGroup('flashlight',70,58,88,v);
+  if(index===5)b=character(6,75,false)+iconGroup('tower',92,39,115,v)+iconGroup('blocks',165,105,55,v);
+  if(index===6)b=character(6,75,false)+iconGroup('tree',128,32,119,v)+iconGroup('kite',147,19,62,v)+'<g transform="rotate(20 132 101)">'+iconGroup('ladder',94,51,102,v)+'</g>';
+  if(index===7)b='<g transform="translate(88 51) scale(.6)">'+friendlyAnimal('bear').replaceAll(friendlyPalette.bear.shirt,'#72988a')+'</g>'+iconGroup('snow',180,66,45,v);
+  if(index===8)b=character(6,75,false)+'<path d="M155 52L94 147H215Z" fill="#f1df9e" opacity=".55"/>'+'<path d="M143 95H220M150 96V151M213 96V151" stroke="#ac8b61" stroke-width="5" fill="none"/>'+iconGroup('book',103,92,77,v)+iconGroup('lamp',136,20,82,v);
+  if(index===14)b=character(6,75,false)+iconGroup('hat',0,28,74,v)+iconGroup('sun',143,30,78,v);
+  if(index===16)b=character(6,75,false)+iconGroup('rock',142,110,67,v)+iconGroup('shovel',104,54,98,v);
+  if(index===17)b=character(6,75,false)+iconGroup('tray',88,62,132,v)+iconGroup('beads',114,86,83,v);
+  if(index===18)b=character(6,75,false)+iconGroup('book',97,47,115,v)+iconGroup('clip',164,47,48,v);
+ }
+ if(stage===3&&index===19)b=friendlyBedScene('bear',v);
  return sceneFrame(b);
 }
 function locationPicture(location,object,v=0){let b='';

@@ -274,3 +274,8 @@ The scripted `ppAction` advance button was removed. Duck, the parcel and boat ar
 The beach, forest and moon stories now use movable buckets, flags, seeds, watering cans, rockets and Teddy. Duck can wave and be dragged across the ground. Choosing paint selects a brush; applying it to the bus changes its colour. Tube pieces can be turned or dragged onto one another to swap. Real SVG object images are provided to the shared drag layer so a drag carries the object rather than an invisible hotspot or a text label. Existing unrelated activities remain outside this update.
 
 Tests explicitly reject automatic boarding/unloading, check that pumping/opening alone cannot solve the rescue, cover both loading/unloading orders and safe return trips, and verify movable story props and pipe swaps. A scoped completion migration lets the updated activities be tried afresh without clearing other courses. DOM/drop-descriptor checks are not physical pointer or browser-layout validation; an updated dedicated browser fixture is retained for that work when the supported browser tool is available.
+
+
+### Illustration quality audit
+
+Corrected shared scene contact/proportions and twelve vocabulary drawings after a complete asset-family audit. [Coverage, fixes and repeatable checks](docs/illustration-audit.md) document the visual review separately from the full generated-SVG and geometry checks. `npm run test:art` guards the asset inventory, surface contacts, limb proportions and native viewBoxes.

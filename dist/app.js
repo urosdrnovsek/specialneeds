@@ -40,8 +40,7 @@ function baseArt(o={}){let {shape=0,color=0,size=1,dir=0,dots=0,pattern=0,missin
  if(shape===1)inner=`<path d="M26 85Q12 23 92 24Q99 85 26 85Z" fill="${fill}"/><path d="M26 85L80 35M46 64L40 40M62 48L81 51" stroke="#38564a" stroke-width="3" fill="none"/>`;
  if(shape===2)inner=`<path d="M48 59L45 99Q60 108 75 99L71 59" fill="#e9d8b3" stroke="#667653" stroke-width="2"/><path d="M14 62Q18 12 60 12Q104 12 107 62Z" fill="${fill}" stroke="#667653" stroke-width="2"/>`;
  if(shape===3)inner=`<path d="M20 60Q58 9 94 60Q58 111 20 60ZM20 60L6 39V81Z" fill="${fill}"/><circle cx="77" cy="53" r="3" fill="#294d40"/>`;
- if(pattern===1)inner+='<path d="M38 35L38 80M54 28L54 89M70 30L70 84M86 38L86 72" stroke="#fff9" stroke-width="5"/>';
- if(pattern===2)inner+='<path d="M28 46H90M27 60H94M31 74H85" stroke="#fff9" stroke-width="5"/>';
+ if(pattern===1||pattern===2){const clipId='visual-pattern-'+shape+'-'+missing;const stripes=pattern===1?'<path d="M38 35L38 80M54 28L54 89M70 30L70 84M86 38L86 72" stroke="#fff9" stroke-width="5" fill="none"/>':'<path d="M28 46H90M27 60H94M31 74H85" stroke="#fff9" stroke-width="5" fill="none"/>';inner+=`<defs><clipPath id="${clipId}">${inner}</clipPath></defs><g clip-path="url(#${clipId})">${stripes}</g>`;}
  if(dots){const layouts={1:[[60,56]],2:[[44,56],[76,56]],3:[[44,44],[76,44],[60,74]],4:[[44,44],[76,44],[44,74],[76,74]]};for(const [x,y] of layouts[dots])inner+=`<circle cx="${x}" cy="${y}" r="6" fill="#fffdf2" stroke="#536d52" stroke-width="1.5"/>`}
  let group=`<g transform="translate(60 60) scale(${size===0?.65:1}) rotate(${dir*90}) translate(-60 -60)">${inner}</g>`;
  if(second!==null){const other=art({...o,shape:second,second:null});return `<svg viewBox="0 0 240 120" aria-hidden="true"><svg x="0" width="120" viewBox="0 0 120 120">${group}</svg><svg x="120" width="120" viewBox="0 0 120 120">${other.match(/<svg[^>]*>([\s\S]*)<\/svg>/)[1]}</svg></svg>`}

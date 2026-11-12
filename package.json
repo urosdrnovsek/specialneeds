@@ -12,7 +12,8 @@
     "test:reading": "node tests/reading-dom.cjs && node tests/reading-dom.cjs --manual && node tests/reading-adventures-dom.cjs && node tests/reading-adventures-dom.cjs --manual",
     "test:reading:browser": "node tests/reading-browser.cjs",
     "test:purposeful": "node tests/purposeful-play-dom.cjs && node tests/purposeful-play-dom.cjs --manual && node tests/purposeful-play-dom.cjs --startup",
-    "test:purposeful:browser": "node tests/purposeful-direct-browser.cjs"
+    "test:purposeful:browser": "node tests/purposeful-direct-browser.cjs",
+    "test:art": "node tests/art-contacts-dom.cjs && node tests/activity-art-dom.cjs"
   },
   "engines": {
     "node": ">=20"

@@ -15,7 +15,7 @@ pictureIcon=function(id,variant=0){
  if(!b)return originalPictureIcon(id,variant);
  let body=`<g stroke="${ink}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">${b}</g>`;if(variant===3)body=body.replace(/fill="[^"]*"/g,'fill="#fffdf6"');return `<svg viewBox="0 0 120 120" aria-hidden="true">${body}</svg>`;
 };
-function adultIcon(id,x,y,w=70,v=0){return `<svg x="${x}" y="${y}" width="${w}" height="${w}" viewBox="0 0 120 120">${svgBody(pictureIcon(id,v))}</svg>`}
+function adultIcon(id,x,y,w=70,v=0){const svg=pictureIcon(id,v),view=svg.match(/viewBox="([^"]+)"/)?.[1]||'0 0 120 120';return `<svg x="${x}" y="${y}" width="${w}" height="${w}" viewBox="${view}">${svgBody(svg)}</svg>`}
 function animalBody(id,x,y,scale=.65){return `<g transform="translate(${x} ${y}) scale(${scale})"><ellipse cx="60" cy="128" rx="32" ry="36" fill="${id==='rabbit'?'#ddd5bb':id==='cat'?'#e2bf63':id==='dog'?'#72988a':'#d5ab87'}" stroke="#355447" stroke-width="2"/>${adultIcon(id,0,0,120)}<path d="M43 154L37 170M76 154L84 170" stroke="#355447" stroke-width="5" stroke-linecap="round"/></g>`}
 function adultPicture(p,v=0){
  if(typeof p==='string')return pictureIcon(p,v);
@@ -33,12 +33,27 @@ function adultPicture(p,v=0){
   return sceneFrame(b);
  }
  if(p.type==='position'){
-  const object=p.object||'ball',ref=p.reference||'box',pos=p.position;let b='';const coords={in:[90,71,62],on:[91,5,60],under:[93,117,53],beside:[172,93,58],behind:[99,26,61],front:[92,88,70]};const [x,y,w]=coords[pos];
-  if(pos==='behind')b+=adultIcon(object,x,y,w,v);
-  b+=adultIcon(ref,52,43,128,v);
-  if(pos!=='behind')b+=adultIcon(object,x,y,w,v);
-  if(pos==='in')b+='<path d="M79 105H162V139H79Z" fill="#d4b58b" stroke="#355447" stroke-width="2"/>';
-  return sceneFrame(b);
+  const object=p.object||'ball',ref=p.reference||'box',pos=p.position;
+  // Each reference has its own contact surface and occlusion, rather than sharing icon offsets.
+  const coordinates={box:{in:[89,58,62],on:[91,18,58],under:[98,119,44],beside:[176,109,58],behind:[123,57,58],front:[91,108,58]},chair:{in:[92,68,55],on:[92,68,55],under:[100,122,40],beside:[174,109,58],behind:[120,83,58],front:[91,108,58]},tree:{in:[91,75,58],on:[91,10,58],under:[98,119,44],beside:[174,109,58],behind:[121,101,51],front:[91,108,58]}};
+  let [x,,w]=(coordinates[ref]||coordinates.box)[pos]||coordinates.box.beside;
+  if(pos==='on'&&ref==='box'&&['rabbit','bear','cat','dog'].includes(object)){x+=4;w-=8;}
+  const surface=ref==='chair'?113.4:ref==='tree'?49.4:55;
+  const bottom=pos==='on'?surface:pos==='in'?117:pos==='behind'?(ref==='tree'?155:118):155;
+  const objectBottom={ball:100.25,apple:106,teddy:119.25,train:112.25,basket:102.25,rocket:110.25}[object]||(['rabbit','bear','cat','dog'].includes(object)?112:108);
+  if(pos==='under'){
+   const objectTop={ball:19.75,apple:14,teddy:12.75,train:21.75,basket:17,rocket:5.75}[object]||0;
+   const availableHeight=ref==='chair'?22:29,center=x+w/2;
+   w=Math.min(w,availableHeight*120/(objectBottom-objectTop));x=center-w/2;
+  }
+  const y=bottom-objectBottom*w/120;
+  const item=`<g data-scene-part="position-object" data-object="${object}" data-contact-y="${bottom}" data-reference="${ref}" data-position="${pos}">${adultIcon(object,x,y,w,v)}</g>`;let reference='';
+  if(ref==='box')reference=`<g data-scene-part="storage-box" stroke="#355447" stroke-width="2.5" stroke-linejoin="round"><g data-scene-part="box-stand" fill="#7d9fa9" stroke="#4d6b77"><path d="M79 123V156M161 123V156" stroke-width="6" stroke-linecap="round"/><rect x="64" y="119" width="112" height="5" rx="2"/></g><rect data-scene-part="reference-body" x="72" y="66" width="96" height="58" rx="2" fill="#d4b58b"/>${pos==='in'?'<path data-scene-part="reference-top" data-contact-y="55" d="M72 66L58 51L93 47L108 66M132 66L149 47L182 51L168 66" fill="#e5cba5"/><path d="M74 68H166V100H74Z" fill="#ad8b65" stroke="none"/>':'<path data-scene-part="reference-top" data-contact-y="55" d="M72 66L84 55H156L168 66Z" fill="#e5cba5"/><path d="M109 66L113 55H126L130 66V85H109Z" fill="#edcf91" stroke="none"/>'}<path d="M76 74L82 79M159 113L164 117" fill="none" stroke="#b28d63"/>${pos==='in'?'':'<rect x="135" y="92" width="22" height="14" rx="1" fill="#f4e8ce" stroke="#b4926a" stroke-width="1.5"/>'}</g>`;
+  else reference=`<g data-scene-part="reference-body">${adultIcon(ref,52,43,128,v)}</g>`;
+  if(ref==='chair')reference+=`<path data-scene-part="reference-seat" data-contact-y="113.4" d="M81 114H151" fill="none" stroke="#6c9180" stroke-width="2"/>`;
+  let body=pos==='behind'?item+reference:reference+item;
+  if(pos==='in'&&ref==='box')body+=`<path data-scene-part="box-front" d="M72 99H168V124H72Z" fill="#d4b58b" stroke="#355447" stroke-width="2.5"/><path d="M109 100H130V123H109Z" fill="#edcf91" stroke="none"/><path d="M158 113L164 118" stroke="#b28d63" stroke-width="2"/><rect x="135" y="106" width="22" height="10" rx="1" fill="#f4e8ce" stroke="#b4926a" stroke-width="1.5"/>`;
+  return sceneFrame(body);
  }
  if(p.type==='actor'){
   let b='',actor=p.actor||'bear',action=p.action||'sit',object=p.object||'ball';
