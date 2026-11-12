@@ -1,6 +1,6 @@
 # Spot & Match
 
-The default home is an **adult-led skill library**: eight skills, each with two to four goal-oriented courses (24 courses in total). Choose a skill, choose a course, review its need and goal, then start an activity directly. Courses include materials, modelling tips, a flexible activity progression, real-life practice, observations, evidence links, and a downloadable plain-text practice plan. Optional parent notes remember useful supports and an offline-practice checkbox; these are not assessment scores. Course context and a way back remain available during play, and completion can launch the next course activity. Skills and courses have bookmarkable routes; browser Back restores the skill/course hierarchy. Saved practice plans contain only public curriculum content, not parent notes or child data.
+The default home helps parents and teachers choose support for children with special educational needs across eight illustrated support areas. A By skill option opens eight skill categories and 43 guided courses, including 19 early-reading courses. Each course explains its need, goal, activities, adaptations and research rationale; games open directly and normally continue automatically. Adult notes and progress stay in this browser and are not assessment scores. See [the 20 new short-word games](docs/short-word-games.md).
 
 The skills are looking/comparing; words/understanding; sequences/stories; spoken sound awareness; attention/planning; comfort/movement; everyday meaning/play; and communication/access. Free play remains optional (`?library=playroom`); the original fuller catalogue is also retained (`?library=full`). Neither replaces the adult-led default. Prior course progress and the ADHD/ADD research guide are preserved. Parent course notes use `spotmatch-course-notes-v1`, separately from earlier progress.
 
@@ -279,3 +279,8 @@ Tests explicitly reject automatic boarding/unloading, check that pumping/opening
 ### Illustration quality audit
 
 Corrected shared scene contact/proportions and twelve vocabulary drawings after a complete asset-family audit. [Coverage, fixes and repeatable checks](docs/illustration-audit.md) document the visual review separately from the full generated-SVG and geometry checks. `npm run test:art` guards the asset inventory, surface contacts, limb proportions and native viewBoxes.
+
+
+## Twenty new short-word games
+
+Added seven adult-supported courses with 20 distinct activities and 80 challenges. Every game includes its purpose, support needs, adaptations and research rationale. Optional syllable colours, b/d/p/g cues and plain print accompany tap/keyboard and drag alternatives. See [the activity and verification guide](docs/short-word-games.md). The reading library now totals 19 courses, 56 games and 190 challenges.
