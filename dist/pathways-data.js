@@ -681,14 +681,14 @@ const supportPathways={
     "games": [
       {
         "title": "Duck’s Canal Rescue",
-        "skill": "Connect a comfortable action with a visible change in a three-step rescue: board, raise the water, open the gate.",
+        "skill": "Follow a visible plan by moving Duck and a parcel onto a boat, operating the water and gate, sailing, and unloading. Tap/select-place and dragging offer the same actions.",
         "kind": "mission",
         "source": null,
         "index": 0,
         "tip": "An adult models the action and reads unfamiliar words. Tap/keyboard alternatives remain available alongside useful drag actions. Keep the child’s usual communication and access supports. This is supportive play, not a reading test or motor therapy.",
         "away": "Try the same idea with familiar real objects or a shared picture book. Accept the child’s usual way of answering.",
         "mission": "canal",
-        "invitation": "Duck has a parcel to deliver. Help the little boat through the canal lock."
+        "invitation": "Duck has a parcel to deliver. Move Duck and the parcel aboard, sail through the lock, and unload at the house."
       },
       {
         "title": "The Anywhere Adventure Bus",

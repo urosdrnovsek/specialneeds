@@ -255,7 +255,7 @@ Nine support-pathway activities that only revealed a static picture or ended aft
 
 Four shared game systems replace those nine placements; these are not nine distinct new games:
 
-- **Duck’s Canal Rescue:** a stable large control boards Duck, raises the lock water and boat, then opens the gate for a parcel delivery. Each action changes the illustrated state.
+- **Duck’s Canal Rescue:** move Duck and the parcel aboard, operate the pump and gate, sail the boat and unload at the dock. Every move acts on the scene object; controls cannot automatically board or deliver.
 - **The Toy Bus Repair Shop:** fit two wheels, wash windows, optionally paint the bus and try a visual pretend horn. Tools can be dragged or selected with tap/keyboard and applied to actual parts of the bus. A wrong tool preserves completed repairs.
 - **Marble Machine: Ring the Bell:** turn connected tube pieces, test where a marble stops, revise the route, and ring the bell. The connection check follows each pipe’s physical entry/exit directions; clicking every piece once does not solve it.
 - **The Anywhere Adventure Bus:** Beach leads to a sandcastle and flag; Forest to a seed and a make-believe flower; Moon to a rocket rescuing Teddy. A destination opens a different scene, action sequence and outcome. It can be changed before completion.
@@ -265,3 +265,12 @@ No letters, voice generation, time limits or precision scores are required. An a
 Design references reviewed: [Sago Mini Toolbox](https://sagomini.com/apps/toolbox/) integrates tools with building and repair; [PBS KIDS building resources](https://www.pbs.org/parents/lets-build) describe construction, testing and useful goals in games such as Hamster Run and Road Repair. Those principles informed the original designs; no proprietary characters, illustrations or code were copied, and their evidence does not validate this app.
 
 `npm run test:purposeful` verifies all replacements through actual DOM handlers and retained drag callbacks in default and manual pacing, meaningful scene changes, wrong-action recovery, stale-event rejection, pause/stop, scoped progress migration, route compatibility and automatic progression. Reading/home regression checks remain separate. Nineteen static SVG states were checked for valid XML, distinct content, and visual clarity. Browser fixtures were updated, but physical touch and responsive browser layout remain unverified when the Sites browser tool is unavailable.
+
+
+### Direct interaction update
+
+The scripted `ppAction` advance button was removed. Duck, the parcel and boat are selectable and draggable. Boarding/loading can happen in either order. Pump/drain and gate controls change only the lock; they cannot perform the rescue. A crossing leaves passengers and cargo aboard until the child unloads them. Wrong destinations preserve the scene, and return trips remain solvable. The bank, boat and dock support the same actions with tap/select-place or dragging.
+
+The beach, forest and moon stories now use movable buckets, flags, seeds, watering cans, rockets and Teddy. Duck can wave and be dragged across the ground. Choosing paint selects a brush; applying it to the bus changes its colour. Tube pieces can be turned or dragged onto one another to swap. Real SVG object images are provided to the shared drag layer so a drag carries the object rather than an invisible hotspot or a text label. Existing unrelated activities remain outside this update.
+
+Tests explicitly reject automatic boarding/unloading, check that pumping/opening alone cannot solve the rescue, cover both loading/unloading orders and safe return trips, and verify movable story props and pipe swaps. A scoped completion migration lets the updated activities be tried afresh without clearing other courses. DOM/drop-descriptor checks are not physical pointer or browser-layout validation; an updated dedicated browser fixture is retained for that work when the supported browser tool is available.
