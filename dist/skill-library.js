@@ -2,6 +2,7 @@
 const skillOriginalFreePlay=prHome;let skillFreePlay=prInitialView==='playroom';
 let skillContext=null;
 let skillNotes={};try{const p=JSON.parse(localStorage.getItem('spotmatch-course-notes-v1')||'{}');if(p&&typeof p==='object'&&!Array.isArray(p))skillNotes=p;}catch{}
+Purposeful.migrate();
 function skillSave(){try{localStorage.setItem('spotmatch-course-notes-v1',JSON.stringify(skillNotes));}catch{}}
 function skillGet(id){return learningSkills.find(s=>s.id===id);}
 function skillCourseGet(id){for(const skill of learningSkills){const course=skill.courses.find(c=>c.id===id);if(course)return{skill,course};}throw Error('Unknown course');}

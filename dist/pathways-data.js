@@ -53,13 +53,15 @@ const supportPathways={
         "away": "Try the same idea with familiar real objects or a shared picture book. Accept the child’s usual way of answering."
       },
       {
-        "title": "Meet a New Word",
-        "skill": "Explore a word through its name, features, use, and examples.",
-        "kind": "explore",
+        "title": "The Toy Bus Repair Shop",
+        "skill": "Use object names and actions for a purpose: fit two wheels, wash muddy windows, and see the repaired bus ready for a parade.",
+        "kind": "mission",
         "source": "vocab",
         "index": 0,
-        "tip": "Name the object, demonstrate its use, and describe a feature. The child can select it to explore; this is not a test.",
-        "away": "Try the same idea with familiar real objects or a shared picture book. Accept the child’s usual way of answering."
+        "tip": "An adult models the action and reads unfamiliar words. Tap/keyboard alternatives remain available alongside useful drag actions. Keep the child’s usual communication and access supports. This is supportive play, not a reading test or motor therapy.",
+        "away": "Try the same idea with familiar real objects or a shared picture book. Accept the child’s usual way of answering.",
+        "mission": "workshop",
+        "invitation": "A muddy, wobbly toy bus needs your help before the parade."
       },
       {
         "title": "Tell Me Which One",
@@ -287,13 +289,15 @@ const supportPathways={
     ],
     "games": [
       {
-        "title": "My Favourite Adventure",
-        "skill": "Choose a theme and share attention to a meaningful scene.",
-        "kind": "theme",
+        "title": "Marble Machine: Ring the Bell",
+        "skill": "Plan a visible connected route, turn tubes, observe where a marble stops, and revise the path. All parts stay visible.",
+        "kind": "mission",
         "source": null,
         "index": 0,
-        "tip": "Let the child lead. Explore their chosen theme without requiring eye contact or a particular spoken answer.",
-        "away": "Try the same idea with familiar real objects or a shared picture book. Accept the child’s usual way of answering."
+        "tip": "An adult models the action and reads unfamiliar words. Tap/keyboard alternatives remain available alongside useful drag actions. Keep the child’s usual communication and access supports. This is supportive play, not a reading test or motor therapy.",
+        "away": "Try the same idea with familiar real objects or a shared picture book. Accept the child’s usual way of answering.",
+        "mission": "marble",
+        "invitation": "Build a path for a marble with a very important job: ringing the bell!"
       },
       {
         "title": "Find the Action",
@@ -413,13 +417,15 @@ const supportPathways={
     ],
     "games": [
       {
-        "title": "Choose Our Activity",
-        "skill": "Make a meaningful choice that an adult follows.",
-        "kind": "theme",
+        "title": "Marble Machine: Ring the Bell",
+        "skill": "Plan a visible connected route, turn tubes, observe where a marble stops, and revise the path. All parts stay visible.",
+        "kind": "mission",
         "source": null,
         "index": 0,
-        "tip": "Follow the child’s choice in play. Preferences have no right or wrong answer.",
-        "away": "Try the same idea with familiar real objects or a shared picture book. Accept the child’s usual way of answering."
+        "tip": "An adult models the action and reads unfamiliar words. Tap/keyboard alternatives remain available alongside useful drag actions. Keep the child’s usual communication and access supports. This is supportive play, not a reading test or motor therapy.",
+        "away": "Try the same idea with familiar real objects or a shared picture book. Accept the child’s usual way of answering.",
+        "mission": "marble",
+        "invitation": "Build a path for a marble with a very important job: ringing the bell!"
       },
       {
         "title": "Real Thing, Real Picture",
@@ -544,13 +550,15 @@ const supportPathways={
     ],
     "games": [
       {
-        "title": "Show Me Your Choice",
-        "skill": "Establish a comfortable way to communicate a preference.",
-        "kind": "theme",
+        "title": "The Anywhere Adventure Bus",
+        "skill": "Make a meaningful destination choice, then act on the chosen story: build a sandcastle, grow a pretend flower, or bring Teddy back from the moon.",
+        "kind": "mission",
         "source": null,
         "index": 0,
-        "tip": "Use the child’s existing response method. An adult may enter the child’s choice without judging speech.",
-        "away": "Try the same idea with familiar real objects or a shared picture book. Accept the child’s usual way of answering."
+        "tip": "An adult models the action and reads unfamiliar words. Tap/keyboard alternatives remain available alongside useful drag actions. Keep the child’s usual communication and access supports. This is supportive play, not a reading test or motor therapy.",
+        "away": "Try the same idea with familiar real objects or a shared picture book. Accept the child’s usual way of answering.",
+        "mission": "trip",
+        "invitation": "Your destination changes the story. Where will we go today?"
       },
       {
         "title": "Hear It, Find It",
@@ -562,13 +570,15 @@ const supportPathways={
         "away": "Try the same idea with familiar real objects or a shared picture book. Accept the child’s usual way of answering."
       },
       {
-        "title": "Describe Without Saying",
-        "skill": "Explore object features and functions through choices.",
-        "kind": "explore",
+        "title": "The Toy Bus Repair Shop",
+        "skill": "Use object names and actions for a purpose: fit two wheels, wash muddy windows, and see the repaired bus ready for a parade.",
+        "kind": "mission",
         "source": "describe",
         "index": 0,
-        "tip": "Ask what the object does or is like. The child can use their own AAC, signs, or pointing.",
-        "away": "Try the same idea with familiar real objects or a shared picture book. Accept the child’s usual way of answering."
+        "tip": "An adult models the action and reads unfamiliar words. Tap/keyboard alternatives remain available alongside useful drag actions. Keep the child’s usual communication and access supports. This is supportive play, not a reading test or motor therapy.",
+        "away": "Try the same idea with familiar real objects or a shared picture book. Accept the child’s usual way of answering.",
+        "mission": "workshop",
+        "invitation": "A muddy, wobbly toy bus needs your help before the parade."
       },
       {
         "title": "Word Beats",
@@ -670,31 +680,37 @@ const supportPathways={
     ],
     "games": [
       {
-        "title": "Make Something Happen",
-        "skill": "Explore activating a comfortable control.",
-        "kind": "activate",
+        "title": "Duck’s Canal Rescue",
+        "skill": "Connect a comfortable action with a visible change in a three-step rescue: board, raise the water, open the gate.",
+        "kind": "mission",
         "source": null,
         "index": 0,
-        "tip": "This is optional access practice, not a prerequisite. Use the child’s preferred method and skip if already easy.",
-        "away": "Try the same idea with familiar real objects or a shared picture book. Accept the child’s usual way of answering."
+        "tip": "An adult models the action and reads unfamiliar words. Tap/keyboard alternatives remain available alongside useful drag actions. Keep the child’s usual communication and access supports. This is supportive play, not a reading test or motor therapy.",
+        "away": "Try the same idea with familiar real objects or a shared picture book. Accept the child’s usual way of answering.",
+        "mission": "canal",
+        "invitation": "Duck has a parcel to deliver. Help the little boat through the canal lock."
       },
       {
-        "title": "Choose Your Adventure",
-        "skill": "Make a meaningful choice between stable targets.",
-        "kind": "theme",
+        "title": "The Anywhere Adventure Bus",
+        "skill": "Make a meaningful destination choice, then act on the chosen story: build a sandcastle, grow a pretend flower, or bring Teddy back from the moon.",
+        "kind": "mission",
         "source": null,
         "index": 0,
-        "tip": "",
-        "away": "Try the same idea with familiar real objects or a shared picture book. Accept the child’s usual way of answering."
+        "tip": "An adult models the action and reads unfamiliar words. Tap/keyboard alternatives remain available alongside useful drag actions. Keep the child’s usual communication and access supports. This is supportive play, not a reading test or motor therapy.",
+        "away": "Try the same idea with familiar real objects or a shared picture book. Accept the child’s usual way of answering.",
+        "mission": "trip",
+        "invitation": "Your destination changes the story. Where will we go today?"
       },
       {
-        "title": "Comfortable Controls",
-        "skill": "Explore selection and revision without time pressure.",
-        "kind": "access",
+        "title": "Marble Machine: Ring the Bell",
+        "skill": "Plan a visible connected route, turn tubes, observe where a marble stops, and revise the path. All parts stay visible.",
+        "kind": "mission",
         "source": null,
         "index": 0,
-        "tip": "Try Tab then Enter or Space if helpful. External switch or gaze software may emulate these controls, but hardware compatibility needs individual testing.",
-        "away": "Try the same idea with familiar real objects or a shared picture book. Accept the child’s usual way of answering."
+        "tip": "An adult models the action and reads unfamiliar words. Tap/keyboard alternatives remain available alongside useful drag actions. Keep the child’s usual communication and access supports. This is supportive play, not a reading test or motor therapy.",
+        "away": "Try the same idea with familiar real objects or a shared picture book. Accept the child’s usual way of answering.",
+        "mission": "marble",
+        "invitation": "Build a path for a marble with a very important job: ringing the bell!"
       },
       {
         "title": "Turn the Story Page",
@@ -742,13 +758,15 @@ const supportPathways={
         "away": "Try the same idea with familiar real objects or a shared picture book. Accept the child’s usual way of answering."
       },
       {
-        "title": "Direct the Adventure",
-        "skill": "Choose what a character does next.",
-        "kind": "adventure",
+        "title": "The Anywhere Adventure Bus",
+        "skill": "Make a meaningful destination choice, then act on the chosen story: build a sandcastle, grow a pretend flower, or bring Teddy back from the moon.",
+        "kind": "mission",
         "source": null,
         "index": 0,
-        "tip": "Follow the child’s choice. This creative activity has no single correct answer.",
-        "away": "Try the same idea with familiar real objects or a shared picture book. Accept the child’s usual way of answering."
+        "tip": "An adult models the action and reads unfamiliar words. Tap/keyboard alternatives remain available alongside useful drag actions. Keep the child’s usual communication and access supports. This is supportive play, not a reading test or motor therapy.",
+        "away": "Try the same idea with familiar real objects or a shared picture book. Accept the child’s usual way of answering.",
+        "mission": "trip",
+        "invitation": "Your destination changes the story. Where will we go today?"
       },
       {
         "title": "Tell and Share",

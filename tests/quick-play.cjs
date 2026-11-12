@@ -23,12 +23,12 @@ for(const key of ['events','stories','meaning'])for(let i=0;i<20;i++){
 }
 for(const key of ['language','dyslexia','autism','development','speech','motor'])for(let i=0;i<10;i++){
  await page.evaluate(([k,i])=>{senActive=k;senIntro(i);document.querySelector('#senBegin').click();},[key,i]);await settle();const t=await page.evaluate(()=>senState.task);
+ if(t.mode==='mission'){await require('./purposeful-browser-helpers.cjs')(page);assert.match(await page.locator('h1').innerText(),/Lovely exploring/);tested++;continue;}
  if(t.mode==='counter')for(let n=0;n<t.answer[0];n++)await page.locator('#senAdd').click();
  else if(t.mode==='book'){for(let n=1;n<t.pages.length;n++)await page.locator('#senPageNext').click();await page.locator('#senPageNext').click();await settle();assert.equal(await page.evaluate(()=>senState.round),1);assert.equal(await page.locator('#senAgain').count(),1);tested++;continue;}
- else if(t.mode==='activate'){await page.locator('#senActivate').click();await settle();await page.locator('#senCheck').click();}
  else if(t.mode==='compose'){for(let n=0;n<3;n++)await page.locator(`[data-compose="${n}:0"]`).click();await page.locator('#senCheck').click();}
  else{if(t.mode==='place')await page.locator('#senPick').click();const ids=t.mode==='explore'?[t.options[0].id]:t.answer;for(const id of ids)await page.locator(`[data-sen-choice="${t.options.findIndex(o=>o.id===id)}"]`).tap();}
- await settle();if(!['activate','compose','explore'].includes(t.mode))assert.equal(await page.evaluate(()=>senState.done),true,`sen ${key}/${i}`);await advance();if(['activate','compose','explore'].includes(t.mode))assert.match(await page.locator('h1').innerText(),/Lovely exploring/);else{assert.equal(await page.evaluate(()=>senState.round),1,`advance ${key}/${i}`);assert.equal(await page.locator('#senAgain').count(),1);}tested++;
+ await settle();if(!['compose','explore'].includes(t.mode))assert.equal(await page.evaluate(()=>senState.done),true,`sen ${key}/${i}`);await advance();if(['compose','explore'].includes(t.mode))assert.match(await page.locator('h1').innerText(),/Lovely exploring/);else{assert.equal(await page.evaluate(()=>senState.round),1,`advance ${key}/${i}`);assert.equal(await page.locator('#senAgain').count(),1);}tested++;
 }
 for(let i=0;i<20;i++){
  await page.evaluate(i=>{focusIntro(i);document.querySelector('#focusThree').click();},i);await settle();const t=await page.evaluate(()=>focusState.task);
