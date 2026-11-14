@@ -14,7 +14,7 @@
     "test:purposeful": "node tests/purposeful-play-dom.cjs && node tests/purposeful-play-dom.cjs --manual && node tests/purposeful-play-dom.cjs --startup",
     "test:purposeful:browser": "node tests/purposeful-direct-browser.cjs",
     "test:art": "node tests/art-contacts-dom.cjs && node tests/activity-art-dom.cjs",
-    "test:studio": "node tests/studio-core.cjs && node tests/studio-dom.cjs && node tests/studio-dom.cjs --manual && node tests/studio-ui-dom.cjs",
+    "test:studio": "node tests/studio-core.cjs && node tests/studio-dom.cjs && node tests/studio-dom.cjs --manual && node tests/studio-ui-dom.cjs && node tests/studio-course-dom.cjs",
     "check:research": "node scripts/check-research-links.mjs"
   },
   "engines": {
