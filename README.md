@@ -284,3 +284,5 @@ Corrected shared scene contact/proportions and twelve vocabulary drawings after 
 ## Twenty new short-word games
 
 Added seven adult-supported courses with 20 distinct activities and 80 challenges. Every game includes its purpose, support needs, adaptations and research rationale. Optional syllable colours, b/d/p/g cues and plain print accompany tap/keyboard and drag alternatives. See [the activity and verification guide](docs/short-word-games.md). The reading library now totals 19 courses, 56 games and 190 challenges.
+
+Expert curriculum and research review is available at `#review` (My practice → Expert review workspace). See the [review guide](docs/expert-review-guide.md) and [implementation status](docs/blueprint-implementation-status.md). Local review decisions and exported notes are separate from child practice.
