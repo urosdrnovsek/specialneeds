@@ -13,7 +13,7 @@ const studioPilots=[
       "Which access support helps",
       "Whether a new example is understood"
     ],
-    "version": 2,
+    "version": 3,
     "pilot": true,
     "status": "curriculum draft; educator review pending",
     "activities": [
@@ -46,18 +46,21 @@ const studioPilots=[
         ]
       },
       {
-        "id": "A03",
-        "engine": "offline",
+        "id": "A03-interactive-v1",
+        "engine": "mission",
         "title": "Tool workshop",
         "invitation": "Tool workshop: give a brush to a paint job or a spoon to a bowl",
-        "purpose": "Object function; demonstrate unfamiliar actions",
-        "adultModel": "Lay out a spoon and brush beside a bowl and paper. Demonstrate using one tool. Invite the child to give you the tool for the other job.",
+        "purpose": "Use a familiar tool to change a visible job.",
+        "adultModel": "Demonstrate mixing with a spoon, painting with a brush, opening with a key and watering with a can. Name the tool and action before inviting a response.",
         "transfer": "Try the same idea with a new real object or on another day.",
         "adaptations": [
           "Keep the model visible.",
           "Accept pointing, AAC or an adult-entered response.",
           "Reduce choices or take a break."
-        ]
+        ],
+        "key": "tools",
+        "mayHelpWhen": "May support children who need explicit models for object functions and verbs, including some children with language or developmental difficulties.",
+        "version": 1
       },
       {
         "id": "A04",
@@ -134,18 +137,21 @@ const studioPilots=[
         ]
       },
       {
-        "id": "A09",
-        "engine": "offline",
-        "title": "Put it in / on",
+        "id": "A09-interactive-v1",
+        "engine": "mission",
+        "title": "In, on or beside?",
         "invitation": "Put it in / on: position a toy using an adult\u2019s one-step message",
-        "purpose": "Spatial meaning; start with real objects if needed",
-        "adultModel": "With a toy and open box, model in and on separately. Ask for one position. Keep the toy supported and accept a pointed direction.",
+        "purpose": "Connect a spoken position word with directly placing an object.",
+        "adultModel": "Show in, on and beside with a real box first. Read the game message aloud. Offer the picture model without treating supported placement as independent understanding.",
         "transfer": "Try the same idea with a new real object or on another day.",
         "adaptations": [
           "Keep the model visible.",
           "Accept pointing, AAC or an adult-entered response.",
           "Reduce choices or take a break."
-        ]
+        ],
+        "key": "space",
+        "mayHelpWhen": "May support children who need help understanding spatial language. Speech or accurate dragging is not required.",
+        "version": 1
       },
       {
         "id": "A10",
@@ -523,7 +529,7 @@ const studioPilots=[
       "Which access support helps",
       "Whether a new example is understood"
     ],
-    "version": 2,
+    "version": 3,
     "pilot": true,
     "status": "curriculum draft; educator review pending",
     "activities": [
@@ -676,18 +682,21 @@ const studioPilots=[
         "key": "direct-scene"
       },
       {
-        "id": "C11",
-        "engine": "offline",
-        "title": "Route with a visible plan",
+        "id": "C11-interactive-v1",
+        "engine": "mission",
+        "title": "The parcel road",
         "invitation": "Route with a visible plan: read two familiar destination labels and deliver in order",
-        "purpose": "Short plan following; plan remains visible",
-        "adultModel": "Make a visible two-step plan with familiar destination labels. Model reading each label and deliver a picture card in that order.",
+        "purpose": "Use a visible two-line word plan while loading, navigating and delivering.",
+        "adultModel": "Read both lines together and supply untaught spellings. Model loading at the depot, driving on a connected road and unloading at the recipient. An adult may navigate from the child\u2019s pointed choices.",
         "transfer": "Try the same idea with a new real object or on another day.",
         "adaptations": [
           "Keep the model visible.",
           "Accept pointing, AAC or an adult-entered response.",
           "Reduce choices or take a break."
-        ]
+        ],
+        "key": "route",
+        "mayHelpWhen": "May support children who benefit from visible reminders for short messages and multistep tasks. Navigation and decoding are separate demands.",
+        "version": 1
       },
       {
         "id": "C12",
