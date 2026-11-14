@@ -1,7 +1,7 @@
 'use strict';
 // Colour is an optional redundant teaching prompt, never a required answer signal.
 const readingColourMap=Object.freeze({b:'#244f91',d:'#9c431c',p:'#19635a',q:'#663d8b',g:'#663d8b',m:'#244f91',n:'#9c431c',u:'#19635a',t:'#244f91',f:'#9c431c',v:'#663d8b',w:'#663d8b'});
-let readingDisplay={colour:true};try{const savedDisplay=JSON.parse(localStorage.getItem('spotmatch-reading-display-v1')||'null');if(savedDisplay&&typeof savedDisplay.colour==='boolean')readingDisplay.colour=savedDisplay.colour;}catch{}
+let readingDisplay={colour:true};try{const savedDisplay=JSON.parse(AppStorage.getItem('spotmatch-reading-display-v1')||'null');if(savedDisplay&&typeof savedDisplay.colour==='boolean')readingDisplay.colour=savedDisplay.colour;}catch{}
 function readingColour(letter){if(!readingDisplay.colour||readingState&&readingGame(readingState.id)?.mode==='puppet-program')return '#345b47';return readingColourMap[String(letter).toLowerCase()]||'#345b47';}
 function readingPaint(text){return [...String(text)].map(c=>`<span class="reading-ink" style="color:${readingColour(c)}">${readingEscape(c)}</span>`).join('');}
 const readingSoundPairs={p:'b',b:'p',d:'t',t:'d',v:'f',f:'v'};
@@ -50,7 +50,7 @@ function readingMoreResult(){const wp=wordPlayResult();if(wp!==null)return wp;co
  if(mode==='word-proof')return readingPicture(s.word.picture);return '';
 }
 function readingMoreMessage(){const wp=wordPlayMessage();if(wp!==null)return wp;const adventure=readingAdventureMessage();if(adventure!==null)return adventure;const s=readingState,g=readingGame(s.id);if(!g.extended)return null;const mode=g.mode;if(mode==='arch-match')return `That shape fits ${s.item}!`;if(mode==='shape-build')return `Robot’s ${s.item} is back together!`;if(mode==='sound-neighbour')return `You chose ${s.item} for the gate!`;if(mode==='edge-letter')return `${s.word.tiles[s.edge]} rides at the ${s.edge===0?'front':'back'} of ${s.word.word}!`;if(mode==='cluster-build')return `All aboard! Our word is ${s.word.word}.`;if(mode==='ending-build')return `More than one: ${s.word.word}!`;if(mode==='order-words')return 'The message carriages are ready. Read them together!';if(mode==='sentence-meaning')return 'That scene fits the whole caption!';if(mode==='word-proof')return `Repaired! The label says ${s.word.word}.`;return null;}
-function readingMoreBind(){if(wordPlayActive()){wordPlayBind();return;}readingAdventureBind();const s=readingState;if(!readingActive(s))return;const colour=app.querySelector('#readingColourToggle');if(colour)colour.onchange=()=>{readingDisplay.colour=colour.checked;try{localStorage.setItem('spotmatch-reading-display-v1',JSON.stringify(readingDisplay));}catch{}s.help=true;readingRender();app.querySelector('#readingColourToggle')?.focus({preventScroll:true});};
+function readingMoreBind(){if(wordPlayActive()){wordPlayBind();return;}readingAdventureBind();const s=readingState;if(!readingActive(s))return;const colour=app.querySelector('#readingColourToggle');if(colour)colour.onchange=()=>{readingDisplay.colour=colour.checked;try{AppStorage.setItem('spotmatch-reading-display-v1',JSON.stringify(readingDisplay));}catch{}s.help=true;readingRender();app.querySelector('#readingColourToggle')?.focus({preventScroll:true});};
  const lens=app.querySelector('#readingLetterLens')||app.querySelector('#readingSentenceHint');if(lens)lens.onclick=()=>{if(!readingCanAct())return;s.showDetail=!s.showDetail;s.help=true;readingRender();};
 
 }

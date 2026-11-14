@@ -1,7 +1,7 @@
 'use strict';
 // Cycle through curated examples on replay. Keep sound tasks tied to checked spoken words.
-let pictureVisits={};try{pictureVisits=JSON.parse(localStorage.getItem('spotmatch-picture-visits')||'{}')||{}}catch{}
-function nextPictureVisit(course,index){const key=course+':'+index,visit=pictureVisits[key]||0;pictureVisits[key]=visit+1;try{localStorage.setItem('spotmatch-picture-visits',JSON.stringify(pictureVisits))}catch{}return visit;}
+let pictureVisits={};try{pictureVisits=JSON.parse(AppStorage.getItem('spotmatch-picture-visits')||'{}')||{}}catch{}
+function nextPictureVisit(course,index){const key=course+':'+index,visit=pictureVisits[key]||0;pictureVisits[key]=visit+1;try{AppStorage.setItem('spotmatch-picture-visits',JSON.stringify(pictureVisits))}catch{}return visit;}
 const originalAdultTask=makeAdultTask;
 const extraSoundSets={
  0:[[['pencil',2,'pen · cil'],['rabbit',2,'rab · bit'],['elephant',3,'el · e · phant']],[['fish',1,'fish'],['button',2,'but · ton'],['dinosaur',3,'di · no · saur']]],

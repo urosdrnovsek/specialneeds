@@ -2,7 +2,7 @@
 // One stable object ID and illustration per concept. Category repeats and synonyms are references.
 const vocabularyObjects=new Map(vocabularyData.objects.map(o=>[o.id,o]));
 const vocabularyCategories=new Map(vocabularyData.categories.map(c=>[c.id,c]));
-let vocabularySaved=[];try{const v=JSON.parse(localStorage.getItem('spotmatch-vocabulary-saved-v1')||'[]');if(Array.isArray(v))vocabularySaved=v.filter(id=>vocabularyObjects.has(id));}catch{}
+let vocabularySaved=[];try{const v=JSON.parse(AppStorage.getItem('spotmatch-vocabulary-saved-v1')||'[]');if(Array.isArray(v))vocabularySaved=v.filter(id=>vocabularyObjects.has(id));}catch{}
 let vocabularySearchTimer=null;let vocabularyState=null,vocabularyFilter={category:'',query:'',saved:false,page:0,names:true};
 const vocabularyModes=['explore','find','collect','pairs','sort'];
 const vocabularyModeLabels={explore:'Meet the words',find:'Find a picture',collect:'Make a picture collection',pairs:'Picture partners',sort:'Two little collections'};
@@ -10,7 +10,7 @@ const vocabularyLegacyPicture=pictureIcon;pictureIcon=function(id,...args){if(ty
 for(const item of vocabularyData.objects)friendlyNames['vocab:'+item.id]=item.label;
 function vocabularyPicture(id){const o=vocabularyObjects.get(id);if(!o)throw Error('Unknown vocabulary object '+id);return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="${senEscape(o.label)}"><title>${senEscape(o.label)}</title><image href="${o.image}?v=${o.revision||'1'}" x="0" y="0" width="120" height="120"/></svg>`;}
 function vocabularyImage(id,extra=''){const o=vocabularyObjects.get(id);return `<img src="${o.image}?v=${o.revision||'1'}" alt="${senEscape(o.label)}" width="240" height="240" ${extra}>`;}
-function vocabularySetSaved(id){vocabularySaved=vocabularySaved.includes(id)?vocabularySaved.filter(v=>v!==id):[...vocabularySaved,id];try{localStorage.setItem('spotmatch-vocabulary-saved-v1',JSON.stringify(vocabularySaved));}catch{}}
+function vocabularySetSaved(id){vocabularySaved=vocabularySaved.includes(id)?vocabularySaved.filter(v=>v!==id):[...vocabularySaved,id];try{AppStorage.setItem('spotmatch-vocabulary-saved-v1',JSON.stringify(vocabularySaved));}catch{}}
 function vocabularyWrite(hash){if(location.hash!==hash)history.pushState(null,'',location.pathname+hash);}
 function vocabularyCategoryIds(category){return [...new Set(vocabularyCategories.get(category)?.entries.map(e=>e.objectId)||[])];}
 function vocabularySample(category,n=4,offset=0){const ids=vocabularyCategoryIds(category);return Array.from({length:Math.min(n,ids.length)},(_,i)=>ids[(offset+i)%ids.length]);}

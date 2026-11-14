@@ -1,7 +1,7 @@
 'use strict';
-let calmProgress={};try{const p=JSON.parse(localStorage.getItem('spotmatch-calm-v1')||'{}');if(p&&typeof p==='object'&&!Array.isArray(p))calmProgress=p;}catch{}
+let calmProgress={};try{const p=JSON.parse(AppStorage.getItem('spotmatch-calm-v1')||'{}');if(p&&typeof p==='object'&&!Array.isArray(p))calmProgress=p;}catch{}
 let calmState=null;let calmFilter='All';
-function calmSave(){try{localStorage.setItem('spotmatch-calm-v1',JSON.stringify(calmProgress));}catch{}}
+function calmSave(){try{AppStorage.setItem('spotmatch-calm-v1',JSON.stringify(calmProgress));}catch{}}
 function calmPose(pose='mountain',seated=true){
  const skin='#d5ac87',ink='#355447';
  // A consistent two-segment arm rig keeps the same proportions in every invitation.

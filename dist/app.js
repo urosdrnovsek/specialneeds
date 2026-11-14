@@ -1,7 +1,7 @@
 'use strict';
 const app=document.querySelector('#app');
 const practiceManualQuery=new URLSearchParams(location.search).get('flow')==='manual';
-function practiceRounds(legacyTotal){let manual=practiceManualQuery;try{manual=manual||localStorage.getItem('spotmatch-answer-pace')==='manual';}catch{}return manual?legacyTotal:1;}
+function practiceRounds(legacyTotal){let manual=practiceManualQuery;try{manual=manual||AppStorage.getItem('spotmatch-answer-pace')==='manual';}catch{}return manual?legacyTotal:1;}
 
 const colors=['#d89565','#72988a','#d7b653','#9e90b2'];
 const courses=[
@@ -31,9 +31,9 @@ const courses=[
  ['Turn to match','Rotate a leaf into the matching direction.','Orientation','Use the turn buttons. Make your leaf face the same way as the model.','#e3ece9'],
  ['What changed?','Find one changed detail in a picture row.','Comparing scenes','Compare the two rows. Tap the picture that changed in the lower row.','#f2ecd7']
 ];
-let saved={};try{saved=JSON.parse(localStorage.getItem('spotmatch-v1')||'{}')||{}}catch{};
+let saved={};try{saved=JSON.parse(AppStorage.getItem('spotmatch-v1')||'{}')||{}}catch{};
 let game=0,round=0,correct=0,hints=0,hadError=false,usedHint=false,answered=false,current=null,sessionSeed=0;
-const persist=()=>{try{localStorage.setItem('spotmatch-v1',JSON.stringify(saved))}catch{}};
+const persist=()=>{try{AppStorage.setItem('spotmatch-v1',JSON.stringify(saved))}catch{}};
 const shuffle=a=>{for(let i=a.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
 function baseArt(o={}){let {shape=0,color=0,size=1,dir=0,dots=0,pattern=0,missing=0,second=null}=o;let fill=colors[color];let inner='';
  if(shape===0){for(let i=0;i<6;i++){if(missing===1&&i===0)continue;inner+=`<ellipse cx="60" cy="31" rx="12" ry="19" fill="${fill}" transform="rotate(${i*60} 60 60)"/>`}inner+='<circle cx="60" cy="60" r="16" fill="#f5d875" stroke="#596e4f" stroke-width="2"/>'}

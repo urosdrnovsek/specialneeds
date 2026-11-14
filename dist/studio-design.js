@@ -2,7 +2,7 @@
 const StudioDesign={
  home({app,esc,registry,bind,go}){
   skillContext=null;prLibraryMode=false;prDirectLegacy=false;skillFreePlay=false;activeLearningCourse=null;senActive=null;
-  let recent=null;try{recent=JSON.parse(localStorage.getItem('spotmatch-last-course-v1')||'null');}catch{}
+  let recent=null;try{recent=JSON.parse(AppStorage.getItem('spotmatch-last-course-v1')||'null');}catch{}
   const course=recent&&registry().find(c=>c.id===recent.courseId),next=course?Math.max(0,Math.min(course.activities.length-1,Number.isInteger(recent.index)?recent.index:0)):0;
   const labels={language:['Language & understanding','Build words, meanings and useful messages.'],dyslexia:['Starting to read','Explore letters, sounds and short words.'],attention:['Attention & planning','Try small steps and visible reminders.'],autism:['Autism support','Explore meaning, communication and shared play.'],development:['Development & learning','Build skills with models and smaller steps.'],speech:['Speech & communication','Join in through speech, signs, pointing or AAC.'],motor:['Motor access','Find comfortable ways to take part.'],calm:['Calm & movement','Make room for a pause, a stretch or quiet play.']};
   const order=['language','dyslexia','attention','autism','development','speech','motor','calm'];

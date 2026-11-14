@@ -1,7 +1,7 @@
 'use strict';
 // Course completion is a transition, not a second menu of games and courses.
 const CourseFlow=(()=>{
- let paused=false,transitioning=false,keyboard=false,queued=false;let stepPreference=false;try{stepPreference=localStorage.getItem('spotmatch-course-flow')==='manual';}catch{}
+ let paused=false,transitioning=false,keyboard=false,queued=false;let stepPreference=false;try{stepPreference=AppStorage.getItem('spotmatch-course-flow')==='manual';}catch{}
  const q=sel=>app.querySelector(sel),key=()=>skillContext&&skillContext.index!==null?skillContext.courseId+':'+skillContext.index:null;
  function enabled(){return !stepPreference&&!QuickPlay.manual;}
  function context(){if(!skillContext||skillContext.index===null)return null;const info=skillCourseGet(skillContext.courseId);return{...info,courseId:skillContext.courseId,index:skillContext.index,activity:info.course.activities[skillContext.index]};}
@@ -46,12 +46,12 @@ const CourseFlow=(()=>{
   if(!c&&enabled()&&!skillFreePlay&&['finish','adultFinish','learningFinish'].includes(name)){for(const skill of learningSkills){const course=skill.courses.find(course=>course.activities.some((a,index)=>matches(name,{activity:a,index})));if(course){const index=course.activities.findIndex(a=>matches(name,{activity:a}));skillContext={skillId:skill.id,courseId:course.id,index};c=context();prLibraryMode=false;prDirectLegacy=true;break;}}}
   const advance=enabled()&&matches(name,c),before=key();const result=original(...args);if(!advance)return result;skillDecorate();queueMicrotask(()=>{if(key()!==before)return;if(c.index+1>=c.course.activities.length){end(c);return;}transitioning=true;try{skillLaunch(c.courseId,c.index+1);}finally{transitioning=false;}if(keyboard){const heading=q('h1');if(heading){heading.tabIndex=-1;heading.focus({preventScroll:true});}}});return result;
  }
- const priorLaunch=skillLaunch;skillLaunch=function(id,index){const from=context();if(!transitioning&&(!from||from.courseId!==id||q('#skillBegin'))&&paused){paused=false;QuickPlay.resume();}const result=priorLaunch(id,index);try{localStorage.setItem('spotmatch-last-course-v1',JSON.stringify({courseId:id,index}));}catch{}refresh();return result;};
+ const priorLaunch=skillLaunch;skillLaunch=function(id,index){const from=context();if(!transitioning&&(!from||from.courseId!==id||q('#skillBegin'))&&paused){paused=false;QuickPlay.resume();}const result=priorLaunch(id,index);try{AppStorage.setItem('spotmatch-last-course-v1',JSON.stringify({courseId:id,index}));}catch{}refresh();return result;};
  const priorRoute=skillWriteRoute;skillWriteRoute=function(type,id,index){if(transitioning&&type==='activity'&&!skillRestoringRoute){history.replaceState({skillRoute:'#activity/'+id+'/'+index},'',location.pathname+'#activity/'+id+'/'+index);return;}return priorRoute(type,id,index);};
  function wrap(name,fn){return function(...args){return afterCompletion(name,fn,args);};}
  finish=wrap('finish',finish);adultFinish=wrap('adultFinish',adultFinish);learningFinish=wrap('learningFinish',learningFinish);senFinish=wrap('senFinish',senFinish);focusFinish=wrap('focusFinish',focusFinish);calmFinish=wrap('calmFinish',calmFinish);prFinish=wrap('prFinish',prFinish);worldFinish=wrap('worldFinish',worldFinish);vocabularyFinish=wrap('vocabularyFinish',vocabularyFinish);readingFinish=wrap('readingFinish',readingFinish);
  document.addEventListener('keydown',e=>{if(['Tab','Enter',' '].includes(e.key))keyboard=true;},{capture:true});document.addEventListener('pointerdown',()=>keyboard=false,{capture:true});
- function setAutomatic(value){stepPreference=!value;QuickPlay.setManual(!value);try{localStorage.setItem('spotmatch-course-flow',value?'auto':'manual');}catch{}if(q('.reading-play')){readingCancel();readingRender();if(value&&readingState?.done)readingSchedule();}refresh();}
+ function setAutomatic(value){stepPreference=!value;QuickPlay.setManual(!value);try{AppStorage.setItem('spotmatch-course-flow',value?'auto':'manual');}catch{}if(q('.reading-play')){readingCancel();readingRender();if(value&&readingState?.done)readingSchedule();}refresh();}
  function refresh(){if(!queued){queued=true;queueMicrotask(decorate);}}
  new MutationObserver(refresh).observe(app,{childList:true,subtree:true});refresh();return{refresh,stop,setPaused,setAutomatic,get paused(){return paused;},get enabled(){return enabled();}};
 })();

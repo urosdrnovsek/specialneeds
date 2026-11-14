@@ -106,6 +106,6 @@ const Purposeful=(()=>{
  if(focus)q(focus)?.focus({preventScroll:true});if(typeof CourseFlow!=='undefined')CourseFlow.refresh();if(s.done)schedule(s);
  }
  function pause(value){paused=value;if(senState?.play)senState.play.version=++serial;cancel();if(senState?.task?.mode==='mission'&&active(senState))render();}
- function migrate(){try{if(localStorage.getItem('spotmatch-direct-objects-v1'))return;for(const [key,path]of Object.entries(supportPathways))for(let i=0;i<path.games.length;i++)if(path.games[i].kind==='mission'){if(senProgress[key])delete senProgress[key][i];for(const skill of learningSkills)for(const course of skill.courses)course.activities.forEach((a,index)=>{if(a.engine==='support'&&a.key===key&&a.index===i&&skillNotes[course.id]?.activities)delete skillNotes[course.id].activities[index];});}senSave();skillSave();localStorage.setItem('spotmatch-direct-objects-v1','true');}catch{}}
+ function migrate(){try{if(AppStorage.getItem('spotmatch-direct-objects-v1'))return;for(const [key,path]of Object.entries(supportPathways))for(let i=0;i<path.games.length;i++)if(path.games[i].kind==='mission'){if(senProgress[key])delete senProgress[key][i];for(const skill of learningSkills)for(const course of skill.courses)course.activities.forEach((a,index)=>{if(a.engine==='support'&&a.key===key&&a.index===i&&skillNotes[course.id]?.activities)delete skillNotes[course.id].activities[index];});}senSave();skillSave();AppStorage.setItem('spotmatch-direct-objects-v1','true');}catch{}}
  return{render,cover,pause,trace,connections,cancel,migrate};
 })();
