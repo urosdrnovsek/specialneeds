@@ -1,0 +1,11 @@
+import fs from 'node:fs';
+import path from 'node:path';
+const root=process.env.APP_DIST||path.resolve('dist');
+const raw=fs.readFileSync(path.join(root,'studio-research.js'),'utf8');
+const data=JSON.parse(raw.replace('const studioResearch=','').replace(/;\s*$/,''));
+const urls=[...new Set([...data.journals,...data.articles].flatMap(x=>[x.url,x.sourceUrl,x.correctionUrl,x.fullTextUrl,x.abstractSourceUrl]).filter(x=>/^https:\/\//.test(x||'')))];
+if(process.argv.includes('--plan')){console.log(JSON.stringify({uniqueLinks:urls.length,articles:data.articles.length,mode:'no-network'}));process.exit(0);}
+async function request(url){try{const r=await fetch(url,{redirect:'follow',signal:AbortSignal.timeout(15000),headers:{'User-Agent':'SpotMatchResearchLinkCheck/1.0'}});await r.body?.cancel();return{url,status:r.status,state:r.ok?'reachable':[404,410].includes(r.status)?'needs-review':'unconfirmed'};}catch(e){return{url,state:'unconfirmed',error:e.name};}}
+const results=[];let cursor=0;await Promise.all(Array.from({length:4},async()=>{while(cursor<urls.length)results.push(await request(urls[cursor++]));}));
+const updates=[];cursor=0;await Promise.all(Array.from({length:3},async()=>{while(cursor<data.articles.length){const a=data.articles[cursor++];if(!a.doi)continue;try{const r=await fetch('https://api.crossref.org/works/'+encodeURIComponent(a.doi),{signal:AbortSignal.timeout(15000)});if(!r.ok)throw Error('HTTP '+r.status);const m=(await r.json()).message;updates.push({id:a.id,doi:a.doi,state:'metadata-retrieved',updates:m['update-to']||[],relations:m.relation||{},warning:'Metadata alone is not a comprehensive retraction check. Editor must inspect updates and publisher notices.'});}catch(e){updates.push({id:a.id,state:'unconfirmed',error:e.message});}}}));
+const report={checkedAt:new Date().toISOString(),results,updates,editorialAction:'Review failed links and correction/retraction notices manually. No curriculum or review approvals were changed.'};fs.writeFileSync('research-link-report.json',JSON.stringify(report,null,2));console.log(JSON.stringify({checked:results.length,needsReview:results.filter(x=>x.state==='needs-review').length,unconfirmed:results.filter(x=>x.state==='unconfirmed').length,report:'research-link-report.json'}));

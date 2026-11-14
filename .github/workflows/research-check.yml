@@ -1,0 +1,23 @@
+name: Research source maintenance
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '25 6 * * 1'
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: node scripts/check-research-links.mjs
+        env:
+          NODE_USE_ENV_PROXY: 1
+      - uses: actions/upload-artifact@v4
+        with:
+          name: research-source-report
+          path: research-link-report.json

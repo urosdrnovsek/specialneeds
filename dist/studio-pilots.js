@@ -86,7 +86,7 @@ const studioPilots=[
           "Accept pointing, AAC or an adult-entered response.",
           "Reduce choices or take a break."
         ],
-        "category": "everyday-objects",
+        "category": "004",
         "mode": "sort"
       },
       {
@@ -102,7 +102,7 @@ const studioPilots=[
           "Accept pointing, AAC or an adult-entered response.",
           "Reduce choices or take a break."
         ],
-        "category": "everyday-objects",
+        "category": "004",
         "mode": "collect"
       },
       {
@@ -160,7 +160,7 @@ const studioPilots=[
           "Accept pointing, AAC or an adult-entered response.",
           "Reduce choices or take a break."
         ],
-        "category": "everyday-objects",
+        "category": "004",
         "mode": "collect"
       },
       {
@@ -193,19 +193,19 @@ const studioPilots=[
       },
       {
         "id": "A13",
-        "engine": "vocabulary",
+        "engine": "reading",
         "title": "Picture recipe",
         "invitation": "Picture recipe: arrange two food cards in an adult-modelled order",
         "purpose": "Short sequence comprehension; no real food required",
-        "adultModel": "Model the game\u2019s first word or concept, demonstrate one action, then invite the child to try. Short sequence comprehension; no real food required",
+        "adultModel": "Read both recipe words for the child. Model putting the food pictures in order, then invite a picture choice and placement. This is listening and meaning practice; independent reading is not required.",
         "transfer": "Try the same idea with a new real object or on another day.",
         "adaptations": [
           "Keep the model visible.",
           "Accept pointing, AAC or an adult-entered response.",
           "Reduce choices or take a break."
         ],
-        "category": "everyday-objects",
-        "mode": "pairs"
+        "key": "tiny-recipe-kitchen",
+        "instructionMode": "adult-read"
       },
       {
         "id": "A14",

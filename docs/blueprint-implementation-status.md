@@ -1,4 +1,4 @@
-# Blueprint implementation status — 13 November 2026
+# Blueprint implementation status — 14 November 2026
 
 This is the first integrated implementation, not full sign-off against every blueprint requirement.
 
@@ -9,7 +9,7 @@ This is the first integrated implementation, not full sign-off against every blu
 - Three versioned pilot courses, four stages each and 16 placements each: 26 interactive placements reusing existing engines and 22 explicitly labelled offline/shared activities. No claim of 48 new games.
 - Individual purposes, adult models, adaptations, entry knowledge and transfer ideas. Pilot curriculum is labelled as awaiting educator review.
 - Local practice viewing and export/import, accepted-field validation and backup before import.
-- Research browsing/search, review-depth/study-type filters, source links, correction flags and credential provenance. Fifteen journal candidates, 30 article references; four abstract-read draft summaries. Independent review is pending; candidate journals are not labelled verified.
+- Research browsing/search, review-depth/study-type filters, source links, correction flags and credential provenance. Fifteen journal candidates, 30 article references; 30 abstract-read draft summaries. Independent review is pending; candidate journals are not labelled verified.
 - Existing input, progression and saved progress retained through adapters. Offline activities record shared participation, cancel delayed transitions on navigation and support pause/manual pacing.
 - Structured curriculum and research validation, including duplicate identifiers, required teaching fields and source links.
 
@@ -26,10 +26,20 @@ This is the first integrated implementation, not full sign-off against every blu
 ## Still outstanding
 
 - Independent educator review of the pilot curriculum and qualified editorial review of research notes.
-- Complete journal credential verification and expansion from four abstract-read summaries toward the target of 30 reviewed articles.
+- Complete journal credential verification and independent editorial review of the 30 abstract-based summaries.
 - Actual browser layout, keyboard-focus and physical touch/device sign-off. Managed Sites requires its supported browser workflow; no callable cua_repl/browser tool was available. DOM tests are not browser/device tests.
 - Full migration of legacy global scripts into the proposed module architecture and player interface; current work uses compatibility adapters.
-- Broader research filters (age, year, language and access status), scheduling of ongoing source/retraction checks, and complete release-wide storage migration/export coverage beyond course notes.
+- Complete release-wide storage migration/export coverage beyond course notes. Research filters and scheduled source checks are now implemented.
 - Adult/child usability sessions, new photographic generalisation assets, fuller content sets and any further new mechanics needed after those reviews.
 
 Do not describe this as all blueprint work finished or all device tests passed. The owner-private app exposes curriculum and research draft statuses explicitly.
+
+## Follow-up implementation — 14 November
+
+- Research now has 30 actual-abstract-based summaries with sources, corrected citations and explicit draft status. Twelve sources have publisher/API-reported open-access metadata; unverified language, age and access remain unknown. Full abstracts are retained only as internal provenance and are not deployed.
+- Research filters include topic, year, participant age, teaching language, access, study design and review depth; filter URLs survive article navigation. Journal pages display metric year/source and indexing provenance. Original sources, corrections and legitimate full-text links are available.
+- Version 2 practice export uses stable activity IDs and curriculum versions. Import accepts legacy files, merges achievements without erasing current notes, retains structured supports, backs up first and skips incompatible course versions. Pure core logic has an ES module entry point for gradual migration.
+- Weekly research maintenance workflow produces a report for editors; it does not change approvals automatically. A first network run checked 53 source links: zero confirmed missing links and 30 unconfirmed responses (including protected publisher pages). Unconfirmed responses are not treated as valid or broken.
+- Corrected pilot content that previously fell back to the Living Room vocabulary set: animal/object sorting, a missing-item board and a two-item kitchen errand. The picture recipe explicitly uses adult-read instructions.
+- New tests cover stable-ID imports after reordering, version mismatch, merging, legacy input, all research filters, URL restoration, provenance, route cancellation and prereading content. Existing reading, parent navigation and contact tests pass.
+- Browser/device testing remains unavailable under the current Sites preview requirements. Independent human curriculum/research review and broader usability sessions remain outstanding.
