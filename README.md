@@ -1,6 +1,6 @@
 # Spot & Match
 
-The default home helps parents and teachers choose support for children with special educational needs across eight illustrated support areas. A By skill option opens eight skill categories and 43 guided courses, including 19 early-reading courses. Each course explains its need, goal, activities, adaptations and research rationale; games open directly and normally continue automatically. Adult notes and progress stay in this browser and are not assessment scores. See [the 20 new short-word games](docs/short-word-games.md).
+The default home helps parents and teachers choose support for children with special educational needs across eight illustrated support areas. A By skill option opens eight skill categories and 46 guided courses, including 19 early-reading courses. Each course explains its need, goal, activities, adaptations and research rationale; games open directly and normally continue automatically. Adult notes and progress stay in this browser and are not assessment scores. See [the 20 new short-word games](docs/short-word-games.md).
 
 The skills are looking/comparing; words/understanding; sequences/stories; spoken sound awareness; attention/planning; comfort/movement; everyday meaning/play; and communication/access. Free play remains optional (`?library=playroom`); the original fuller catalogue is also retained (`?library=full`). Neither replaces the adult-led default. Prior course progress and the ADHD/ADD research guide are preserved. Parent course notes use `spotmatch-course-notes-v1`, separately from earlier progress.
 

@@ -6,7 +6,7 @@ This is the first integrated implementation, not full sign-off against every blu
 
 - Four navigation destinations with responsive styling: Find support, Courses, Research, My practice.
 - Searchable/filterable access to 46 courses, preserving existing course and activity routes.
-- Three versioned pilot courses, four stages each and 16 placements each: 29 interactive placements and 19 explicitly labelled offline/shared activities. No claim of 48 new games.
+- Three versioned pilot courses, four stages each and 16 placements each: 33 interactive placements and 15 explicitly labelled offline/shared activities. No claim of 48 new games.
 - Individual purposes, adult models, adaptations, entry knowledge and transfer ideas. Pilot curriculum is labelled as awaiting educator review.
 - Local practice viewing and export/import, accepted-field validation and backup before import.
 - Research browsing/search, review-depth/study-type filters, source links, correction flags and credential provenance. Fifteen journal candidates, 30 article references; 30 abstract-read draft summaries. Independent review is pending; candidate journals are not labelled verified.
@@ -51,3 +51,11 @@ Three previously offline placements are now new interactive game systems: Tool w
 Progress remains scoped: prior offline participation is retained but is not treated as completion of a new game. Updated courses use version3 and new stable activity IDs; versioned import/export recognises the new games explicitly.
 
 Validation: all12 challenges through tap and drag descriptors in both pacing modes (48 rounds), wrong-move retention, connected-road navigation, actual loading/unloading, visible delivered parcels, stale input/timer guards, old-pause reset and progress-version checks. Sixteen new scene states were rasterised and statically reviewed; surface/floor contact and in-box occlusion have regression assertions. Full art inventory adds17 mission illustrations:34,862 uses and11,815 distinct inline SVGs; all1,136 object pictures remain. Existing reading and parent-navigation checks pass. Actual browser/device gestures and layout remain unverified.
+
+## Room search, property descriptions and shared adventures
+
+Two additional interactive activities now occupy previously offline placements: Room search (Everyday words activity12) and the lost-property desk (Messages activity8). Room search requires opening a compartment and actually retrieving the requested picture, with the noun deliberately revisited in a new setting. Lost property uses two-word labels, four picture cards and retained returns to two lockers. Print cues, optional names, models, tap/drag, pause and pacing are available.
+
+The existing Anywhere Adventure Bus and Toy Bus Repair Shop are now reused within Everyday words activities2 and8, with course-specific teaching notes. These placements are not new game engines. The pilot mix is33 interactive placements and15 shared offline activities. Old offline participation does not automatically complete new content; stable IDs and authored versions scope progress, including the reused games.
+
+New tests cover32 round completions across both tap/drag descriptors and automatic/manual pacing, wrong returns, door/retrieval sequencing, model/name/display changes, stale callbacks, pause, the reused games and versioned completion. Twenty-one scene/prop states were rasterised and statically reviewed. The expanded illustration inventory covers34,878 uses and11,832 distinct inline SVGs, with no missing named icons; contact tests, existing reading and purposeful-game regressions pass. Browser/device gestures and layout remain unverified.

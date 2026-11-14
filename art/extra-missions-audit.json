@@ -1,0 +1,16 @@
+{
+  "newActivities": [
+    "rooms",
+    "claims"
+  ],
+  "reusedGames": [
+    "The Anywhere Adventure Bus",
+    "The Toy Bus Repair Shop"
+  ],
+  "reviewedSceneAndPropStates": 21,
+  "automatedInventoryUses": 34878,
+  "distinctInlineSvg": 11832,
+  "objectIllustrations": 1136,
+  "tapAndDragDescriptorRounds": 32,
+  "physicalTouchAndBrowserLayout": "unverified"
+}

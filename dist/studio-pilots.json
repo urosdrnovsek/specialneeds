@@ -13,7 +13,7 @@
       "Which access support helps",
       "Whether a new example is understood"
     ],
-    "version": 3,
+    "version": 4,
     "pilot": true,
     "status": "curriculum draft; educator review pending",
     "activities": [
@@ -32,18 +32,22 @@
         ]
       },
       {
-        "id": "A02",
-        "engine": "offline",
-        "title": "Teddy\u2019s useful bag",
-        "invitation": "Teddy\u2019s useful bag: adult requests one object; child packs it and teddy uses it",
-        "purpose": "Receptive object vocabulary; two choices and visible adult model",
-        "adultModel": "Put two familiar objects beside a toy. Ask for one, help the child put it in the toy\u2019s bag, then act out using it.",
+        "id": "A02-adventure-shared-v1",
+        "engine": "support",
+        "title": "The Anywhere Adventure Bus",
+        "invitation": "Choose an adventure, then move its objects to make the story happen.",
+        "purpose": "Use picture choices to direct a story, then move objects to make the chosen adventure happen.",
+        "adultModel": "Name the destination and props. Model selecting an object and placing it where it can be used. The child may point, sign or use AAC while an adult moves it.",
         "transfer": "Try the same idea with a new real object or on another day.",
         "adaptations": [
           "Keep the model visible.",
           "Accept pointing, AAC or an adult-entered response.",
           "Reduce choices or take a break."
-        ]
+        ],
+        "key": "speech",
+        "index": 0,
+        "version": 1,
+        "reused": true
       },
       {
         "id": "A03-interactive-v1",
@@ -123,18 +127,22 @@
         ]
       },
       {
-        "id": "A08",
-        "engine": "offline",
-        "title": "Rescue workshop",
-        "invitation": "Rescue workshop: choose and use a tool to fix a visible problem",
-        "purpose": "Function and cause\u2013effect; result must visibly change",
-        "adultModel": "Create a pretend repair: a toy bridge has a loose piece. Offer the appropriate connector and an unrelated object. Help the child choose, attach and test the repair.",
+        "id": "A08-repair-shared-v1",
+        "engine": "support",
+        "title": "The Toy Bus Repair Shop",
+        "invitation": "Repair the toy bus: fit both wheels and clean its windows.",
+        "purpose": "Connect tools and parts with changes to a toy bus while carrying out a small repair plan.",
+        "adultModel": "Show a wheel space and model attaching one wheel. Name the sponge and demonstrate cleaning. Keep the scene visible and invite one repair at a time.",
         "transfer": "Try the same idea with a new real object or on another day.",
         "adaptations": [
           "Keep the model visible.",
           "Accept pointing, AAC or an adult-entered response.",
           "Reduce choices or take a break."
-        ]
+        ],
+        "key": "language",
+        "index": 2,
+        "version": 1,
+        "reused": true
       },
       {
         "id": "A09-interactive-v1",
@@ -184,18 +192,21 @@
         ]
       },
       {
-        "id": "A12",
-        "engine": "offline",
-        "title": "Different room, same object",
+        "id": "A12-room-search-v1",
+        "engine": "mission",
+        "title": "Room search: find it again",
         "invitation": "Different room, same object: find a familiar item in a new scene",
-        "purpose": "Meaning across contexts; control visual clutter",
-        "adultModel": "Place the same familiar object in a different room or picture. Name it together, then help the child find another example.",
+        "purpose": "Recognise a familiar object picture in different settings and retrieve it through direct object actions.",
+        "adultModel": "Name the requested object aloud. Model opening a compartment and retrieving its picture to the tray. The picture model is optional; matching a visible model alone does not establish receptive word understanding. The same noun is deliberately revisited in a different setting; this is context practice, not a new vocabulary item.",
         "transfer": "Try the same idea with a new real object or on another day.",
         "adaptations": [
-          "Keep the model visible.",
-          "Accept pointing, AAC or an adult-entered response.",
-          "Reduce choices or take a break."
-        ]
+          "An adult can open one compartment first to reduce visible choices.",
+          "Show the target picture model or name the object again.",
+          "Accept AAC, pointing, tap/select-place or adult-operated movement; precise dragging and speech are not required."
+        ],
+        "key": "rooms",
+        "version": 1,
+        "mayHelpWhen": "May support children who need explicit vocabulary practice across contexts, including some children with language or broader developmental difficulties."
       },
       {
         "id": "A13",
@@ -529,7 +540,7 @@
       "Which access support helps",
       "Whether a new example is understood"
     ],
-    "version": 3,
+    "version": 4,
     "pilot": true,
     "status": "curriculum draft; educator review pending",
     "activities": [
@@ -638,18 +649,21 @@
         "key": "count-the-word"
       },
       {
-        "id": "C08",
-        "engine": "offline",
-        "title": "Lost-property detective",
+        "id": "C08-property-desk-v1",
+        "engine": "mission",
+        "title": "The lost-property desk",
         "invitation": "Lost-property detective: use a short description to select and return an item",
-        "purpose": "Descriptive language; use familiar words and contrast one feature",
-        "adultModel": "Offer two familiar objects differing in one feature. Read a brief description with untaught words supplied by the adult, then return the matching object to a toy.",
+        "purpose": "Read a short description and use both the object word and colour word to return a picture to its labelled locker.",
+        "adultModel": "Name the pictured objects and teach the colour words first. Model reading both words on a label. Use item names or adult colour descriptions for colour-vision access; these supports change the task and do not prove independent decoding.",
         "transfer": "Try the same idea with a new real object or on another day.",
         "adaptations": [
-          "Keep the model visible.",
-          "Accept pointing, AAC or an adult-entered response.",
-          "Reduce choices or take a break."
-        ]
+          "Model one locker label and return its card before introducing the second.",
+          "Show item names for colour-vision or vocabulary access; this permits visual label matching.",
+          "Use AAC pointing, tap/select-place or an adult moving the cards. Four visible cards are the full board; no speed is required."
+        ],
+        "key": "claims",
+        "version": 1,
+        "mayHelpWhen": "May support children who attend to one word in a short message and need help combining two pieces of meaning."
       },
       {
         "id": "C09",

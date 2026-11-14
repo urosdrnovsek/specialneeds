@@ -12,8 +12,11 @@ Every game has four challenges and a clear course destination. Tap/select-place,
 
 `studio-missions-core.js` contains deterministic data and state transitions. `studio-missions.js` owns rendering, lifecycle, input binding, feedback and progression. An ES module entry point is in `studio-modules/missions.mjs`. Game state is disposed on navigation; input descriptors capture session/revision and delayed transitions capture round/revision. Invalid actions preserve completed work. The existing teaching/parent content sits below the game.
 
-The courses remain16 placements each; three offline placements became interactive. The pilot mix is29 interactive placements and19 shared offline activities. These are three new game systems, not three new courses. Existing shared practice is not retroactively marked as completion of the new interactive content.
+The courses remain16 placements each; three offline placements became interactive. The pilot mix is33 interactive placements and15 shared offline activities. These are three new game systems, not three new courses. Existing shared practice is not retroactively marked as completion of the new interactive content.
 
 ## Verification limits
 
 Automated tests cover48 round completions across input descriptors and pacing modes, retries, parcel retention, road connectivity, pause, navigation, stale events, progress and contact geometry. Sixteen scene states were rasterised and statically reviewed. Browser layout, real keyboard focus and physical-device drag gestures still require the supported browser/device workflow.
+
+
+Room search (Everyday words, activity12) and the lost-property desk (Messages, activity8) add two further interactive activities. The existing adventure and repair games are reused in Everyday words activities2 and8. See blueprint-implementation-status.md for the current release details.
