@@ -21,6 +21,10 @@ for(const access of ['tap','drag']){
  launch('letter-lookalikes',0);
  for(let round=0;round<3;round++){
   const cargo=run('readingDeliveryMissions[readingState.round].cargo');assert.equal(state().mission.delivered.length,0);assert.equal(state().word,null);
+  for(const [letter,id]of cargo){const name=run(`readingDeliveryWord(${JSON.stringify(id)})`);assert.equal(name[0],letter,'Every picture name must begin with its route letter');}
+  for(const [letter,word]of [['b','balloon'],['d','dog']]){const home=document.querySelector(`[data-ra-door="${letter}"]`);assert(home.querySelector('.ra-house-name').textContent.includes(`${letter} for ${word}`));assert.equal(home.querySelector('.ra-window img').getAttribute('alt'),word);}
+  assert.equal(document.querySelectorAll('.ra-picture-name').length,3);
+
   // Free exploration changes the world, but never marks the learning task complete.
   click('#raTownDuck');assert.equal(state().mission.gag,true);assert(document.querySelector('.ra-duck-bubble'));assert.equal(state().done,false);
   click('[data-ra-door="b"]');assert.equal(state().mission.loaded,null);

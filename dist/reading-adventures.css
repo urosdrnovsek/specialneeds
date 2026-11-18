@@ -6,3 +6,6 @@
 .ra-duck-bubble{position:absolute;top:0;left:46%;padding:5px 8px;border-radius:12px;background:#fffdf0;border:1px solid #c7ad7c;font-size:12px;white-space:nowrap;color:#62482f}
 
 .ra-cargo>.ra-parcel,.ra-cargo>.ra-parcel-arrived{min-width:0;flex:0 1 112px}@media(max-width:600px){.ra-cargo{gap:8px}.ra-cargo>.ra-parcel,.ra-cargo>.ra-parcel-arrived{flex-basis:84px}.ra-hotspot-2{top:67%}.ra-hotspot-3{top:67%}}
+
+/* Stable first-sound picture cues for Tiny Van Route. */
+.ra-home .ra-window>img{width:100%;height:100%;object-fit:contain;padding:3px;box-sizing:border-box}.ra-home .ra-window{height:55%;background:#f7fbf0}.ra-house-name{position:absolute;left:3%;right:3%;bottom:6%;z-index:2;border-radius:7px;background:#fff8e8;color:#29443c;font-size:clamp(11px,1.7vw,16px);line-height:1.4;padding:2px 0}.ra-home .ra-door{bottom:21%;height:63%}.ra-picture-name{position:absolute;bottom:3px;left:2px;right:2px;background:#fff9e9;border-radius:5px;font-size:12px;line-height:1.3;color:#29443c}.ra-parcel .ra-object{padding-bottom:15px;box-sizing:border-box}@media(max-width:600px){.ra-house-name{font-size:11px}.ra-picture-name{font-size:11px}.ra-home .ra-window{width:55%;height:50%}}
