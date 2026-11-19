@@ -11,7 +11,7 @@
     "test:home": "node tests/parent-home-dom.cjs",
     "test:reading": "node tests/reading-dom.cjs && node tests/reading-dom.cjs --manual && node tests/reading-adventures-dom.cjs && node tests/reading-adventures-dom.cjs --manual && node tests/reading-word-games-dom.cjs && node tests/reading-word-games-dom.cjs --manual && node tests/reading-word-quests-dom.cjs && node tests/reading-word-quests-dom.cjs --manual",
     "test:reading:browser": "node tests/reading-browser.cjs",
-    "test:purposeful": "node tests/purposeful-play-dom.cjs && node tests/purposeful-play-dom.cjs --manual && node tests/purposeful-play-dom.cjs --startup",
+    "test:purposeful": "node tests/purposeful-play-dom.cjs && node tests/purposeful-play-dom.cjs --manual && node tests/purposeful-play-dom.cjs --startup && node tests/canal-guidance-dom.cjs",
     "test:purposeful:browser": "node tests/purposeful-direct-browser.cjs",
     "test:art": "node tests/art-contacts-dom.cjs && node tests/activity-art-dom.cjs",
     "test:studio": "node tests/studio-core.cjs && node tests/studio-dom.cjs && node tests/studio-dom.cjs --manual && node tests/studio-ui-dom.cjs && node tests/studio-course-dom.cjs && node tests/studio-missions-dom.cjs && node tests/studio-extra-missions-dom.cjs && node tests/studio-review-dom.cjs && node tests/studio-review-dom.cjs --manual",
