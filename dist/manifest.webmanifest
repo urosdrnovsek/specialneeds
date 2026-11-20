@@ -1,0 +1,10 @@
+{
+ "name": "Spot & Match",
+ "short_name": "Spot & Match",
+ "description": "Adult-led learning games and guidance for children with special educational needs.",
+ "start_url": "./",
+ "display": "standalone",
+ "background_color": "#fffdf7",
+ "theme_color": "#fffdf7",
+ "icons": [{"src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any"}]
+}

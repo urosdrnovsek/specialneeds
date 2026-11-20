@@ -1,5 +1,7 @@
 # Spot & Match
 
+> **Review and redesign (Nov 2026):** see [docs/review-2026-11.md](docs/review-2026-11.md) for the UX/code review, what changed (shared play-screen layout, design tokens in `dist/design-system.css`, I-spy and close-up games, course grouping, fixes) and the prioritised roadmap. Run `npm run test:redesign` for its checks. Deployments must also ship `design-system.css`, `design-shell.js`, `manifest.webmanifest` and `icon.svg`.
+
 The default home helps parents and teachers choose support for children with special educational needs across eight illustrated support areas. A By skill option opens eight skill categories and 46 guided courses, including 19 early-reading courses. Each course explains its need, goal, activities, adaptations and research rationale; games open directly and normally continue automatically. Adult notes and progress stay in this browser and are not assessment scores. See [the 20 new short-word games](docs/short-word-games.md).
 
 The skills are looking/comparing; words/understanding; sequences/stories; spoken sound awareness; attention/planning; comfort/movement; everyday meaning/play; and communication/access. Free play remains optional (`?library=playroom`); the original fuller catalogue is also retained (`?library=full`). Neither replaces the adult-led default. Prior course progress and the ADHD/ADD research guide are preserved. Parent course notes use `spotmatch-course-notes-v1`, separately from earlier progress.
