@@ -103,24 +103,24 @@ const root = path.resolve(__dirname, '..');
   }
   await help();
   assert.match(await page.locator('.play-invitation').innerText(), /What kind of help/);
+  // A one-tap choice: the labelled picture itself shows the choice (no separate "Your choice" box).
+  assert.equal(await page.locator('.focus-choice-home, .tp-answer-pad').count(), 0);
+  const labels = [/Show another example/, /Fewer things/, /Play with a grown-up/];
   for (const i of [0, 1, 2]) {
-    await drag(`[data-focus-choice="${i}"]`, '.focus-choice-home', { mouse: i === 1 });
+    if (i === 1) await page.locator(`[data-focus-choice="${i}"]`).click();
+    else await page.locator(`[data-focus-choice="${i}"]`).tap();
     assert.deepEqual(await page.evaluate(() => focusState.selected), [String(i)]);
-    assert.equal(await page.locator('.focus-choice-home .choice-home-pictures>div>svg').count(), 1);
-    assert.match(
-      await page.locator('.focus-choice-home').innerText(),
-      [/Show another example/, /Fewer things/, /Play with a grown-up/][i]
-    );
+    const pressed = page.locator('[data-focus-choice][aria-pressed="true"]');
+    assert.equal(await pressed.count(), 1);
+    assert.match(await pressed.innerText(), labels[i]);
   }
-  await drag('[data-focus-choice="0"]', '.focus-choice-home', { cancel: true });
-  assert.deepEqual(await page.evaluate(() => focusState.selected), ['2']);
   await drag('[data-focus-choice="0"]', '.play-invitation');
   assert.deepEqual(await page.evaluate(() => focusState.selected), ['2']);
   await page.locator('#focusClear').tap();
-  assert.equal(await page.locator('.focus-choice-home .choice-home-pictures>div>svg').count(), 0);
+  assert.equal(await page.locator('[data-focus-choice][aria-pressed="true"]').count(), 0);
   for (const i of [0, 1, 2]) {
     await help();
-    await drag(`[data-focus-choice="${i}"]`, '.focus-choice-home');
+    await page.locator(`[data-focus-choice="${i}"]`).tap();
     await page.locator('#focusCheck').tap();
     assert.equal(await page.evaluate(() => worldState.help), i);
     assert.equal(await page.evaluate(() => worldState.mode), 'puzzle');
@@ -139,14 +139,14 @@ const root = path.resolve(__dirname, '..');
   await help();
   await page.locator('[data-focus-choice="1"]').focus();
   await page.keyboard.press('Enter');
-  assert.match(await page.locator('.focus-choice-home').innerText(), /Fewer things/);
+  assert.match(await page.locator('[data-focus-choice][aria-pressed="true"]').innerText(), /Fewer things/);
   await page.screenshot({ path: path.join(root, 'test-results', 'helping-hand-mobile.png'), fullPage: true });
   assert.deepEqual(errors, []);
   console.log(
     JSON.stringify({
       exactActivity: 'A Helping Hand',
-      touch: 'retains dropped picture',
-      mouse: 'retains dropped picture',
+      touch: 'tap shows pressed labelled picture',
+      mouse: 'click shows pressed labelled picture',
       keyboard: 'same choice',
       cancellation: 'previous choice retained',
       supports: 'model, fewer pieces, shared play all applied to real puzzle',
