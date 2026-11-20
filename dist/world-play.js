@@ -312,14 +312,12 @@ TouchPlay.register(bind => {
   if (!app.querySelector('.world-play') || !worldState || worldState.finished) return;
   const s = worldState,
     slots = () => [...app.querySelectorAll('[data-world-slot]')];
-  app
-    .querySelectorAll('[data-world-piece]')
-    .forEach(b =>
-      bind(b, {
-        targets: slots,
-        drop: target => worldPlace(+b.dataset.worldPiece, +target.dataset.worldSlot)
-      })
-    );
+  app.querySelectorAll('[data-world-piece]').forEach(b =>
+    bind(b, {
+      targets: slots,
+      drop: target => worldPlace(+b.dataset.worldPiece, +target.dataset.worldSlot)
+    })
+  );
   slots().forEach(b => {
     const i = +b.dataset.worldSlot;
     if (s.slots[i] !== null)
@@ -328,14 +326,12 @@ TouchPlay.register(bind => {
         drop: target => worldPlace(s.slots[i], +target.dataset.worldSlot)
       });
   });
-  app
-    .querySelectorAll('[data-world-object]')
-    .forEach(b =>
-      bind(b, {
-        targets: () => [document.getElementById('worldBag')],
-        drop: () => worldPack(b.dataset.worldObject)
-      })
-    );
+  app.querySelectorAll('[data-world-object]').forEach(b =>
+    bind(b, {
+      targets: () => [document.getElementById('worldBag')],
+      drop: () => worldPack(b.dataset.worldObject)
+    })
+  );
   app.querySelectorAll('[data-world-character]').forEach(b =>
     bind(b, {
       targets: () => [document.getElementById('worldStage')],

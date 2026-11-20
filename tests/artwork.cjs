@@ -2,7 +2,14 @@ const { chromium } = require('playwright');
 const fs = require('fs'),
   path = require('path');
 (async () => {
-  const b = await chromium.launch({ executablePath: '/usr/bin/chromium', headless: true });
+  const b = await chromium.launch({
+    ...(process.env.CHROMIUM_PATH
+      ? { executablePath: process.env.CHROMIUM_PATH }
+      : require('node:fs').existsSync('/usr/bin/chromium')
+        ? { executablePath: '/usr/bin/chromium' }
+        : {}),
+    headless: true
+  });
   const p = await b.newPage({ viewport: { width: 1680, height: 1500 } });
   const root = path.resolve(__dirname, '../dist');
   await p.route('https://art.test/**', r => {

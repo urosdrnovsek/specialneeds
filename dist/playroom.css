@@ -1,5 +1,5 @@
 body {
-  background: #faf8f0;
+  background: var(--ds-paper);
 }
 header {
   max-width: 1120px;
@@ -52,7 +52,7 @@ footer {
   display: flex;
   gap: 10px;
   padding: 8px;
-  background: #efefe4;
+  background: var(--ds-sage);
   border-radius: 20px;
   margin: 8px 0 28px;
 }
@@ -69,7 +69,7 @@ footer {
   min-height: 54px;
 }
 .pr-tabs button[aria-pressed='true'] {
-  background: #fffef8;
+  background: var(--ds-paper);
   box-shadow: 0 2px 7px #56604412;
   color: #365b3f;
 }
@@ -84,9 +84,9 @@ footer {
 }
 .pr-card {
   padding: 0;
-  border: 1px solid #e0e5d6;
+  border: 1px solid var(--ds-line);
   border-radius: 24px;
-  background: #fffef8;
+  background: var(--ds-paper);
   overflow: hidden;
   text-align: left;
   transition: transform 0.15s;
@@ -96,7 +96,7 @@ footer {
 }
 .pr-card-art {
   padding: 13px;
-  background: #e9edde;
+  background: var(--ds-sage);
   aspect-ratio: 1.86;
 }
 .pr-card-art > svg {
@@ -169,8 +169,8 @@ footer {
   color: #536f50;
 }
 .pr-board {
-  background: #f4f1e5;
-  border: 1px solid #e5e5d6;
+  background: var(--ds-cream);
+  border: 1px solid var(--ds-line);
   border-radius: 26px;
   overflow: hidden;
 }
@@ -204,9 +204,9 @@ footer {
   margin: 19px 0 0;
 }
 .pr-tool {
-  border: 1px solid #d7e0cf;
+  border: 1px solid var(--ds-line);
   border-radius: 17px;
-  background: #fffdf6;
+  background: var(--ds-paper);
   padding: 12px 17px;
   min-height: 52px;
   min-width: 100px;
@@ -238,7 +238,7 @@ footer {
 .pr-studio-settings [aria-pressed='true'] {
   outline: 3px solid #68864e;
   outline-offset: 3px;
-  background: #eff3e7;
+  background: var(--ds-sage);
 }
 .pr-message {
   font-size: 15px;
@@ -259,7 +259,7 @@ footer {
 }
 .pr-grownup-tip {
   text-align: left;
-  background: #eef1e5;
+  background: var(--ds-sage);
   border-radius: 16px;
   padding: 17px 20px;
   margin-top: 28px;
@@ -339,7 +339,7 @@ footer {
 }
 .pr-train-cards button {
   padding: 8px;
-  background: #fffdf5;
+  background: var(--ds-paper);
   border: 0;
   border-radius: 10px;
   min-width: 0;
@@ -352,7 +352,7 @@ footer {
 .pr-train-cards .selected {
   outline: 4px solid #68864e;
   outline-offset: 3px;
-  background: #eef4e6;
+  background: var(--ds-sage);
 }
 .pr-studio-settings {
   flex-basis: 100%;
@@ -362,7 +362,7 @@ footer {
   margin-top: 10px;
 }
 .pr-studio-settings fieldset {
-  border: 1px solid #dce3d0;
+  border: 1px solid var(--ds-sage-strong);
   border-radius: 16px;
   display: flex;
   justify-content: center;
@@ -376,8 +376,8 @@ footer {
   padding: 0 7px;
 }
 .pr-studio-settings button {
-  border: 1px solid #dce3d0;
-  background: #fffdf5;
+  border: 1px solid var(--ds-sage-strong);
+  background: var(--ds-paper);
   border-radius: 12px;
   padding: 8px;
   width: 74px;
@@ -398,7 +398,7 @@ footer {
   width: 52px;
   display: grid;
   place-items: center;
-  background: #eee9d8;
+  background: var(--ds-cream);
   border-radius: 10px;
   color: #8f9c80;
 }
@@ -420,8 +420,8 @@ footer {
 .pr-drum-pads button {
   width: 43%;
   max-width: 230px;
-  border: 1px solid #dbe2d1;
-  background: #fffdf5;
+  border: 1px solid var(--ds-line);
+  background: var(--ds-paper);
   border-radius: 20px;
   padding: 13px;
 }
@@ -440,13 +440,13 @@ footer {
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 18px;
   padding: 26px;
-  background: #dce6ce;
+  background: var(--ds-sage-strong);
 }
 .pr-map button {
   aspect-ratio: 1;
-  border: 2px solid #c5d0b8;
+  border: 2px solid var(--ds-line-strong);
   border-radius: 28px;
-  background: #efe6cd;
+  background: var(--ds-sand);
   font-size: 30px;
   color: #b7ad8a;
   min-width: 0;
@@ -466,7 +466,7 @@ footer {
   border-color: #96ad80;
 }
 .pr-map .current {
-  background: #fffdf1;
+  background: var(--ds-paper);
   border: 3px solid #8da772;
 }
 .pr-map button:not(:disabled) {
@@ -486,14 +486,14 @@ footer {
   font-weight: 700;
   font-size: 22px;
   letter-spacing: 1px;
-  border: 2px solid #c3d4b4;
+  border: 2px solid var(--ds-line-strong);
   border-radius: 15px;
   padding: 12px;
   color: #466c43;
-  background: #e6edda;
+  background: var(--ds-sage-strong);
 }
 .pr-road-sign.red {
-  background: #f2e3d8;
+  background: var(--ds-warm-soft);
   color: #97634b;
   border-color: #dcbba5;
 }
@@ -510,7 +510,7 @@ footer {
   border-radius: 35px;
   background: transparent;
   pointer-events: auto;
-  color: #839b92;
+  color: var(--ds-sage-mid);
   font-size: 25px;
 }
 .pr-cloud-buttons button span {
@@ -573,12 +573,12 @@ footer {
   font-size: 16px;
 }
 .pr-parent-content a {
-  color: #426849;
+  color: var(--ds-success);
   overflow-wrap: anywhere;
 }
 .pr-parent-content details {
-  border: 1px solid #dfe4d4;
-  background: #fffdf6;
+  border: 1px solid var(--ds-line);
+  background: var(--ds-paper);
   border-radius: 16px;
   margin: 17px 0;
   padding: 17px 20px;
@@ -623,7 +623,7 @@ body:has(.pr-play) .larger-pictures {
 .pr-play button:focus-visible,
 .pr-cards button:focus-visible,
 .pr-tabs button:focus-visible {
-  outline: 4px solid #4b718f;
+  outline: 4px solid var(--ds-sky-mid);
   outline-offset: 4px;
 }
 @media (max-width: 680px) {

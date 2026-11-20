@@ -93,48 +93,47 @@ const root = path.resolve(__dirname, '..');
     assert.equal(await page.locator('.tp-ghost').count(), 0);
     assert.equal(await page.locator('.tp-lifted').count(), 0);
   }
-  await launch('communicate', 0);
-  assert.match(await page.locator('.play-invitation').innerText(), /trains, animals, or a picnic/);
-  await page.locator('#senChoiceHome').waitFor();
-  assert.equal(await page.locator('.sen-chosen-picture').count(), 0);
-  for (let i = 0; i < 3; i++) {
-    await drag(`[data-sen-choice="${i}"]`, '#senChoiceHome', { mouse: i === 1 });
+  // The retired topic picker (trains / animals / a picnic) and its separate "Your choice" drop box are gone.
+  // A one-tap picture choice now stays visible as the pressed picture itself until the adult checks it.
+  const pressed = () =>
+    page.evaluate(() =>
+      [...document.querySelectorAll('[data-sen-choice]')].map(e => e.getAttribute('aria-pressed'))
+    );
+  await launch('communicate', 1);
+  assert.equal(await page.locator('#senChoiceHome, .sen-choice-caption, .tp-answer-pad').count(), 0);
+  assert.doesNotMatch(await page.locator('#app').innerText(), /trains, animals, or a picnic/i);
+  const t = await page.evaluate(() => senState.task);
+  const wrong = t.options.findIndex(o => !t.answer.includes(o.id)),
+    right = t.options.findIndex(o => t.answer.includes(o.id));
+  for (const i of [wrong, right]) {
+    await page.locator(`[data-sen-choice="${i}"]`).tap();
     assert.equal(await page.evaluate(() => senState.selection), i);
-    assert.equal(await page.locator('.sen-chosen-picture svg').count(), 1);
-    assert.equal(await page.locator('.sen-choice-caption').innerText(), ['Trains', 'Animals', 'A picnic'][i]);
-    assert.equal(await page.locator('#senChoiceHome').getAttribute('role'), 'group');
+    const expected = t.options.map((_, j) => String(j === i));
+    assert.deepEqual(await pressed(), expected);
     await page.waitForTimeout(250);
-    assert.equal(await page.locator('.sen-chosen-picture svg').count(), 1);
+    assert.deepEqual(await pressed(), expected, 'the choice stays pressed');
   }
-  await page.locator('#senHelp').tap();
-  assert.equal(await page.locator('.sen-choice-caption').innerText(), 'A picnic');
-  await drag('[data-sen-choice="0"]', '#senChoiceHome', { cancel: true });
-  assert.equal(await page.locator('.sen-choice-caption').innerText(), 'A picnic');
-  await drag('[data-sen-choice="0"]', '.play-invitation');
-  assert.equal(await page.locator('.sen-choice-caption').innerText(), 'A picnic');
-  await page.locator('[data-sen-choice="1"]').tap();
-  assert.equal(await page.locator('.sen-choice-caption').innerText(), 'Animals');
-  await page.locator('#senCheck').tap();
-  assert.equal(await page.locator('.sen-choice-caption').innerText(), 'Animals');
-  assert.equal(await page.locator('.sen-chosen-picture svg').count(), 1);
-  await page.locator('#senNext').tap();
-  assert.equal(await page.locator('.sen-chosen-picture').count(), 0);
-  assert.equal(await page.locator('#senCheck').isDisabled(), true);
-  await page.locator('[data-sen-choice="2"]').focus();
+  // Keyboard selection works the same way.
+  await page.locator(`[data-sen-choice="${wrong}"]`).focus();
   await page.keyboard.press('Enter');
-  assert.equal(await page.locator('.sen-choice-caption').innerText(), 'A picnic');
-  await page.locator('#senClear').tap();
-  assert.equal(await page.locator('.sen-chosen-picture').count(), 0);
+  assert.equal(await page.evaluate(() => senState.selection), wrong);
+  // Dragging a picture somewhere meaningless does not change the choice.
+  await drag(`[data-sen-choice="${right}"]`, '.play-invitation');
+  assert.equal(await page.evaluate(() => senState.selection), wrong);
+  await page.locator(`[data-sen-choice="${right}"]`).tap();
+  await page.locator('#senCheck').tap();
+  assert.equal(await page.evaluate(() => senState.done), true);
   for (const key of ['autism', 'development', 'motor']) {
     await page.evaluate(k => {
       senActive = k;
       senIntro(k === 'motor' ? 1 : 0);
       document.querySelector('#senBegin').click();
     }, key);
-    await page.locator('[data-sen-choice="0"]').tap();
-    assert.equal(await page.locator('.sen-choice-caption').innerText(), 'Trains');
-    await drag('[data-sen-choice="2"]', '#senChoiceHome');
-    assert.equal(await page.locator('.sen-choice-caption').innerText(), 'A picnic');
+    if (await page.locator('[data-sen-choice]').count()) {
+      await page.locator('[data-sen-choice="0"]').tap();
+      assert.equal(await page.locator('[data-sen-choice="0"]').getAttribute('aria-pressed'), 'true');
+    }
+    assert.equal(await page.locator('#senChoiceHome, .tp-answer-pad').count(), 0, key);
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
   }
   fs.mkdirSync(path.join(root, 'test-results'), { recursive: true });
@@ -143,15 +142,12 @@ const root = path.resolve(__dirname, '..');
   console.log(
     JSON.stringify(
       {
-        activity: 'Show me your choice',
-        themes: ['trains', 'animals', 'picnic'],
-        touchDrop: 'picture stays',
-        mouseDrop: 'picture stays',
-        tapAndKeyboard: 'same visible result',
-        helpAndCheck: 'choice retained',
-        nextAndClear: 'choice resets',
-        cancelAndInvalidDrop: 'previous choice retained',
-        otherThemeCourses: 'passed',
+        activity: 'Hear It, Find It (one-tap picture choice)',
+        retiredTopicPicker: 'absent',
+        dropBox: 'absent; the pressed picture shows the choice',
+        tapAndKeyboard: 'same pressed state',
+        invalidDrag: 'previous choice retained',
+        otherPathways: 'no drop box, no overflow',
         pageErrors: errors
       },
       null,

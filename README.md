@@ -1,6 +1,6 @@
 # Spot & Match
 
-> **Review and redesign (Nov 2026):** see [docs/review-2026-11.md](docs/review-2026-11.md) for the UX/code review, what changed (shared play-screen layout, design tokens in `dist/design-system.css`, I-spy and close-up games, course grouping, fixes) and the prioritised roadmap. Run `npm run test:redesign` for its checks. Deployments must also ship `design-system.css`, `design-shell.js`, `manifest.webmanifest` and `icon.svg`.
+> **Review and redesign (Nov 2026):** see [docs/review-2026-11.md](docs/review-2026-11.md) for the review, both redesign passes and what remains open. Key tooling: `npm run format` (Prettier 3.6.2; do not use 3.3.x, it corrupts nested arrays in template literals), `npm run stamp` (cache stamps; `npm run check` fails when stale), `npm test` (all suites; set `CHROMIUM_PATH` to use a specific browser), `python3 scripts/consolidate-colours.py` (snap new hard-coded colours to tokens). Deployments must ship every file referenced by `dist/index.html`, plus `manifest.webmanifest` and `icon.svg`.
 
 The default home helps parents and teachers choose support for children with special educational needs across eight illustrated support areas. A By skill option opens eight skill categories and 46 guided courses, including 19 early-reading courses. Each course explains its need, goal, activities, adaptations and research rationale; games open directly and normally continue automatically. Adult notes and progress stay in this browser and are not assessment scores. See [the 20 new short-word games](docs/short-word-games.md).
 

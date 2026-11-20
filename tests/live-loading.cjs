@@ -5,7 +5,14 @@ const readline = require('readline');
   const rl = readline.createInterface({ input: process.stdin });
   const token = await new Promise(resolve => rl.once('line', resolve));
   rl.close();
-  const browser = await chromium.launch({ executablePath: '/usr/bin/chromium', headless: true });
+  const browser = await chromium.launch({
+    ...(process.env.CHROMIUM_PATH
+      ? { executablePath: process.env.CHROMIUM_PATH }
+      : require('node:fs').existsSync('/usr/bin/chromium')
+        ? { executablePath: '/usr/bin/chromium' }
+        : {}),
+    headless: true
+  });
   const context = await browser.newContext();
   const page = await context.newPage();
   const base = 'https://spot-and-match-visual-course.blossomingchip1.chatgpt.site';

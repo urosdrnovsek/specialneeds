@@ -31,6 +31,23 @@
   --ds-r-lg: 24px;
   --ds-shadow: 0 1px 2px rgba(31, 58, 49, 0.06), 0 6px 18px rgba(31, 58, 49, 0.06);
   --ds-header-h: 76px;
+
+  /* Palette used by scripts/consolidate-colours.py for engine stylesheets */
+  --ds-butter: #fbf3dd;
+  --ds-mist: #e7eff7;
+  --ds-lilac: #ece9f4;
+  --ds-blush: #f8ebe5;
+  --ds-ink-2: #304c40;
+  --ds-success-mid: #5f8d6c;
+  --ds-sage-mid: #8ea596;
+  --ds-teal: #19635a;
+  --ds-teal-mid: #608d86;
+  --ds-warm-mid: #c97c55;
+  --ds-brown: #805037;
+  --ds-gold: #e2bf63;
+  --ds-gold-soft: #f6e3a6;
+  --ds-sand: #f2e8ce;
+  --ds-sky-mid: #4b718f;
 }
 
 /* ---------- Base ---------- */
@@ -455,4 +472,300 @@ body.ds-playing .skill-session-context {
   .ds-course-group h2 {
     font-size: 22px;
   }
+}
+
+/* ---------- Covers (design-covers.js) ---------- */
+/* Covers are 5:3; every frame that shows one uses that ratio so letter tiles and badges are never cropped. */
+.ds-cover {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 5 / 3;
+}
+body.studio .studio-card-art,
+body.studio .studio-need-art {
+  height: auto;
+  aspect-ratio: 5 / 3;
+  padding: 0;
+  overflow: hidden;
+}
+body.studio .studio-card-art > svg.ds-cover {
+  width: 100%;
+  height: 100%;
+}
+body.studio .skill-course-preview > svg.ds-cover,
+body.studio .support-detail-head svg.ds-cover {
+  width: 100%;
+  max-width: 420px;
+  height: auto;
+  border-radius: var(--ds-r-lg);
+  margin-left: auto;
+}
+body.studio .support-detail-head > div:last-child {
+  height: auto;
+  min-height: 0;
+  max-height: none;
+  background: none;
+}
+
+/* ---------- One adult panel per play screen (design-shell.js gathers the notes) ---------- */
+body.studio #coursePurpose.ds-adult-panel {
+  max-width: 760px;
+  margin: 18px auto 8px;
+  padding: 16px 18px 6px;
+  background: var(--ds-surface);
+  border: 1px solid var(--ds-line);
+  border-radius: var(--ds-r);
+  box-shadow: none;
+  font-size: 15px;
+  color: var(--ds-ink-soft);
+}
+body.studio #coursePurpose.ds-adult-panel > span:first-child {
+  display: block;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  color: var(--ds-warm);
+}
+body.studio #coursePurpose.ds-adult-panel > p {
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--ds-ink);
+  margin: 6px 0 4px;
+}
+body.studio #coursePurpose.ds-adult-panel > small {
+  display: block;
+  font-size: 14px;
+  color: var(--ds-ink-soft);
+  margin-bottom: 8px;
+}
+body.studio #coursePurpose.ds-adult-panel > details {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-top: 1px solid var(--ds-line);
+  border-radius: 0;
+  background: none;
+  max-width: none;
+}
+body.studio #coursePurpose.ds-adult-panel > details > summary {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  font-size: 15px;
+  font-weight: 650;
+  color: var(--ds-ink);
+  cursor: pointer;
+  padding: 0;
+  background: none;
+}
+body.studio #coursePurpose.ds-adult-panel > details > :not(summary) {
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--ds-ink-soft);
+}
+body.studio #coursePurpose.ds-adult-panel > details[open] {
+  padding-bottom: 10px;
+}
+body.studio #coursePurpose.ds-adult-panel > details > summary {
+  list-style: none;
+  justify-content: space-between;
+}
+body.studio #coursePurpose.ds-adult-panel > details > summary::-webkit-details-marker {
+  display: none;
+}
+body.studio #coursePurpose.ds-adult-panel > details > summary::after {
+  content: '+';
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--ds-accent);
+}
+body.studio #coursePurpose.ds-adult-panel > details[open] > summary::after {
+  content: '–';
+}
+
+/* ---------- One picture-choice button ----------
+ * Every engine's picture choice (original .choice, .learning-option, .vocabulary-choice, world pictures and
+ * the data-*-choice buttons of the support, focus, adult and learning engines) shares one look and one set
+ * of states: rest, hover, keyboard focus, selected/pressed, hinted, correct, wrong and disabled. */
+body.studio
+  #app
+  :is(
+    .choice,
+    .learning-option,
+    .vocabulary-choice,
+    .world-picture,
+    [data-sen-choice],
+    [data-focus-choice],
+    [data-adult-choice],
+    [data-learning-choice],
+    [data-calm-choice],
+    [data-calm-open]
+  ):not(.calm-see-lens) {
+  --ds-choice-border: var(--ds-line);
+  position: relative;
+  min-width: 88px;
+  min-height: 88px;
+  padding: 10px;
+  background: var(--ds-surface);
+  border: 2px solid var(--ds-choice-border);
+  border-radius: 18px;
+  box-shadow:
+    0 1px 0 rgba(31, 58, 49, 0.06),
+    0 4px 12px rgba(31, 58, 49, 0.05);
+  color: var(--ds-ink);
+  cursor: pointer;
+  transition:
+    border-color 0.15s,
+    background-color 0.15s,
+    box-shadow 0.15s,
+    transform 0.15s;
+}
+body.studio
+  #app
+  :is(
+    .choice,
+    .learning-option,
+    .vocabulary-choice,
+    .world-picture,
+    [data-sen-choice],
+    [data-focus-choice],
+    [data-adult-choice],
+    [data-learning-choice],
+    [data-calm-choice],
+    [data-calm-open]
+  ):not(.calm-see-lens):not(:disabled):hover {
+  --ds-choice-border: var(--ds-sage-mid);
+  transform: translateY(-1px);
+  box-shadow:
+    0 2px 0 rgba(31, 58, 49, 0.06),
+    0 8px 18px rgba(31, 58, 49, 0.08);
+}
+body.studio
+  #app
+  :is(
+    .choice,
+    .learning-option,
+    .vocabulary-choice,
+    .world-picture,
+    [data-sen-choice],
+    [data-focus-choice],
+    [data-adult-choice],
+    [data-learning-choice],
+    [data-calm-choice],
+    [data-calm-open]
+  ):is(.selected, [aria-pressed='true']) {
+  --ds-choice-border: var(--ds-accent);
+  background: var(--ds-accent-soft);
+  box-shadow: 0 0 0 3px var(--ds-accent-soft);
+}
+body.studio
+  #app
+  :is(
+    .choice,
+    .learning-option,
+    .vocabulary-choice,
+    .world-picture,
+    [data-sen-choice],
+    [data-focus-choice],
+    [data-adult-choice],
+    [data-learning-choice],
+    [data-calm-choice],
+    [data-calm-open]
+  ).hinted {
+  --ds-choice-border: var(--ds-gold);
+  box-shadow: 0 0 0 4px var(--ds-gold-soft);
+}
+body.studio
+  #app
+  :is(
+    .choice,
+    .learning-option,
+    .vocabulary-choice,
+    .world-picture,
+    [data-sen-choice],
+    [data-focus-choice],
+    [data-adult-choice],
+    [data-learning-choice]
+  ).correct {
+  --ds-choice-border: var(--ds-success);
+  background: var(--ds-success-soft);
+}
+body.studio
+  #app
+  :is(
+    .choice,
+    .learning-option,
+    .vocabulary-choice,
+    .world-picture,
+    [data-sen-choice],
+    [data-focus-choice],
+    [data-adult-choice],
+    [data-learning-choice]
+  ).wrong {
+  --ds-choice-border: var(--ds-warm-mid);
+  background: var(--ds-warm-soft);
+}
+body.studio
+  #app
+  :is(
+    .choice,
+    .learning-option,
+    .vocabulary-choice,
+    .world-picture,
+    [data-sen-choice],
+    [data-focus-choice],
+    [data-adult-choice],
+    [data-learning-choice],
+    [data-calm-choice],
+    [data-calm-open]
+  ):disabled {
+  cursor: default;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  body.studio
+    #app
+    :is(
+      .choice,
+      .learning-option,
+      .vocabulary-choice,
+      .world-picture,
+      [data-sen-choice],
+      [data-focus-choice],
+      [data-adult-choice],
+      [data-learning-choice],
+      [data-calm-choice],
+      [data-calm-open]
+    ) {
+    transition: none;
+  }
+}
+
+/* ---------- Optional legacy libraries (?library=full / ?library=playroom) ---------- */
+body.studio.ds-library header > nav:not(#studioNav) {
+  display: flex !important;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+body.studio.ds-library #studioNav {
+  display: none !important;
+}
+body.studio.ds-library header > nav:not(#studioNav) button {
+  min-height: 44px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--ds-line);
+  background: var(--ds-surface);
+  color: var(--ds-ink);
+  font-weight: 600;
+}
+.ds-main-app {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 12px;
+  color: var(--ds-accent);
+  font-weight: 650;
+  text-decoration: none;
 }

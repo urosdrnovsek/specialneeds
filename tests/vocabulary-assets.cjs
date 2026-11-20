@@ -29,7 +29,14 @@ const { chromium } = require('playwright');
     fs.readdirSync(path.join(root, 'vocabulary/pictures')).filter(f => f.endsWith('.svg')).length,
     catalog.objectCount
   );
-  const browser = await chromium.launch({ executablePath: '/usr/bin/chromium', headless: true });
+  const browser = await chromium.launch({
+    ...(process.env.CHROMIUM_PATH
+      ? { executablePath: process.env.CHROMIUM_PATH }
+      : require('node:fs').existsSync('/usr/bin/chromium')
+        ? { executablePath: '/usr/bin/chromium' }
+        : {}),
+    headless: true
+  });
   const page = await browser.newPage();
   const result = await page.evaluate(pics => {
     const parser = new DOMParser(),

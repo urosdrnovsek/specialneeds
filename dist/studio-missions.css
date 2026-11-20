@@ -6,7 +6,7 @@
   font:
     500 clamp(28px, 4vw, 40px) / 1.2 Georgia,
     serif;
-  color: #263f37;
+  color: var(--ds-ink);
   margin: 20px 0 8px;
 }
 .mission-top {
@@ -17,11 +17,11 @@
 }
 .mission-top > span {
   font-size: 13px;
-  color: #53685d;
+  color: var(--ds-ink-soft);
 }
 .mission-adult {
   font-size: 12px;
-  color: #53685d;
+  color: var(--ds-ink-soft);
 }
 .mission-controls {
   display: flex;
@@ -41,18 +41,18 @@
   width: 24px;
   height: 24px;
   min-height: 24px;
-  accent-color: #244f91;
+  accent-color: var(--ds-accent);
 }
 .mission-board {
   padding: 24px;
-  background: #fff;
-  border: 1px solid #dce4d4;
+  background: var(--ds-surface);
+  border: 1px solid var(--ds-line);
   border-radius: 24px;
 }
 .mission-board > h2 {
   font-size: 20px;
   line-height: 1.6;
-  color: #263f37;
+  color: var(--ds-ink);
   text-align: center;
   margin: 0 0 20px;
 }
@@ -87,9 +87,9 @@
   width: 105px;
   height: 105px;
   padding: 12px;
-  border: 2px solid #9db2a0;
+  border: 2px solid var(--ds-sage-mid);
   border-radius: 17px;
-  background: #fffdf7;
+  background: var(--ds-paper);
 }
 .mission-token img,
 .mission-token svg {
@@ -98,13 +98,13 @@
   object-fit: contain;
 }
 .mission-board [aria-pressed='true'] {
-  outline: 4px solid #244f91;
+  outline: 4px solid var(--ds-accent);
   outline-offset: 3px;
 }
 .mission-how {
   font-size: 13px;
   line-height: 1.8;
-  color: #53685d;
+  color: var(--ds-ink-soft);
   text-align: center;
   margin: 20px auto 0;
   max-width: 650px;
@@ -112,7 +112,7 @@
 .mission-feedback {
   font-size: 17px;
   text-align: center;
-  color: #263f37;
+  color: var(--ds-ink);
   min-height: 30px;
   line-height: 1.7;
   margin: 20px 0;
@@ -136,7 +136,7 @@
   min-width: 70px;
   min-height: 56px;
   font-size: 14px !important;
-  color: #263f37;
+  color: var(--ds-ink);
 }
 .place-on {
   left: 57%;
@@ -154,8 +154,8 @@
   display: block;
   width: 110px;
   height: 100px;
-  border: 2px solid #9db2a0;
-  background: #fffdf7;
+  border: 2px solid var(--ds-sage-mid);
+  background: var(--ds-paper);
   border-radius: 18px;
   margin: 20px auto;
   padding: 7px;
@@ -171,7 +171,7 @@
 }
 .mission-model {
   max-width: 300px;
-  border: 2px solid #dce4d4;
+  border: 2px solid var(--ds-line);
   border-radius: 18px;
   margin: 15px auto;
 }
@@ -184,7 +184,7 @@
   justify-content: center;
   gap: 20px;
   flex-wrap: wrap;
-  background: #edf3e6;
+  background: var(--ds-sage);
   border-radius: 18px;
   padding: 16px;
   margin-bottom: 20px;
@@ -199,14 +199,14 @@
   font-size: 30px;
 }
 .mission-delivered {
-  border-bottom: 3px solid #19635a;
+  border-bottom: 3px solid var(--ds-teal);
 }
 .mission-map {
   position: relative;
   height: 340px;
-  background: #edf3e6;
+  background: var(--ds-sage);
   border-radius: 24px;
-  border: 1px solid #dce4d4;
+  border: 1px solid var(--ds-line);
   margin: 20px 0 35px;
 }
 .mission-roads {
@@ -224,11 +224,11 @@
   justify-content: center;
   width: 88px;
   height: 102px;
-  background: #fffdf7;
-  border: 2px solid #9db2a0;
+  background: var(--ds-paper);
+  border: 2px solid var(--ds-sage-mid);
   border-radius: 15px;
   padding: 6px;
-  color: #263f37;
+  color: var(--ds-ink);
 }
 .mission-stop img,
 .mission-stop svg {
@@ -245,7 +245,7 @@
   font-weight: 700;
 }
 .mission-current {
-  border: 3px solid #244f91;
+  border: 3px solid var(--ds-accent);
 }
 .mission-van {
   position: absolute;
@@ -267,7 +267,7 @@
   gap: 14px;
 }
 .mission-delivery-controls > div {
-  background: #f4f3e9;
+  background: var(--ds-cream);
   border-radius: 17px;
   padding: 15px;
 }
@@ -296,7 +296,7 @@
   max-width: none;
 }
 .studio-mission button:focus-visible {
-  outline: 4px solid #244f91;
+  outline: 4px solid var(--ds-accent);
   outline-offset: 3px;
 }
 @media (max-width: 600px) {
@@ -373,9 +373,9 @@
   justify-content: center;
   width: 35px;
   height: 35px;
-  border: 2px solid #19635a;
+  border: 2px solid var(--ds-teal);
   border-radius: 9px;
-  background: #fffdf7;
+  background: var(--ds-paper);
   padding: 3px;
 }
 .mission-received img,
@@ -408,7 +408,7 @@
 .extra-room-title {
   font-size: 14px;
   text-align: center;
-  color: #53685d;
+  color: var(--ds-ink-soft);
 }
 .extra-room-board {
   position: relative;
@@ -436,9 +436,9 @@
   top: 26%;
   height: 56px;
   width: 60px;
-  border: 1px solid #9aaf9a;
+  border: 1px solid var(--ds-sage-mid);
   border-radius: 10px;
-  background: #fffdf7;
+  background: var(--ds-paper);
   z-index: 2;
   font-size: 23px !important;
 }
@@ -451,8 +451,8 @@
   min-width: 64px;
   min-height: 64px;
   padding: 8px;
-  border: 1px solid #dce4d4;
-  background: #fffdf7;
+  border: 1px solid var(--ds-line);
+  background: var(--ds-paper);
   border-radius: 13px;
 }
 .extra-room-object img,
@@ -468,10 +468,10 @@
   transform: translate(-50%, -50%);
   min-width: 58px;
   min-height: 56px;
-  border: 1px solid #9aaf9a;
+  border: 1px solid var(--ds-sage-mid);
   border-radius: 12px;
-  background: #fffdf7;
-  color: #244f91;
+  background: var(--ds-paper);
+  color: var(--ds-accent);
   font-size: 12px !important;
 }
 .extra-room-tray {
@@ -480,12 +480,12 @@
   justify-content: center;
   min-width: 200px;
   min-height: 100px;
-  border: 3px dashed #8ea79b;
+  border: 3px dashed var(--ds-sage-mid);
   border-radius: 18px;
-  background: #edf3e6;
+  background: var(--ds-sage);
   margin: 20px auto;
   padding: 12px;
-  color: #263f37;
+  color: var(--ds-ink);
 }
 .extra-room-tray > img,
 .extra-room-tray > svg {
@@ -543,9 +543,9 @@
 .extra-claim-label {
   display: block;
   padding: 7px;
-  background: #fffdf7;
+  background: var(--ds-paper);
   border-radius: 9px;
-  border: 1px solid #a2b3a3;
+  border: 1px solid var(--ds-sage-mid);
   width: max-content;
   max-width: 150%;
 }
@@ -558,8 +558,8 @@
   justify-content: center;
   width: 90%;
   height: 65%;
-  background: #fffdf7;
-  border: 1px solid #bdcbb9;
+  background: var(--ds-paper);
+  border: 1px solid var(--ds-line-strong);
   border-radius: 13px;
   color: #486d63;
   font-size: 30px;
@@ -574,7 +574,7 @@
   gap: 14px;
   justify-content: center;
   flex-wrap: wrap;
-  background: #ede4d3;
+  background: var(--ds-cream);
   border-radius: 18px;
   padding: 18px;
   margin: 20px 0;
@@ -582,8 +582,8 @@
 .extra-property {
   width: 130px;
   min-height: 115px;
-  background: #fffdf7;
-  border: 2px solid #9aaf9a;
+  background: var(--ds-paper);
+  border: 2px solid var(--ds-sage-mid);
   border-radius: 15px;
   padding: 8px;
 }

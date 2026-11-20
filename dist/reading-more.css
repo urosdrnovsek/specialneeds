@@ -20,7 +20,7 @@
 .reading-display-option input {
   width: 19px;
   height: 19px;
-  accent-color: #426b55;
+  accent-color: var(--ds-success);
 }
 .reading-display-option small {
   font-size: 11px;
@@ -38,13 +38,13 @@
   border-radius: 50%;
   margin: 8px auto 30px;
   border: 2px solid #b8c7ce;
-  background: #f7fbf8;
+  background: var(--ds-surface);
   font-size: 73px;
   line-height: 1;
   font-family: system-ui, sans-serif;
   box-shadow:
-    inset 7px 7px 0 #ffffff,
-    3px 4px 0 #e2e8dd;
+    inset 7px 7px 0 var(--ds-surface),
+    3px 4px 0 var(--ds-line);
 }
 .reading-letter-houses {
   display: flex;
@@ -62,9 +62,9 @@
   gap: 9px;
   width: 170px;
   min-height: 174px;
-  border: 2px solid #b7c9b6;
+  border: 2px solid var(--ds-line-strong);
   border-radius: 12px;
-  background: #f0efdb;
+  background: var(--ds-butter);
   padding: 23px 14px 14px;
 }
 .reading-house-roof {
@@ -83,7 +83,7 @@
   justify-content: center;
   min-width: 90px;
   min-height: 105px;
-  background: #fffdf3;
+  background: var(--ds-paper);
   border: 2px solid #cfceb8;
   border-radius: 42px 42px 8px 8px;
   font-size: 66px;
@@ -98,7 +98,7 @@
 }
 .reading-letter-house:hover {
   border-color: #7b9c6b;
-  background: #e9efd9;
+  background: var(--ds-sage-strong);
 }
 .reading-letter-house:focus-visible,
 .reading-bubble:focus-visible {
@@ -113,7 +113,7 @@
   max-width: 400px;
   margin: 13px auto 18px;
   padding: 13px;
-  background: #f1eddf;
+  background: var(--ds-cream);
   border-radius: 14px;
 }
 .reading-letter-detail > svg {
@@ -156,8 +156,8 @@
   width: 130px;
   height: 151px;
   margin: 0 auto;
-  background: #eeeee0;
-  border: 2px dashed #bcc9ae;
+  background: var(--ds-sage);
+  border: 2px dashed var(--ds-line-strong);
   border-radius: 50px 50px 12px 12px;
   padding: 7px;
 }
@@ -183,7 +183,7 @@
 }
 .reading-edge-word .reading-edge-focus,
 .reading-result-edge .reading-edge-focus {
-  background: #fff0c8;
+  background: var(--ds-sand);
   border-style: dashed;
   border-color: #af8a4c;
 }
@@ -208,9 +208,9 @@
 }
 .reading-train-word > span {
   position: relative;
-  border: 2px solid #b6c9af;
+  border: 2px solid var(--ds-line-strong);
   border-radius: 8px;
-  background: #eaf1de;
+  background: var(--ds-sage-strong);
   min-width: 46px;
   padding: 7px 10px;
   font-size: 32px;
@@ -223,7 +223,7 @@
   width: 11px;
   height: 11px;
   bottom: -9px;
-  background: #6e8580;
+  background: var(--ds-ink-faint);
   border-radius: 50%;
 }
 .reading-train-word > span:before {
@@ -251,8 +251,8 @@
   width: 11px;
   height: 11px;
   border-radius: 50%;
-  background: #70877a;
-  box-shadow: 45px 0 #70877a;
+  background: var(--ds-ink-faint);
+  box-shadow: 45px 0 var(--ds-ink-faint);
 }
 .reading-word-carriages .reading-slots {
   gap: 10px;
@@ -291,7 +291,7 @@
   min-width: 75px;
   min-height: 86px;
   border: 2px dashed #c7b273;
-  background: #fff3d0;
+  background: var(--ds-sand);
   border-radius: 14px;
   color: #9a8b5a;
 }
@@ -349,7 +349,7 @@
   border: 2px dashed #c3b38e;
   border-radius: 15px;
   max-width: 370px;
-  background: #f3ecdb;
+  background: var(--ds-cream);
 }
 .reading-robot-label > span {
   display: block;
@@ -443,7 +443,7 @@
   }
   .reading-cluster .reading-slot:after {
     left: 5px;
-    box-shadow: 32px 0 #70877a;
+    box-shadow: 32px 0 var(--ds-ink-faint);
   }
   .reading-word-carriages .reading-slot {
     font-size: 20px;

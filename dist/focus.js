@@ -313,10 +313,8 @@ function focusRender(focus) {
     : '';
   if (t.inventory.length)
     body += `<div class="focus-inventory"><span class="micro">${t.mode === 'classify' ? 'Our new item' : 'Already packed'}</span><div class="focus-strip">${t.inventory.map(p => `<div class="story-frame">${focusPicture(p)}</div>`).join('')}</div></div>`;
-  if (t.mode === 'open') {
-    const chosen = t.options.find(o => s.selected.includes(o.id));
-    body += `<div class="focus-choice-home tp-answer-pad ${chosen ? 'has-choice' : ''}" role="group" aria-label="Your choice"><span class="choice-home-heading">Your choice</span>${chosen ? `<div class="choice-home-pictures"><div>${focusPicture(chosen.picture)}<span>${senEscape(chosen.label || 'Your choice')}</span></div></div>` : '<span>Drag a picture here, or tap one below.</span>'}</div>`;
-  }
+  // One-tap choice: the pressed picture itself shows the choice (no separate 'Your choice' box).
+
   if (t.mode === 'plan')
     body += `<div class="calm-routine">${t.banks.map((bank, r) => `<fieldset><legend>${['A little task', 'A helpful support', 'A comfortable ending'][r]}</legend>${bank.map((p, i) => `<button class="secondary ${s.plan[r] === i ? 'selected' : ''}" data-focus-plan="${r}:${i}" aria-pressed="${s.plan[r] === i}" ${s.done ? 'disabled' : ''}>${focusPicture(p)}<span>${t.labels[r][i]}</span></button>`).join('')}<button class="back" data-focus-plan="${r}:2" aria-pressed="${s.plan[r] === 2}" ${s.done ? 'disabled' : ''}>Skip this part</button></fieldset>`).join('')}</div>`;
   else

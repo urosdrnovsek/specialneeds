@@ -1,5 +1,6 @@
 // Regression checks for the 2026-11 redesign: shared play-screen shell, course grouping/deep links,
-// and the two calm-library games that replaced picture-only "choose and nothing happens" screens.
+// the two calm-library games that replaced picture-only "choose and nothing happens" screens, the single
+// router, reading paths, course/support covers, one adult panel per screen and one-tap picture choices.
 const { chromium } = require('playwright');
 const fs = require('node:fs');
 const path = require('node:path');
@@ -49,10 +50,8 @@ const types = {
     );
     const groups = await page.locator('.ds-course-group').count();
     assert(groups >= 6, 'courses are grouped by skill');
-    const total = await page
-      .locator('#studioResults .studio-course, #studioResults a[href^="#course/"]')
-      .count();
-    assert(total >= 40, 'all courses remain listed: ' + total);
+    // 26 authored courses + 4 reading paths are listed; 20 short reading courses are merged into the paths.
+    assert.equal(await page.locator('#studioResults .studio-course-card').count(), 30);
     await page.locator('.ds-course-chips a').nth(1).click();
     await page.waitForFunction(() => location.hash.includes('skill='));
     assert.equal(await page.locator('.ds-course-group').count(), 0, 'a filtered list is flat');
@@ -187,6 +186,152 @@ const types = {
     );
     await page.locator('#calmFinish').click();
     assert.match(await page.locator('h1').innerText(), /little moment/);
+    assert.deepEqual(errors, []);
+    await context.close();
+  }
+
+  // Router: optional libraries keep their own navigation; Back/Forward render the right page.
+  {
+    const { context, page, errors } = await open({ width: 1280, height: 850 });
+    await page.goto('https://spot-match.test/?library=full');
+    await page.waitForSelector('#dsMainApp');
+    assert.equal(new URL(page.url()).search, '?library=full', 'library deep link is kept');
+    assert.equal(await page.locator('#libraryNav').isVisible(), true);
+    assert.equal(await page.locator('#studioNav').isVisible(), false);
+    await page.locator('#dsMainApp').click();
+    await page.waitForSelector('.studio-welcome');
+    assert.equal(await page.locator('#dsMainApp').count(), 0);
+    await page.goto('https://spot-match.test/?library=playroom');
+    await page.waitForSelector('[data-pr-game]');
+    await page.goto('https://spot-match.test/#courses');
+    await page.waitForSelector('.ds-course-group');
+    await page.locator('#studioResults a[href="#course/reading-path-letters"]').first().click();
+    await page.waitForSelector('.studio-stage');
+    await page.goBack();
+    await page.waitForSelector('.ds-course-group');
+    await page.goForward();
+    await page.waitForSelector('.studio-stage');
+    assert.equal(await page.locator('h1').first().innerText(), 'First letters and sounds');
+    assert.deepEqual(errors, []);
+    await context.close();
+  }
+
+  // Reading paths: one stage per merged course, old course links still open, progress carries over.
+  {
+    const { context, page, errors } = await open({ width: 1100, height: 850 });
+    await page.addInitScript(() => {
+      if (!sessionStorage.getItem('seeded')) {
+        sessionStorage.setItem('seeded', '1');
+        localStorage.setItem(
+          'spotmatch-course-notes-v1',
+          JSON.stringify({ 'letter-forms': { activities: { 0: true } } })
+        );
+      }
+    });
+    await page.goto('https://spot-match.test/#course/reading-path-letters');
+    await page.waitForSelector('.studio-stage');
+    const stages = await page.locator('.studio-stage summary b').allInnerTexts();
+    assert.deepEqual(stages, [
+      'Play with word endings',
+      'Getting to know letters',
+      'Letters carry sounds',
+      'Letters that look alike',
+      'Letter details & neighbour sounds'
+    ]);
+    assert.match(await page.locator('.studio-stage summary').nth(1).innerText(), /1 of 3 explored/);
+    await page.goto('https://spot-match.test/#course/letter-forms');
+    await page.reload();
+    assert.equal(await page.locator('h1').first().innerText(), 'Getting to know letters');
+    await page.goto('https://spot-match.test/#support/dyslexia');
+    await page.reload();
+    const linked = await page
+      .locator('.support-reading-courses [data-home-course]')
+      .evaluateAll(a => a.map(x => x.dataset.homeCourse));
+    assert.deepEqual(linked, [
+      'reading-path-letters',
+      'reading-path-blend',
+      'reading-path-meaning',
+      'reading-path-purpose'
+    ]);
+    assert.deepEqual(errors, []);
+    await context.close();
+  }
+
+  // Covers, one adult panel, one-tap choices and the shared choice button.
+  {
+    const { context, page, errors } = await open({ width: 1100, height: 850 });
+    await page.addInitScript(() => localStorage.setItem('spotmatch-course-flow', 'manual'));
+    await page.goto('https://spot-match.test/#courses');
+    await page.waitForSelector('.ds-course-group');
+    const covers = await page
+      .locator('#studioResults .studio-card-art svg.ds-cover')
+      .evaluateAll(list => list.map(svg => svg.dataset.cover));
+    assert.equal(covers.length, 30);
+    assert.equal(new Set(covers).size, 30, 'every listed course has its own cover');
+    const audit = await page.evaluate(() => {
+      const parser = new DOMParser();
+      const ids = new Set(vocabularyObjects.keys());
+      const svgs = [
+        'language',
+        'dyslexia',
+        'attention',
+        'autism',
+        'development',
+        'speech',
+        'motor',
+        'calm'
+      ].map(id => DesignCovers.support(id));
+      return {
+        invalid: svgs.filter(
+          s =>
+            /undefined|NaN/.test(s) || parser.parseFromString(s, 'image/svg+xml').querySelector('parsererror')
+        ).length,
+        uniqueSupport: new Set(svgs).size,
+        unknownObjects: Object.values(DesignCovers.covers)
+          .flatMap(c => c.objects)
+          .filter(id => !ids.has(id))
+      };
+    });
+    assert.deepEqual(audit, { invalid: 0, uniqueSupport: 8, unknownObjects: [] });
+    for (const [course, index] of [
+      ['comfort', 1],
+      ['short-words-v2', 3],
+      ['communicate', 1],
+      ['matching', 0]
+    ]) {
+      await page.evaluate(([c, i]) => skillLaunch(c, i), [course, index]);
+      await page.waitForSelector('#coursePurpose.ds-adult-panel');
+      const outside = await page.evaluate(() => {
+        const panel = document.querySelector('#coursePurpose');
+        return [...document.querySelectorAll('#app details')].filter(d => !panel.contains(d)).length;
+      });
+      assert.equal(outside, 0, course + ': all adult notes are in the one panel');
+      assert.equal(await page.locator('#coursePurpose').isVisible(), true);
+    }
+    for (const [course, index] of [
+      ['communicate', 1],
+      ['vocabulary', 2]
+    ]) {
+      await page.evaluate(([c, i]) => skillLaunch(c, i), [course, index]);
+      await page.waitForTimeout(200);
+      assert.equal(await page.locator('.tp-answer-pad, #senChoiceHome, #vocabChoiceHome').count(), 0, course);
+    }
+    const radius = [];
+    for (const [course, index, selector] of [
+      ['matching', 0, '.choice'],
+      ['story-meaning', 2, '.learning-option'],
+      ['communicate', 1, '[data-sen-choice]']
+    ]) {
+      await page.evaluate(([c, i]) => skillLaunch(c, i), [course, index]);
+      await page.waitForSelector(selector);
+      radius.push(
+        await page
+          .locator(selector)
+          .first()
+          .evaluate(e => getComputedStyle(e).borderRadius)
+      );
+    }
+    assert.equal(new Set(radius).size, 1, 'one shared picture-choice button: ' + radius.join(', '));
     assert.deepEqual(errors, []);
     await context.close();
   }

@@ -3,7 +3,7 @@
 }
 .sen-intro {
   max-width: 720px;
-  color: #566653;
+  color: var(--ds-ink-soft);
   line-height: 1.75;
   margin-bottom: 26px;
 }
@@ -113,7 +113,7 @@
   min-height: 100px;
   display: grid;
   place-items: center;
-  background: #f4f3e9;
+  background: var(--ds-cream);
   border-radius: 16px;
 }
 .sen-story-slots svg {
@@ -156,10 +156,10 @@
   max-width: 430px;
   padding: 14px;
   margin-top: 12px;
-  border: 1px solid #92a187;
+  border: 1px solid var(--ds-sage-mid);
   border-radius: 12px;
-  background: #fffdf6;
-  color: #355447;
+  background: var(--ds-paper);
+  color: var(--ds-ink-2);
   font: inherit;
 }
 .sen-play .selected {
@@ -167,11 +167,11 @@
   outline-offset: 3px;
 }
 .sen-play .hinted {
-  box-shadow: 0 0 0 5px #e0c678;
+  box-shadow: 0 0 0 5px var(--ds-gold);
 }
 .sen-play button:focus-visible,
 .sen-library button:focus-visible {
-  outline: 4px solid #486b88;
+  outline: 4px solid var(--ds-sky-mid);
   outline-offset: 5px;
 }
 .sen-play .completion-friend {
@@ -264,7 +264,7 @@
   max-width: 850px;
 }
 .sen-sources a {
-  color: #355f48;
+  color: var(--ds-success);
   text-underline-offset: 3px;
 }
 @media (max-width: 600px) {
@@ -325,7 +325,7 @@
   display: block;
   width: fit-content;
   margin-top: 22px;
-  color: #476c50;
+  color: var(--ds-success);
   font-size: 14px;
   line-height: 1.7;
   text-underline-offset: 5px;
@@ -343,12 +343,12 @@
   margin: 15px auto 24px;
   border: 2px dashed #afc29f;
   border-radius: 22px;
-  background: #f5f6eb;
+  background: var(--ds-sage);
   color: #657f57;
 }
 .sen-choice-home.has-choice {
   border: 2px solid #9ab681;
-  background: #edf3e2;
+  background: var(--ds-sage);
 }
 .sen-choice-heading {
   font-size: 12px;

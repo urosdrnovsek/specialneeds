@@ -3,7 +3,14 @@ const { chromium } = require('playwright'),
   path = require('path'),
   assert = require('node:assert/strict');
 (async () => {
-  const b = await chromium.launch({ executablePath: '/usr/bin/chromium', headless: true });
+  const b = await chromium.launch({
+    ...(process.env.CHROMIUM_PATH
+      ? { executablePath: process.env.CHROMIUM_PATH }
+      : require('node:fs').existsSync('/usr/bin/chromium')
+        ? { executablePath: '/usr/bin/chromium' }
+        : {}),
+    headless: true
+  });
   const p = await b.newPage();
   const root = path.resolve(__dirname, '../dist'),
     errors = [];

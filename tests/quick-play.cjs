@@ -276,15 +276,13 @@ const root = path.resolve(__dirname, '..');
     assert.equal(await page.locator('#again').count(), 1);
     tested++;
   }
-  // Open preferences keep the chosen picture on their completion screen.
+  // The retired "choose a topic (Trains / Animals / A picnic)" picker must stay retired: its position now
+  // opens the shared Anywhere Adventure Bus, which uses the chosen destination in play.
   await launch('communicate', 0);
   await settle();
-  await drag('[data-sen-choice="0"]', '#senChoiceHome');
-  assert.equal(await page.locator('.sen-choice-caption').innerText(), 'Trains');
-  await advance();
-  assert.equal(await page.locator('#quickChosenTopic .sen-choice-caption').innerText(), 'Trains');
-  await advance();
-  assert.equal(await page.locator('#quickChosenTopic').count(), 1);
+  assert.equal(await page.locator('.purposeful-play').count(), 1);
+  assert.equal(await page.locator('#senChoiceHome, #quickChosenTopic, .sen-choice-caption').count(), 0);
+  assert.doesNotMatch(await page.locator('#app').innerText(), /\bTrains\b/);
   // Wrong answers remain retryable. Pausing prevents the transition.
   await page.evaluate(() => {
     senActive = 'language';
@@ -368,7 +366,7 @@ const root = path.resolve(__dirname, '..');
     assert.equal(await page.locator('.pr-board').count(), 1, id);
   }
   // Leaving during feedback must cancel the old activity's pending transition.
-  await launch('communicate', 0);
+  await launch('communicate', 1);
   await settle();
   await page.locator('[data-sen-choice="0"]').tap();
   await page.evaluate(() => skillHome());
@@ -378,7 +376,7 @@ const root = path.resolve(__dirname, '..');
   console.log(
     JSON.stringify({
       automaticActivityTypes: tested,
-      openPreference: 'one choice, retained on completion',
+      retiredTopicPicker: 'replaced by shared adventure game',
       wrongAnswer: 'retry without checking',
       pause: 'waits for child',
       pageErrors: errors

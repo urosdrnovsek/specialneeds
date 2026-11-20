@@ -142,7 +142,8 @@ for (const id of run('learningSkills.map(s=>s.id)')) {
   run(`Studio.go('#courses?skill=${id}')`);
   assert.equal(
     document.querySelectorAll('.studio-course-card').length,
-    run(`skillGet('${id}').courses.length`)
+    // Short courses merged into reading paths stay routable but are not listed separately.
+    run(`skillGet('${id}').courses.filter(c=>!c.mergedInto).length`)
   );
 }
 run('skillLaunch("planning",0);skillHome()');

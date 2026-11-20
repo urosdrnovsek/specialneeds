@@ -14,7 +14,7 @@
   font-size: 43px;
   line-height: 1.15;
   margin: 14px 0;
-  color: #304f44;
+  color: var(--ds-ink-2);
 }
 .vocabulary-hero p {
   font-size: 17px;
@@ -28,7 +28,7 @@
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 13px;
   padding: 20px;
-  background: #fff0cd;
+  background: var(--ds-sand);
   border-radius: 28px;
 }
 .vocabulary-hero-pictures img {
@@ -36,7 +36,7 @@
   height: auto;
   max-height: 120px;
   object-fit: contain;
-  background: #fffaf0;
+  background: var(--ds-paper);
   border-radius: 18px;
   padding: 8px;
   box-sizing: border-box;
@@ -46,8 +46,8 @@
   gap: 14px;
   align-items: flex-end;
   flex-wrap: wrap;
-  background: #edf3e5;
-  border: 1px solid #d5e2ca;
+  background: var(--ds-sage);
+  border: 1px solid var(--ds-sage-strong);
   border-radius: 22px;
   padding: 20px;
   margin-top: 28px;
@@ -66,8 +66,8 @@
   font-weight: 400;
   border: 1px solid #b2c6a7;
   border-radius: 12px;
-  background: #fffef7;
-  color: #304f44;
+  background: var(--ds-paper);
+  color: var(--ds-ink-2);
   padding: 13px;
   min-height: 48px;
   max-width: 100%;
@@ -110,12 +110,12 @@
 }
 .vocabulary-card {
   position: relative;
-  border: 1px solid #dce2ce;
+  border: 1px solid var(--ds-sage-strong);
   border-radius: 21px;
   overflow: hidden;
-  background: #fffdf7;
+  background: var(--ds-paper);
   min-width: 0;
-  box-shadow: 0 3px 0 #e3e9d8;
+  box-shadow: 0 3px 0 var(--ds-line);
 }
 .vocabulary-open {
   display: flex;
@@ -151,7 +151,7 @@
   right: 5px;
   width: 38px;
   height: 38px;
-  border: 1px solid #e6d9b6;
+  border: 1px solid var(--ds-sand);
   border-radius: 50%;
   background: #fff6dbed;
   color: #9a7028;
@@ -161,7 +161,7 @@
   place-items: center;
 }
 .vocabulary-save[aria-pressed='true'] {
-  background: #ffe09c;
+  background: var(--ds-gold-soft);
   color: #865b12;
 }
 .vocabulary-name-hidden {
@@ -183,7 +183,7 @@
   padding: 40px;
   text-align: center;
   line-height: 1.8;
-  background: #f5f2e4;
+  background: var(--ds-cream);
   border-radius: 20px;
 }
 .vocabulary-detail-layout {
@@ -194,8 +194,8 @@
   margin-top: 30px;
 }
 .vocabulary-large-picture {
-  background: #fffaf0;
-  border: 1px solid #e4dbbd;
+  background: var(--ds-paper);
+  border: 1px solid var(--ds-sand);
   border-radius: 30px;
   padding: 30px;
   max-width: 480px;
@@ -240,15 +240,15 @@
 }
 .vocabulary-game-board {
   padding: 20px;
-  border: 1px solid #d9e4cc;
+  border: 1px solid var(--ds-sage-strong);
   border-radius: 26px;
-  background: #fffdf7;
+  background: var(--ds-paper);
   margin: 20px 0;
 }
 .vocabulary-flashcard {
   display: grid;
   justify-items: center;
-  background: #fff4d7;
+  background: var(--ds-butter);
   border-radius: 24px;
   padding: 25px;
   max-width: 440px;
@@ -270,7 +270,7 @@
   max-width: 290px;
   min-height: 155px;
   margin: 5px auto 20px;
-  background: #edf5e1;
+  background: var(--ds-sage-strong);
   border: 2px dashed #9fbb8a;
   border-radius: 23px;
   padding: 12px;
@@ -302,9 +302,9 @@
 .vocabulary-choice {
   position: relative;
   width: 165px;
-  border: 2px solid #dce3cd;
+  border: 2px solid var(--ds-sage-strong);
   border-radius: 20px;
-  background: #fff9e9;
+  background: var(--ds-cream);
   padding: 12px;
   display: grid;
   justify-items: center;
@@ -325,7 +325,7 @@
 .vocabulary-play .selected {
   outline: 4px solid #638fa8;
   outline-offset: 3px;
-  background: #e8f1e1;
+  background: var(--ds-sage-strong);
 }
 .vocabulary-feedback {
   min-height: 29px;
@@ -335,7 +335,7 @@
   color: #45664c;
 }
 .vocabulary-feedback.success {
-  background: #e1f1d7;
+  background: var(--ds-sage-strong);
   border-radius: 16px;
   padding: 12px;
   font-weight: 700;
@@ -354,7 +354,7 @@
   display: flex;
   justify-content: center;
   gap: 15px;
-  background: #fff0cb;
+  background: var(--ds-sand);
   border-radius: 20px;
   padding: 12px;
   margin-bottom: 20px;
@@ -385,7 +385,7 @@
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 14px;
   padding: 15px;
-  background: #e8f2df;
+  background: var(--ds-sage-strong);
   border: 3px dashed #a3ba8c;
   border-radius: 25px;
   margin-bottom: 24px;
@@ -394,7 +394,7 @@
   display: grid;
   place-items: center;
   min-height: 130px;
-  background: #fffdf3;
+  background: var(--ds-paper);
   border-radius: 15px;
 }
 .vocabulary-collection-board > div > span {
@@ -420,7 +420,7 @@
   box-sizing: border-box;
 }
 .vocabulary-choice.paired {
-  background: #e2f0d8;
+  background: var(--ds-sage-strong);
   border-color: #8ead75;
 }
 .vocabulary-pair-tick {
@@ -445,7 +445,7 @@
 .vocabulary-sort-home {
   display: block;
   padding: 17px;
-  background: #edf5e1;
+  background: var(--ds-sage-strong);
   border: 2px dashed #a9bf91;
   border-radius: 23px;
   min-width: 0;
@@ -453,7 +453,7 @@
   min-height: 260px;
 }
 .vocabulary-sort-home:nth-child(2) {
-  background: #fff0d3;
+  background: var(--ds-sand);
   border-color: #d9bc7e;
 }
 .vocabulary-sort-home h2 {
@@ -506,8 +506,8 @@
   max-width: 200px;
   min-width: 110px;
   gap: 10px;
-  background: #fff4d8;
-  border: 1px solid #e2d9bc;
+  background: var(--ds-butter);
+  border: 1px solid var(--ds-sand);
   border-radius: 23px;
   padding: 15px;
   margin: 0;
@@ -527,7 +527,7 @@
   grid-template-columns: 260px 1fr;
   gap: 25px;
   align-items: center;
-  background: #e5f1ed;
+  background: var(--ds-success-soft);
   border: 1px solid #c4ddd1;
   border-radius: 25px;
   padding: 23px;
@@ -541,7 +541,7 @@
 .skill-vocabulary-preview img {
   width: 100%;
   height: auto;
-  background: #fffdf6;
+  background: var(--ds-paper);
   border-radius: 15px;
   padding: 6px;
   box-sizing: border-box;

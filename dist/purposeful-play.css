@@ -1,7 +1,7 @@
 .purposeful-play {
   max-width: 760px;
   margin: auto;
-  color: #355447;
+  color: var(--ds-ink-2);
 }
 .purposeful-play h1 {
   font-family: Georgia, serif;
@@ -27,7 +27,7 @@
   margin: auto;
 }
 .pp-story-strip {
-  background: #f0ecd9;
+  background: var(--ds-butter);
   border-radius: 14px;
   padding: 14px 18px;
   font-size: 15px;
@@ -60,9 +60,9 @@
 }
 .pp-tools > button,
 .pp-destinations > button {
-  border: 2px solid #c4ceb3;
-  background: #fff8e5;
-  color: #355447;
+  border: 2px solid var(--ds-line-strong);
+  background: var(--ds-butter);
+  color: var(--ds-ink-2);
   border-radius: 17px;
   padding: 9px;
   min-width: 75px;
@@ -86,9 +86,9 @@
   margin-top: 4px;
 }
 .pp-tools .selected {
-  outline: 3px solid #587a94;
+  outline: 3px solid var(--ds-sky-mid);
   outline-offset: 3px;
-  background: #e4ecdb;
+  background: var(--ds-sage-strong);
 }
 .pp-destinations > button {
   flex: 0 1 155px;
@@ -174,7 +174,7 @@
 .pp-pipe > span {
   display: block;
   background: #fffdf2ec;
-  color: #3f5c4d;
+  color: var(--ds-ink-soft);
   border-radius: 8px;
   padding: 3px 8px;
   font:
@@ -193,7 +193,7 @@
 .pp-ball {
   font-size: 36px;
   line-height: 1.2;
-  background: #fff8e9;
+  background: var(--ds-cream);
   color: #ae6186;
   border: 2px solid #bb9d8a;
   border-radius: 50%;
@@ -209,7 +209,7 @@
   min-width: 94px;
   border: 2px dashed #8a9e7a;
   border-radius: 13px;
-  background: #edf2e3;
+  background: var(--ds-sage);
   font-size: 13px;
 }
 .purposeful-play button:focus-visible {
@@ -313,7 +313,7 @@
   padding: 0;
   border: 2px solid transparent;
   background: transparent;
-  color: #345447;
+  color: var(--ds-ink-2);
   min-width: 44px;
   min-height: 44px;
   border-radius: 12px;
@@ -344,11 +344,11 @@
     11px system-ui,
     sans-serif;
   white-space: nowrap;
-  color: #345447;
+  color: var(--ds-ink-2);
   pointer-events: none;
 }
 .pp-scene-object[aria-pressed='true'] {
-  outline: 3px solid #416e97;
+  outline: 3px solid var(--ds-sky-mid);
   outline-offset: 2px;
   background: #fff9e52b;
 }
@@ -374,14 +374,14 @@
 .pp-scene-object[data-pp-canal='dock'],
 .pp-scene-object[data-pp-canal='bank'],
 .pp-scene-object[data-pp-trip-place] {
-  border: 2px dashed #6a8785;
+  border: 2px dashed var(--ds-ink-faint);
   background: #fffdf010;
 }
 .pp-scene-object[data-pp-canal='bank'] {
   background: #f4e4bd4d;
 }
 .pp-scene-object[data-pp-gate-position] {
-  background: #fff8e2;
+  background: var(--ds-butter);
   border: 2px dashed #9a8666;
   border-radius: 10px;
 }
@@ -496,7 +496,7 @@
   align-items: center;
   gap: 18px;
   text-align: left;
-  background: #e7f3f4;
+  background: var(--ds-mist);
   border: 2px solid #a6cbd0;
   border-radius: 20px;
   padding: 16px 20px;
@@ -549,13 +549,13 @@
   line-height: 1.4;
   padding: 5px 10px;
   border-radius: 18px;
-  background: #edf1ec;
-  border: 1px solid #cfdbd1;
-  color: #496054;
+  background: var(--ds-sage);
+  border: 1px solid var(--ds-line);
+  color: var(--ds-ink-soft);
 }
 .pp-canal-plan > [aria-current='step'] {
   background: #275d73;
-  color: #fff;
+  color: var(--ds-surface);
   border-color: #275d73;
   font-weight: 700;
 }
@@ -595,7 +595,7 @@
     sans-serif;
   bottom: -14px;
   padding: 3px 7px;
-  background: #fffdf5;
+  background: var(--ds-paper);
   border: 1px solid #d8d7bd;
   z-index: 6;
 }
@@ -606,7 +606,7 @@
 .pp-canal-board [data-canal-target] {
   border: 3px dashed #285a78;
   background: #f8fcff29;
-  outline: 3px solid #fff7d1;
+  outline: 3px solid var(--ds-sand);
   outline-offset: 2px;
 }
 .pp-canal-board [aria-pressed='true'] {
@@ -652,7 +652,7 @@
   width: 28px;
   height: 14px;
   border: 2px solid #527984;
-  background: #e6f0ec;
+  background: var(--ds-success-soft);
   border-radius: 4px;
 }
 .pp-canal-meter > i:last-child {
@@ -667,7 +667,7 @@
 .pp-canal-explore {
   text-align: left;
   margin-top: 12px;
-  border-top: 1px solid #d1dfd7;
+  border-top: 1px solid var(--ds-line);
   padding-top: 12px;
   font-size: 14px;
 }
@@ -738,4 +738,24 @@
 }
 .pp-canal-board [data-canal-aboard]:not([data-canal-next]):not([aria-pressed='true']) .pp-object-caption {
   display: none;
+}
+
+/* While one object is being moved (selected), the other movable scene objects (boat, Duck, parcel) must not
+   catch the tap meant for the destination unless they are a valid destination themselves
+   (data-canal-target). Cargo that is aboard sits over the boat and the landing, so it lets taps through
+   while a move is in progress — including the selected cargo, so tapping the landing where it is drawn
+   places it there. Before this, unloading failed when the tap landed on the docked boat or on cargo.
+   Pump and gate controls stay tappable. */
+.pp-canal-board:has([data-pp-canal][aria-pressed='true'])
+  :is(
+    :is([data-pp-canal='boat'], [data-pp-canal='duck'], [data-pp-canal='parcel']):not([aria-pressed='true']),
+    [data-canal-aboard='true']
+  ):not([data-canal-target='true']),
+.pp-canal-board:has([data-pp-canal][aria-pressed='true'])
+  :is(
+    :is([data-pp-canal='boat'], [data-pp-canal='duck'], [data-pp-canal='parcel']):not([aria-pressed='true']),
+    [data-canal-aboard='true']
+  ):not([data-canal-target='true'])
+  > svg {
+  pointer-events: none;
 }

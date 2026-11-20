@@ -29,7 +29,7 @@
   display: grid;
   place-items: center;
   border-radius: 50%;
-  background: #e7edda;
+  background: var(--ds-sage-strong);
   width: 28px;
   height: 28px;
   color: #58744e;
@@ -45,16 +45,16 @@
   gap: 19px;
   align-items: center;
   padding: 19px;
-  border: 1px solid #dde4d3;
+  border: 1px solid var(--ds-line);
   border-radius: 23px;
-  background: #fffdf7;
+  background: var(--ds-paper);
   text-align: left;
   min-width: 0;
 }
 .skill-card-art {
   border-radius: 17px;
   overflow: hidden;
-  background: #e9efdf;
+  background: var(--ds-sage);
   aspect-ratio: 1.05;
   display: grid;
   place-items: center;
@@ -118,8 +118,8 @@
   grid-template-columns: 1.4fr 1fr;
   gap: 35px;
   align-items: center;
-  background: #edf1e5;
-  border: 1px solid #e0e5d6;
+  background: var(--ds-sage);
+  border: 1px solid var(--ds-line);
   border-radius: 25px;
   padding: 32px;
   margin: 12px 0 30px;
@@ -153,8 +153,8 @@
 }
 .skill-course-card {
   text-align: left;
-  border: 1px solid #dce3d1;
-  background: #fffdf7;
+  border: 1px solid var(--ds-line);
+  background: var(--ds-paper);
   border-radius: 21px;
   padding: 24px;
   min-width: 0;
@@ -184,7 +184,7 @@
   width: 32%;
   height: 80px;
   border-radius: 12px;
-  background: #edf0e3;
+  background: var(--ds-sage);
   padding: 5px;
 }
 .skill-mini-art svg {
@@ -254,8 +254,8 @@
   gap: 14px;
   align-items: center;
   text-align: left;
-  background: #fffdf7;
-  border: 1px solid #dce3d1;
+  background: var(--ds-paper);
+  border: 1px solid var(--ds-line);
   border-radius: 17px;
   padding: 15px;
   min-width: 0;
@@ -267,7 +267,7 @@
 .skill-activity-picture {
   height: 82px;
   border-radius: 12px;
-  background: #edf1e3;
+  background: var(--ds-sage);
   padding: 6px;
 }
 .skill-activity-picture svg {
@@ -294,9 +294,9 @@
   color: #72876a;
 }
 .skill-real-life {
-  border: 1px solid #d6e0c9;
+  border: 1px solid var(--ds-sage-strong);
   border-radius: 23px;
-  background: #e9efdc;
+  background: var(--ds-sage-strong);
   padding: 28px;
   margin: 35px 0 25px;
 }
@@ -324,9 +324,9 @@
 }
 .skill-notes {
   padding: 19px 22px;
-  border: 1px solid #dce3d1;
+  border: 1px solid var(--ds-line);
   border-radius: 17px;
-  background: #fffdf7;
+  background: var(--ds-paper);
   margin: 17px 0;
   line-height: 1.9;
 }
@@ -342,7 +342,7 @@
 .skill-session-context {
   max-width: 850px;
   margin: 24px auto 35px;
-  background: #edf1e5;
+  background: var(--ds-sage);
   border-radius: 15px;
   padding: 17px 20px;
   font-size: 13px;
@@ -355,7 +355,7 @@
 .skill-grid button:focus-visible,
 .skill-course-grid button:focus-visible,
 .skill-activity-list button:focus-visible {
-  outline: 4px solid #4b718f;
+  outline: 4px solid var(--ds-sky-mid);
   outline-offset: 4px;
 }
 @media (max-width: 900px) {
@@ -542,7 +542,7 @@
   line-height: 1.2;
   letter-spacing: -1px;
   margin: 12px 0;
-  color: #304c40;
+  color: var(--ds-ink-2);
 }
 .compact-welcome p {
   font-size: 16px;
@@ -554,7 +554,7 @@
   display: inline-flex;
   gap: 4px;
   padding: 4px;
-  background: #e9eddf;
+  background: var(--ds-sage);
   border-radius: 15px;
   margin-bottom: 23px;
 }
@@ -568,7 +568,7 @@
   min-height: 44px;
 }
 .home-view-switch button[aria-pressed='true'] {
-  background: #fffdf7;
+  background: var(--ds-paper);
   color: #2e5842;
   box-shadow: 0 1px 5px #354c4012;
   font-weight: 600;
@@ -584,13 +584,13 @@
   flex-direction: column;
   min-width: 0;
   text-align: left;
-  border: 1px solid #dce2d2;
+  border: 1px solid var(--ds-line);
   border-radius: 19px;
-  background: #fffdf8;
+  background: var(--ds-paper);
   overflow: hidden;
   padding: 0;
   text-decoration: none;
-  color: #365442;
+  color: var(--ds-ink-2);
   transition:
     box-shadow 0.15s,
     border-color 0.15s;
@@ -603,7 +603,7 @@
   display: block;
   height: 148px;
   overflow: hidden;
-  background: #eceddf;
+  background: var(--ds-sage);
 }
 .support-tile-art svg {
   display: block;
@@ -638,8 +638,8 @@
   align-items: center;
   justify-content: space-between;
   gap: 20px;
-  background: #eaf0df;
-  border: 1px solid #d8e3c7;
+  background: var(--ds-sage-strong);
+  border: 1px solid var(--ds-sage-strong);
   border-radius: 16px;
   padding: 14px 19px;
   margin-bottom: 22px;
@@ -665,8 +665,8 @@
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 0;
-  border-top: 1px solid #dce2d2;
-  border-bottom: 1px solid #dce2d2;
+  border-top: 1px solid var(--ds-line);
+  border-bottom: 1px solid var(--ds-line);
   padding: 12px 0;
   margin-top: 30px;
 }
@@ -675,7 +675,7 @@
   font-size: 13px;
   padding: 8px 16px;
   border: 0;
-  border-right: 1px solid #dce2d2;
+  border-right: 1px solid var(--ds-line);
   background: transparent;
   min-height: 57px;
   color: #3a5a43;
@@ -712,7 +712,7 @@
   font-size: 36px;
   line-height: 1.2;
   letter-spacing: -0.5px;
-  color: #304c40;
+  color: var(--ds-ink-2);
   margin: 12px 0 15px;
 }
 .support-detail-head p {
@@ -742,7 +742,7 @@
 .compact-section-title h2,
 .support-course-section h2 {
   font-size: 22px;
-  color: #355443;
+  color: var(--ds-ink-2);
   margin: 0;
 }
 .compact-section-title > span {
@@ -760,15 +760,15 @@
   gap: 20px;
   padding: 19px;
   border-radius: 19px;
-  border: 1px solid #d9e0cd;
-  background: #fffdf7;
+  border: 1px solid var(--ds-line);
+  background: var(--ds-paper);
   text-decoration: none;
-  color: #365442;
+  color: var(--ds-ink-2);
   min-width: 0;
 }
 .support-game:hover {
   border-color: #90aa80;
-  background: #f3f6e9;
+  background: var(--ds-sage);
 }
 .support-game-art {
   display: flex;
@@ -777,7 +777,7 @@
   width: 135px;
   height: 135px;
   flex-shrink: 0;
-  background: #edf1e2;
+  background: var(--ds-sage);
   border-radius: 13px;
   overflow: hidden;
   padding: 7px;
@@ -812,9 +812,9 @@
   align-items: center;
   justify-content: space-between;
   gap: 15px;
-  background: #eef2e4;
+  background: var(--ds-sage);
   color: #3e5d43;
-  border: 1px solid #dce3d0;
+  border: 1px solid var(--ds-sage-strong);
   border-radius: 13px;
   padding: 16px 19px;
   text-decoration: none;
@@ -832,7 +832,7 @@
 }
 .parent-research {
   margin: 25px 0;
-  border-top: 1px solid #d9e0cf;
+  border-top: 1px solid var(--ds-line);
   padding-top: 10px;
 }
 .parent-research summary {
@@ -872,7 +872,7 @@
 .support-game:focus-visible,
 .parent-course-links > a:focus-visible,
 .home-view-switch button:focus-visible {
-  outline: 3px solid #4b718f;
+  outline: 3px solid var(--ds-sky-mid);
   outline-offset: 4px;
 }
 .skill-mini-art span {

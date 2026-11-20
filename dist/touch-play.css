@@ -61,7 +61,7 @@
   margin: 15px auto;
   max-width: 340px;
   color: #718768;
-  background: #f5f6ea;
+  background: var(--ds-sage);
   font-size: 14px;
   min-height: 65px;
 }
@@ -120,18 +120,18 @@
   font-size: 13px;
 }
 .pr-meal-goals span {
-  border: 1px solid #dce4d0;
+  border: 1px solid var(--ds-sage-strong);
   border-radius: 20px;
   padding: 8px 13px;
-  background: #fffdf5;
+  background: var(--ds-paper);
 }
 .pr-meal-goals .done {
-  background: #e7efd9;
+  background: var(--ds-sage-strong);
   border-color: #b7cfa3;
 }
 .pr-meal-tools {
   padding: 13px;
-  background: #f1f1e4;
+  background: var(--ds-sage);
   border-radius: 19px;
   display: flex;
   gap: 12px;
@@ -216,7 +216,7 @@
 }
 .pr-trip-banner {
   flex-basis: 100%;
-  background: #e9f0dd;
+  background: var(--ds-sage-strong);
   border-radius: 14px;
   padding: 14px;
   color: #55764b;
@@ -308,7 +308,7 @@
   align-items: center;
   gap: 14px;
   padding: 15px;
-  background: #edf2e2;
+  background: var(--ds-sage);
   border: 2px dashed #b4c6a2;
   border-radius: 20px;
   margin: 20px auto;
@@ -336,7 +336,7 @@
 .focus-packed-items > span:not(.focus-packed-empty) {
   width: 68px;
   height: 68px;
-  background: #fffdf1;
+  background: var(--ds-paper);
   border-radius: 12px;
   padding: 6px;
 }
@@ -384,14 +384,14 @@
   justify-content: center;
   gap: 10px;
   padding: 18px;
-  border: 2px dashed #87ac9c;
+  border: 2px dashed var(--ds-sage-mid);
   border-radius: 24px;
-  background: #f2f8ed;
+  background: var(--ds-sage);
   text-align: center;
 }
 .tp-answer-pad.has-choice {
   border-style: solid;
-  background: #eaf5e3;
+  background: var(--ds-sage-strong);
 }
 .choice-home-heading {
   display: block;

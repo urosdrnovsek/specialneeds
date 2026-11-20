@@ -105,7 +105,8 @@ const root = path.resolve(__dirname, '..');
       if (imgs.some(img => !img.complete || !img.naturalWidth)) throw Error('A picture did not load');
     });
   }
-  await page.locator('#vocabularyNav').tap();
+  // Word pictures are reached from the home page link (the legacy header button is gone).
+  await page.locator('main a[href="#vocabulary"]').first().tap();
   await imagesReady();
   assert.equal(await page.locator('#vocabCategory option').count(), 101);
   assert.equal(await page.locator('.vocabulary-card').count(), 36);
@@ -165,19 +166,19 @@ const root = path.resolve(__dirname, '..');
         target: vocabularyState.target,
         wrong: vocabularyState.choices.find(id => id !== vocabularyState.target)
       }));
-      await drag(`[data-vocab-choice="${s.wrong}"]`, '#vocabChoiceHome');
+      // Finding a named picture is a one-tap choice; the pressed picture shows the choice (no drop box).
+      assert.equal(await page.locator('#vocabChoiceHome').count(), 0);
+      await page.locator(`[data-vocab-choice="${s.wrong}"]`).tap();
       await settle();
       assert.equal(await page.evaluate(() => vocabularyState.done), false);
+      assert.equal(await page.evaluate(() => vocabularyState.selection), s.wrong);
       assert.equal(
-        await page.locator('#vocabChoiceHome img').getAttribute('alt'),
-        await page.evaluate(id => vocabularyObjects.get(id).label, s.wrong)
+        await page.locator(`[data-vocab-choice="${s.wrong}"]`).getAttribute('aria-pressed'),
+        'true'
       );
-      await drag(`[data-vocab-choice="${s.target}"]`, '#vocabChoiceHome', { mouse: true });
+      await page.locator(`[data-vocab-choice="${s.target}"]`).click();
       await settle();
-      assert.equal(
-        await page.locator('#vocabChoiceHome img').getAttribute('alt'),
-        await page.evaluate(id => vocabularyObjects.get(id).label, s.target)
-      );
+      assert.equal(await page.evaluate(() => vocabularyState.selection), s.target);
       await page.clock.runFor(1200);
     }
     if (mode === 'collect') {
@@ -246,7 +247,9 @@ const root = path.resolve(__dirname, '..');
       .locator('.adult-options svg image')
       .evaluateAll(els => els.map(e => e.getAttribute('href')));
     assert.equal(loaded.length, 3);
-    await drag(`[data-adult-choice="${s.correct}"]`, '.tp-answer-pad');
+    // A one-tap picture choice: no invented drop box, the picture is tapped.
+    assert.equal(await page.locator('.tp-answer-pad').count(), 0);
+    await page.locator(`[data-adult-choice="${s.correct}"]`).tap();
     await page.clock.runFor(1200);
     assert.equal(await page.locator('#adultAgain').count(), 1);
   }
@@ -257,12 +260,13 @@ const root = path.resolve(__dirname, '..');
   });
   await settle();
   const target = await page.evaluate(() => vocabularyState.target);
-  await drag(`[data-vocab-choice="${target}"]`, '#vocabChoiceHome', { cancel: true });
+  assert.equal(await page.locator('#vocabChoiceHome').count(), 0);
   assert.equal(await page.evaluate(() => vocabularyState.selection), null);
   await page.locator(`[data-vocab-choice="${target}"]`).focus();
   await page.keyboard.press('Enter');
   assert.equal(await page.evaluate(() => vocabularyState.selection), target);
-  await page.locator('#libraryNav').tap();
+  // The main navigation replaced the legacy header buttons.
+  await page.locator('#studioNav a[href="#support"]').tap();
   await page.clock.runFor(2000);
   assert.equal(await page.locator('[data-support]').count(), 8);
   assert.deepEqual(broken, []);

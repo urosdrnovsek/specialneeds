@@ -3,7 +3,14 @@ const fs = require('fs'),
   path = require('path'),
   assert = require('assert/strict');
 (async () => {
-  const browser = await chromium.launch({ executablePath: '/usr/bin/chromium', headless: true });
+  const browser = await chromium.launch({
+    ...(process.env.CHROMIUM_PATH
+      ? { executablePath: process.env.CHROMIUM_PATH }
+      : require('node:fs').existsSync('/usr/bin/chromium')
+        ? { executablePath: '/usr/bin/chromium' }
+        : {}),
+    headless: true
+  });
   const page = await browser.newPage();
   const root = process.env.STARTUP_ASSETS || path.resolve(__dirname, '../dist');
   const errors = [],
@@ -41,9 +48,9 @@ const fs = require('fs'),
     8,
     'Home must work while external font servers are unreachable'
   );
-  await page.locator('[data-home-view="skills"]').click();
-  await page.locator('[data-skill="seeing"]').click();
-  await page.locator('[data-skill-course="matching"]').click();
+  // The home toggle was replaced by the Courses page: open the course from its card.
+  await page.locator('#studioNav a[href="#courses"]').click();
+  await page.locator('#studioResults a[href="#course/matching"]').first().click();
   await page.locator('#skillBegin').click();
   assert.ok((await page.locator('[data-choice]').count()) > 0);
   const i = await page.evaluate(() => current.choices.findIndex(c => c.match));

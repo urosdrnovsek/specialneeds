@@ -1,9 +1,9 @@
 :root {
-  --ink: #243f35;
+  --ink: var(--ds-ink);
   --muted: #64766a;
-  --paper: #f7f8ef;
-  --green: #2f624e;
-  --line: #dce3d5;
+  --paper: var(--ds-sage);
+  --green: var(--ds-success);
+  --line: var(--ds-line);
   --yellow: #f6d878;
 }
 * {
@@ -104,7 +104,7 @@ main {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: #6f9470;
+  background: var(--ds-success-mid);
 }
 h1 {
   font-family: Manrope, sans-serif;
@@ -115,7 +115,7 @@ h1 {
 }
 h1 em {
   font-style: normal;
-  color: #749174;
+  color: var(--ds-success-mid);
 }
 p {
   color: var(--muted);
@@ -134,7 +134,7 @@ p {
   font-weight: 700;
 }
 .primary:hover {
-  background: #234b3a;
+  background: var(--ds-ink-2);
 }
 .hero-actions {
   display: flex;
@@ -149,15 +149,15 @@ p {
 .illustration {
   height: 315px;
   position: relative;
-  background: #e8eedd;
+  background: var(--ds-sage-strong);
   border-radius: 48% 43% 45% 40%;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 .art-card {
-  background: #fffdf5;
-  border: 1px solid #d8dfce;
+  background: var(--ds-paper);
+  border: 1px solid var(--ds-line);
   border-radius: 23px;
   width: 146px;
   height: 166px;
@@ -241,7 +241,7 @@ h2 {
 .progress-track {
   height: 5px;
   width: 145px;
-  background: #e2e7d9;
+  background: var(--ds-line);
   border-radius: 9px;
   margin-top: 9px;
   overflow: hidden;
@@ -258,7 +258,7 @@ h2 {
 }
 .course-card {
   border: 1px solid var(--line);
-  background: #fffdf7;
+  background: var(--ds-paper);
   border-radius: 17px;
   padding: 12px;
   text-align: left;
@@ -348,7 +348,7 @@ dialog a {
 }
 .secondary {
   border: 1px solid var(--line);
-  background: #fffdf7;
+  background: var(--ds-paper);
   border-radius: 10px;
   padding: 12px 18px;
 }
@@ -390,7 +390,7 @@ dialog a {
   align-items: center;
   justify-content: center;
   gap: 16px;
-  background: #f0f3e8;
+  background: var(--ds-sage);
   border-radius: 17px;
   width: max-content;
   max-width: 100%;
@@ -408,9 +408,9 @@ dialog a {
   flex-wrap: wrap;
 }
 .choice {
-  border: 2px solid #e0e6d9;
+  border: 2px solid var(--ds-line);
   border-radius: 17px;
-  background: #fffdf8;
+  background: var(--ds-paper);
   min-width: 120px;
   min-height: 120px;
   display: grid;
@@ -422,17 +422,17 @@ dialog a {
   height: 105px;
 }
 .choice:hover {
-  background: #f4f6ec;
-  border-color: #91a48b;
+  background: var(--ds-sage);
+  border-color: var(--ds-sage-mid);
 }
 .choice.wrong {
   border-color: #c59773;
-  background: #fff1df;
+  background: var(--ds-cream);
 }
 .choice.correct,
 .choice.hinted {
   border-color: var(--green);
-  background: #e3eddb;
+  background: var(--ds-sage-strong);
 }
 .feedback {
   min-height: 28px;
@@ -454,13 +454,13 @@ dialog a {
   height: 9px;
   width: 9px;
   border-radius: 50%;
-  background: #dbe2d3;
+  background: var(--ds-line);
 }
 .round-dots i.done {
   background: var(--green);
 }
 .round-dots i.current {
-  outline: 2px solid #91a48b;
+  outline: 2px solid var(--ds-sage-mid);
   outline-offset: 2px;
 }
 .demo-row {
@@ -474,7 +474,7 @@ dialog a {
   border: 2px solid #b8cba8;
   padding: 15px;
   border-radius: 18px;
-  background: #f0f4e8;
+  background: var(--ds-sage);
 }
 .demo-tile svg {
   width: 100px;
@@ -482,7 +482,7 @@ dialog a {
 }
 .demo-arrow {
   font-size: 38px;
-  color: #739274;
+  color: var(--ds-success-mid);
 }
 .success-icon {
   font-size: 50px;
@@ -498,7 +498,7 @@ dialog a {
   margin: 25px 0;
 }
 .completion-stat div {
-  background: #f0f3e8;
+  background: var(--ds-sage);
   padding: 18px;
   border-radius: 12px;
 }
@@ -637,7 +637,7 @@ dialog a {
   font-size: 14px;
 }
 .everyday-card {
-  background: #eaf0e0;
+  background: var(--ds-sage);
   border-radius: 18px;
   padding: 24px;
   align-self: center;
@@ -663,7 +663,7 @@ dialog a {
   border: 1px solid var(--line);
   border-radius: 14px;
   padding: 17px;
-  background: #fffdf7;
+  background: var(--ds-paper);
 }
 .support-grid h3 {
   font-size: 14px;
@@ -676,7 +676,7 @@ dialog a {
   margin: 0;
 }
 .access-note {
-  background: #f2ecdd;
+  background: var(--ds-cream);
   border-radius: 12px;
   padding: 16px;
 }
@@ -692,7 +692,7 @@ dialog a {
   font-size: 10px;
   font-weight: 800;
   letter-spacing: 1px;
-  background: #e7eddf;
+  background: var(--ds-sage);
   border-radius: 20px;
   padding: 7px 10px;
   color: var(--green);
@@ -784,7 +784,7 @@ button[hidden] {
   line-height: 1.65;
   color: var(--muted);
   text-align: left;
-  background: #edf1e6;
+  background: var(--ds-sage);
   padding: 17px 21px;
   margin: 18px 0;
   border-radius: 13px;
@@ -819,7 +819,7 @@ button[hidden] {
   outline-offset: 3px;
 }
 .trail-token.sorted {
-  background: #e3eddb;
+  background: var(--ds-sage-strong);
   font-size: 24px;
 }
 .arrow-cue {
@@ -835,8 +835,8 @@ button[hidden] {
   position: relative;
   min-width: 130px;
   min-height: 130px;
-  background: #f5f6ed;
-  border: 2px solid #c8d5ba;
+  background: var(--ds-sage);
+  border: 2px solid var(--ds-line-strong);
   border-radius: 45% 45% 16px 16px;
   padding: 17px 12px 8px;
 }
@@ -851,7 +851,7 @@ button[hidden] {
   transform: translateX(-50%);
   font-size: 27px;
   background: white;
-  color: #73916a;
+  color: var(--ds-success-mid);
 }
 .pair-board {
   display: grid;
@@ -865,7 +865,7 @@ button[hidden] {
   min-height: 116px;
   border: 2px solid var(--line);
   border-radius: 16px;
-  background: #fffdf7;
+  background: var(--ds-paper);
   display: grid;
   place-items: center;
 }
@@ -876,12 +876,12 @@ button[hidden] {
 .pair-card.selected,
 .part-option.selected,
 .color-option.selected {
-  border-color: #2f624e;
+  border-color: var(--ds-success);
   box-shadow: 0 0 0 2px #2f624e33;
-  background: #edf3e5;
+  background: var(--ds-sage);
 }
 .pair-card.paired {
-  background: #e5eedc;
+  background: var(--ds-sage-strong);
   border-color: #b0c59d;
   opacity: 0.65;
 }
@@ -890,7 +890,7 @@ button[hidden] {
   right: 7px;
   top: 5px;
   font-size: 18px;
-  color: #2f624e;
+  color: var(--ds-success);
 }
 .hinted {
   outline: 3px dashed #497d35;
@@ -898,11 +898,11 @@ button[hidden] {
 }
 .wrong {
   border-color: #bc885e !important;
-  background: #fff2e5 !important;
+  background: var(--ds-warm-soft) !important;
 }
 .correct {
-  border-color: #2f624e !important;
-  background: #e5eedc !important;
+  border-color: var(--ds-success) !important;
+  background: var(--ds-sage-strong) !important;
 }
 .compare-workbench {
   display: flex;
@@ -920,7 +920,7 @@ button[hidden] {
   margin: 0 0 10px;
 }
 .bench-picture {
-  background: #f0f3e8;
+  background: var(--ds-sage);
   border: 1px solid var(--line);
   border-radius: 19px;
   padding: 10px 20px;
@@ -932,7 +932,7 @@ button[hidden] {
   height: 130px;
 }
 .built-picture {
-  background: #fff8e9;
+  background: var(--ds-cream);
   border-style: dashed;
 }
 .workbench-link {
@@ -961,7 +961,7 @@ button[hidden] {
   display: grid;
   place-items: center;
   border-radius: 13px;
-  background: #fffdf8;
+  background: var(--ds-paper);
   border: 2px solid var(--line);
 }
 .color-option span {
@@ -974,7 +974,7 @@ button[hidden] {
   position: absolute;
   bottom: 0;
   right: 1px;
-  background: #fffdf8;
+  background: var(--ds-paper);
   border-radius: 50%;
   font-size: 15px;
 }
@@ -985,7 +985,7 @@ button[hidden] {
   height: 87px;
   border-radius: 12px;
   border: 2px solid var(--line);
-  background: #fffdf8;
+  background: var(--ds-paper);
 }
 .part-option svg {
   width: 72px;
@@ -998,8 +998,8 @@ button[hidden] {
   margin: 25px 0;
 }
 .turn-button {
-  background: #eef3e5;
-  border: 2px solid #cbd8bf;
+  background: var(--ds-sage);
+  border: 2px solid var(--ds-line-strong);
   border-radius: 16px;
   padding: 12px 17px;
   font-size: 13px;
@@ -1021,7 +1021,7 @@ button[hidden] {
 .scene-tile {
   border: 2px solid var(--line);
   border-radius: 14px;
-  background: #fffdf8;
+  background: var(--ds-paper);
   padding: 6px;
   display: grid;
   place-items: center;
@@ -1032,7 +1032,7 @@ button[hidden] {
   height: 95px;
 }
 .model-row .scene-tile {
-  background: #edf2e4;
+  background: var(--ds-sage);
 }
 .interactive-stage button:disabled {
   cursor: default;
@@ -1042,7 +1042,7 @@ button[hidden] {
 .scene-tile:hover:not(:disabled),
 .turn-button:hover:not(:disabled) {
   border-color: #7c9770;
-  background: #f0f4e7;
+  background: var(--ds-sage);
 }
 @media (max-width: 600px) {
   .compare-workbench {
@@ -1109,13 +1109,13 @@ button[hidden] {
   justify-content: center;
   gap: 10px;
   min-height: 300px;
-  background: #e9eedf;
+  background: var(--ds-sage);
   border-radius: 43% 51% 40% 48%;
   padding: 25px;
 }
 .library-picture {
-  background: #fffdf5;
-  border: 1px solid #d8dfce;
+  background: var(--ds-paper);
+  border: 1px solid var(--ds-line);
   border-radius: 20px;
   box-shadow: 0 8px 0 #cbd8be55;
   padding: 14px;
@@ -1148,7 +1148,7 @@ button[hidden] {
   margin: 22px 0 35px;
 }
 .library-card {
-  background: #fffdf6;
+  background: var(--ds-paper);
   border: 1px solid var(--line);
   border-radius: 20px;
   text-align: left;
@@ -1207,7 +1207,7 @@ button[hidden] {
   max-width: 610px;
 }
 .course-title-dot {
-  color: #ba7d52;
+  color: var(--ds-warm-mid);
 }
 .course-hero-art {
   height: 260px;
@@ -1223,7 +1223,7 @@ button[hidden] {
   border: 1px solid var(--line);
   border-radius: 17px;
   padding: 22px;
-  background: #fffdf7;
+  background: var(--ds-paper);
 }
 .course-evidence p {
   font-size: 13px;
@@ -1249,7 +1249,7 @@ button[hidden] {
   place-items: center;
   border: 1px solid var(--line);
   border-radius: 12px;
-  background: #fffdf7;
+  background: var(--ds-paper);
   padding: 6px;
 }
 .story-frame > svg {
@@ -1263,7 +1263,7 @@ button[hidden] {
 }
 .frame-dot {
   font-size: 10px;
-  background: #e3ead7;
+  background: var(--ds-sage-strong);
   padding: 4px 7px;
   border-radius: 15px;
   margin-top: 5px;
@@ -1289,7 +1289,7 @@ button[hidden] {
   position: relative;
   display: grid;
   place-items: center;
-  background: #fffdf7;
+  background: var(--ds-paper);
   border: 2px solid var(--line);
   border-radius: 15px;
   flex: 1;
@@ -1305,12 +1305,12 @@ button[hidden] {
   max-height: 145px;
 }
 .learning-option:hover:not(:disabled) {
-  background: #eef3e5;
-  border-color: #91a48b;
+  background: var(--ds-sage);
+  border-color: var(--ds-sage-mid);
 }
 .learning-option.selected,
 .sequence-slot.selected {
-  background: #e6efdc;
+  background: var(--ds-sage-strong);
   border-color: var(--green);
 }
 .selected-check {
@@ -1324,7 +1324,7 @@ button[hidden] {
   display: flex;
   justify-content: center;
   gap: 12px;
-  background: #eaf0df;
+  background: var(--ds-sage-strong);
   padding: 13px;
   border-radius: 17px;
   margin: 18px 0;
@@ -1337,7 +1337,7 @@ button[hidden] {
   min-height: 130px;
   border: 2px dashed #aabf9a;
   border-radius: 12px;
-  background: #fffdf7;
+  background: var(--ds-paper);
   padding: 7px;
   color: #87a076;
 }
@@ -1359,10 +1359,10 @@ button[hidden] {
   font-size: 40px;
   color: #86a174;
   border-style: dashed;
-  background: #eaf0df;
+  background: var(--ds-sage-strong);
 }
 .reference-strip .story-frame {
-  background: #edf2e4;
+  background: var(--ds-sage);
 }
 .reference-strip svg {
   max-height: 145px;
@@ -1544,7 +1544,7 @@ button[hidden] {
   border: 1px solid #d6b97e;
   border-radius: 20px;
   padding: 6px 10px;
-  background: #f7eed8;
+  background: var(--ds-butter);
   color: #69562d;
   font-size: 11px;
   font-weight: 700;
@@ -1554,7 +1554,7 @@ button[hidden] {
   display: flex;
   gap: 13px;
   align-items: center;
-  background: #f5ecd5;
+  background: var(--ds-sand);
   border: 1px solid #decb9e;
   border-radius: 14px;
   padding: 17px 20px;
@@ -1583,8 +1583,8 @@ button[hidden] {
   padding: 13px;
 }
 .adult-prompt {
-  background: #eef3e7;
-  border: 1px solid #cbd8be;
+  background: var(--ds-sage);
+  border: 1px solid var(--ds-line-strong);
   border-radius: 17px;
   padding: 20px 23px;
   text-align: left;
@@ -1599,7 +1599,7 @@ button[hidden] {
 }
 .adult-prompt-top > span {
   font-size: 10px;
-  border: 1px solid #bdcdb2;
+  border: 1px solid var(--ds-line-strong);
   border-radius: 20px;
   padding: 5px 8px;
   color: var(--muted);
@@ -1638,7 +1638,7 @@ button[hidden] {
   width: 100%;
 }
 .adult-instructions {
-  background: #f2f4eb;
+  background: var(--ds-sage);
   text-align: left;
   border-radius: 12px;
   padding: 17px 20px;
@@ -1680,8 +1680,8 @@ button[hidden] {
   display: block;
   width: 42px;
   height: 42px;
-  background: #f8f9f0;
-  border: 2px dashed #c9d5bd;
+  background: var(--ds-paper);
+  border: 2px dashed var(--ds-line-strong);
   border-radius: 50%;
 }
 .sound-counter.filled {
@@ -1709,7 +1709,7 @@ button[hidden] {
 }
 .adult-order-slots .story-frame {
   min-height: 110px;
-  background: #edf2e4;
+  background: var(--ds-sage);
 }
 .empty-order {
   font-size: 35px;

@@ -2,7 +2,7 @@
   display: none !important;
 }
 .quick-mode .quick-success {
-  background: #e8f1dd;
+  background: var(--ds-sage-strong);
   border: 1px solid #cbdcba;
   border-radius: 14px;
   padding: 12px 18px;

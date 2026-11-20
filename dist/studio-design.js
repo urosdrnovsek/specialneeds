@@ -75,7 +75,7 @@ const StudioDesign = {
             '" href="#support/' +
             id +
             '"><div class="studio-need-art" aria-hidden="true">' +
-            worldScene(...s.scene) +
+            DesignCovers.support(id) +
             '</div><div class="studio-need-copy"><h3>' +
             title +
             '</h3><p>' +
@@ -158,7 +158,7 @@ const StudioDesign = {
       );
     return (
       '<article class="studio-card studio-course-card"><div class="studio-card-art" aria-hidden="true">' +
-      art(c.activities[0]) +
+      DesignCovers.course(c) +
       '</div><div class="studio-card-body"><div class="studio-card-meta"><small>' +
       esc(c.skillTitle || skillGet(c.skill).title) +
       '</small><span>' +
@@ -189,15 +189,32 @@ const StudioDesign = {
     );
   },
   stages(c, esc) {
-    const first = c.activities.findIndex((a, i) => !skillExplored(a, c.id, i)),
-      active = first < 0 ? 0 : Math.floor(first / 4),
-      labels = ['Explore together', 'Practise with support', 'Try new examples', 'Use and revisit'];
+    // Pilots use four stages of four; reading paths declare their own stages (one per merged course).
+    const plan = c.stages
+        ? c.stages.map(st => ({ label: st.title, size: st.size }))
+        : ['Explore together', 'Practise with support', 'Try new examples', 'Use and revisit'].map(label => ({
+            label,
+            size: 4
+          })),
+      starts = plan.map((_, i) => plan.slice(0, i).reduce((n, p) => n + p.size, 0)),
+      first = c.activities.findIndex((a, i) => !skillExplored(a, c.id, i)),
+      active =
+        first < 0
+          ? 0
+          : Math.max(
+              0,
+              starts.findLastIndex(start => start <= first)
+            ),
+      words = ['', 'ONE', 'TWO', 'THREE', 'FOUR', 'FIVE', 'SIX', 'SEVEN', 'EIGHT'];
     return (
-      '<div class="studio-course-map"><span>FOUR SMALL STAGES</span><p>Start with one activity. You can enter any stage and keep useful support.</p></div>' +
-      labels
-        .map((label, stage) => {
-          const items = c.activities.slice(stage * 4, stage * 4 + 4),
-            done = items.filter((a, j) => skillExplored(a, c.id, stage * 4 + j)).length;
+      '<div class="studio-course-map"><span>' +
+      (words[plan.length] || plan.length) +
+      ' SMALL STAGES</span><p>Start with one activity. You can enter any stage and keep useful support.</p></div>' +
+      plan
+        .map(({ label }, stage) => {
+          const base = starts[stage],
+            items = c.activities.slice(base, base + plan[stage].size),
+            done = items.filter((a, j) => skillExplored(a, c.id, base + j)).length;
           return (
             '<details class="studio-stage" ' +
             (stage === active ? 'open' : '') +
@@ -212,7 +229,7 @@ const StudioDesign = {
             ' explored</small></span><span class="studio-stage-expand" aria-hidden="true">＋</span></summary><div class="studio-stage-items">' +
             items
               .map((a, j) => {
-                const index = stage * 4 + j,
+                const index = base + j,
                   explored = skillExplored(a, c.id, index);
                 return (
                   '<button data-pilot-activity="' +
@@ -220,9 +237,9 @@ const StudioDesign = {
                   '"><span class="studio-activity-index" aria-hidden="true">' +
                   (explored ? '✓' : String(index + 1).padStart(2, '0')) +
                   '</span><span><b>' +
-                  esc(a.title) +
+                  esc(a.title || skillTitle(a)) +
                   '</b><small>' +
-                  esc(a.purpose) +
+                  esc(a.purpose || '') +
                   '</small><em>' +
                   (a.engine === 'offline'
                     ? 'Together away from the screen'

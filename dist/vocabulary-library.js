@@ -352,7 +352,7 @@ function vocabularyRender() {
   let body = '',
     instruction = '';
   const pictureButton = (id, attr, selected = false) =>
-    `<button class="vocabulary-choice ${selected ? 'selected' : ''}" ${attr} aria-label="${senEscape(vocabularyObjects.get(id).label)}" ${s.done ? 'disabled' : ''}>${vocabularyImage(id)}${s.names ? `<span>${senEscape(vocabularyObjects.get(id).label)}</span>` : ''}</button>`;
+    `<button class="vocabulary-choice ${selected ? 'selected' : ''}" ${attr} aria-pressed="${!!selected}" aria-label="${senEscape(vocabularyObjects.get(id).label)}" ${s.done ? 'disabled' : ''}>${vocabularyImage(id)}${s.names ? `<span>${senEscape(vocabularyObjects.get(id).label)}</span>` : ''}</button>`;
   if (s.mode === 'explore') {
     const ids = vocabularyCategoryIds(s.category);
     s.target = ids[s.current % ids.length];
@@ -361,7 +361,7 @@ function vocabularyRender() {
   }
   if (s.mode === 'find') {
     instruction = 'Find the ' + vocabularyObjects.get(s.target).label + '.';
-    body = `<div class="vocabulary-choice-home tp-answer-pad ${s.selection ? 'has-choice' : ''}" id="vocabChoiceHome" role="group" aria-label="Your choice">${s.selection ? `${vocabularyImage(s.selection)}<b>${senEscape(vocabularyObjects.get(s.selection).label)}</b>` : '<span>Drag a picture here, or tap it below.</span>'}</div><div class="vocabulary-options">${s.choices.map(id => pictureButton(id, `data-vocab-choice="${id}"`, s.selection === id)).join('')}</div>`;
+    body = `<div class="vocabulary-options">${s.choices.map(id => pictureButton(id, `data-vocab-choice="${id}"`, s.selection === id)).join('')}</div>`;
   }
   if (s.mode === 'collect') {
     const extra = vocabularySample(s.category, 20, s.current)
@@ -488,22 +488,13 @@ makeAdultTask = function (key, index, round, seed = 0) {
 TouchPlay.register(bind => {
   if (!app.querySelector('.vocabulary-play') || !vocabularyState || vocabularyState.done) return;
   const s = vocabularyState;
-  app
-    .querySelectorAll('[data-vocab-choice]')
-    .forEach(b =>
-      bind(b, {
-        targets: () => [document.getElementById('vocabChoiceHome')],
-        drop: () => vocabularySelect(b.dataset.vocabChoice)
-      })
-    );
-  app
-    .querySelectorAll('[data-vocab-collect]')
-    .forEach(b =>
-      bind(b, {
-        targets: () => [document.getElementById('vocabCollection')],
-        drop: () => vocabularyCollect(b.dataset.vocabCollect)
-      })
-    );
+  // Finding a named picture is a one-tap choice; there is no drop box to drag into.
+  app.querySelectorAll('[data-vocab-collect]').forEach(b =>
+    bind(b, {
+      targets: () => [document.getElementById('vocabCollection')],
+      drop: () => vocabularyCollect(b.dataset.vocabCollect)
+    })
+  );
   app.querySelectorAll('[data-vocab-pair]:not(:disabled)').forEach(b =>
     bind(b, {
       targets: () => [...app.querySelectorAll('[data-vocab-pair]:not(:disabled)')].filter(v => v !== b),
@@ -513,12 +504,10 @@ TouchPlay.register(bind => {
       }
     })
   );
-  app
-    .querySelectorAll('[data-vocab-sort]')
-    .forEach(b =>
-      bind(b, {
-        targets: () => [...app.querySelectorAll('[data-vocab-home]')],
-        drop: target => vocabularySort(b.dataset.vocabSort, +target.dataset.vocabHome)
-      })
-    );
+  app.querySelectorAll('[data-vocab-sort]').forEach(b =>
+    bind(b, {
+      targets: () => [...app.querySelectorAll('[data-vocab-home]')],
+      drop: target => vocabularySort(b.dataset.vocabSort, +target.dataset.vocabHome)
+    })
+  );
 });

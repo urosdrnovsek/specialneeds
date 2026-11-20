@@ -460,15 +460,8 @@ function senRender(focusId) {
   let body = '';
   if (t.reference?.length)
     body += `<div class="sen-reference">${t.reference.map(p => `<div class="story-frame">${senPicture(p)}</div>`).join('')}</div>`;
-  if (['explore', 'choice'].includes(t.mode)) {
-    const chosen = s.selection === null ? null : t.options[s.selection],
-      label = chosen
-        ? g.kind === 'theme'
-          ? ['Trains', 'Animals', 'A picnic'][s.selection]
-          : senDescription(chosen.picture)
-        : '';
-    body += `<div id="senChoiceHome" class="tp-answer-pad sen-choice-home ${chosen ? 'has-choice' : ''}" role="group" aria-label="Your choice"><span class="sen-choice-heading">Your choice</span>${chosen ? `<div class="sen-chosen-picture" role="img" aria-label="Chosen: ${senEscape(label)}">${senPicture(chosen.picture)}</div><span class="sen-choice-caption">${senEscape(label)}</span>` : '<span class="sen-choice-placeholder">Drag a picture here, or tap one below.</span>'}</div>`;
-  }
+  // One-tap choice: the pressed picture itself shows the choice (no separate 'Your choice' box).
+
   if (t.mode === 'book') {
     body += `<div class="sen-book" aria-label="Story page ${s.page + 1} of ${t.pages.length}"><div class="story-frame">${senPicture(t.pages[s.page])}</div><p>${senEscape(t.captions[s.page])}</p><div class="sen-controls"><button class="secondary" id="senPageBack" ${s.page === 0 ? 'disabled' : ''}>← Previous page</button><span>${s.page + 1} / ${t.pages.length}</span><button class="secondary" id="senPageNext" ${s.page === t.pages.length - 1 ? 'disabled' : ''}>Next page →</button></div></div>`;
   } else if (t.mode === 'counter') {

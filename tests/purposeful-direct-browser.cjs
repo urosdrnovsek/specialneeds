@@ -96,7 +96,12 @@ const { chromium } = require('playwright'),
     assert.equal(await p.evaluate(() => senState.play.canal.boat), 'dock');
     await drag('[data-pp-canal="duck"]', '[data-pp-canal="dock"]');
     assert.equal(await p.evaluate(() => senState.done), false);
-    await drag('[data-pp-canal="parcel"]', '[data-pp-canal="dock"]', true);
+    // At the landing the parcel is drawn on top of the landing itself, so a drag "to the landing" barely
+    // moves and counts as a tap. Unload it the way a child would: tap the parcel, then tap the landing.
+    // (This needs the landing to stay tappable while cargo is selected; see purposeful-play.css.)
+    await p.locator('[data-pp-canal="parcel"]').tap();
+    assert.equal(await p.evaluate(() => senState.play.selected), 'parcel');
+    await p.locator('[data-pp-canal="dock"]').tap();
     assert.equal(await p.evaluate(() => senState.done), true);
     await launch('controls', 1);
     await p.locator('[data-pp-trip="beach"]').tap();
@@ -119,7 +124,7 @@ const { chromium } = require('playwright'),
     JSON.stringify({
       physicalTouchBoatAndCargo: true,
       tapBoatThroughPassengerCorners: true,
-      mouseUnload: true,
+      tapUnloadAtLanding: true,
       keyboardTubeTurn: true,
       sceneObjectDrag: true,
       responsiveWidths: [320, 390, 768],

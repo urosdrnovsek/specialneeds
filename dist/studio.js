@@ -43,8 +43,7 @@ const Studio = (() => {
     StudioMissions.dispose();
     token++;
     clearTimeout(timer);
-    if (location.hash !== hash) history.pushState(null, '', location.pathname + hash);
-    route();
+    AppRouter.go(hash);
   }
   function nav() {
     old.nav();
@@ -162,8 +161,8 @@ const Studio = (() => {
         .join('') +
       '</select></label><button class="primary">Find courses</button></form><p id="studioCount" role="status"></p><div class="studio-grid" id="studioResults"></div>';
     const found = registry()
-      .filter(c => (!skill || c.skillId === skill) && StudioDesign.courseMatches(c, query))
-      .sort((a, b) => Number(!!b.pilot) - Number(!!a.pilot));
+      .filter(c => !c.mergedInto && (!skill || c.skillId === skill) && StudioDesign.courseMatches(c, query))
+      .sort((a, b) => Number(!!(b.pilot || b.path)) - Number(!!(a.pilot || a.path)));
     app.querySelector('#studioCount').textContent = found.length + ' courses';
     const results = app.querySelector('#studioResults');
     const chips =
@@ -343,12 +342,14 @@ const Studio = (() => {
     clearTimeout(timer);
     old.course(id);
     const c = skillCourseGet(id).course;
-    if (c.pilot) {
+    if (c.pilot || c.stages) {
       const section = app.querySelector('.skill-course-activities');
       section.innerHTML =
-        '<p class="studio-notice">Curriculum draft · Educator review pending. Adult support is needed. Try one to three activities for a short visit.</p><p><b>Start with:</b> ' +
-        esc(c.entry) +
-        '</p>' +
+        (c.pilot
+          ? '<p class="studio-notice">Curriculum draft · Educator review pending. Adult support is needed. Try one to three activities for a short visit.</p><p><b>Start with:</b> ' +
+            esc(c.entry) +
+            '</p>'
+          : '<p class="studio-notice">A grown-up joins in. Try one to three activities for a short visit; stages can be entered in any order.</p>') +
         StudioDesign.stages(c, esc);
       section
         .querySelectorAll('button')
@@ -598,10 +599,21 @@ const Studio = (() => {
     return old.restore();
   };
   StudioDevice.mountNotice();
-  window.addEventListener('popstate', route);
-  window.addEventListener('hashchange', route);
+  AppRouter.setResolver(() => {
+    const view = AppRouter.libraryView();
+    if (view) {
+      // Optional legacy libraries (?library=full / ?library=playroom) stay reachable for free play.
+      prLibraryMode = view === 'full';
+      skillFreePlay = view === 'playroom';
+      skillContext = null;
+      libraryHome(); // the library renders its own navigation
+      return;
+    }
+    prLibraryMode = false;
+    skillFreePlay = false;
+    route();
+  });
   nav();
-  if (!location.hash || location.hash === '#skills' || location.hash === '#support') support();
-  else route();
+  AppRouter.start();
   return { registry, route, go };
 })();

@@ -193,9 +193,10 @@ const root = path.resolve(__dirname, '..');
   assert.equal(await page.locator('[data-pr-game]').count(), 4);
   await page.locator('#courseNav').click();
   await page.locator('[data-pr-parent="research"]').click();
-  await page.locator('.pr-research-section summary').first().click();
+  // The early-reading section was added first; open the ADHD section by name.
+  await page.locator('.pr-research-section summary', { hasText: 'ADHD / ADD' }).click();
   assert.match(await page.locator('.pr-parent-content').innerText(), /predominantly inattentive/);
-  assert.equal(await page.locator('.pr-research-section').count(), 9);
+  assert.equal(await page.locator('.pr-research-section').count(), 10);
   assert.ok((await page.locator('.pr-parent-content a').count()) > 20);
   // Optional original activities start without their intro screen.
   await page.locator('[data-pr-parent="courses"]').click();
@@ -208,9 +209,9 @@ const root = path.resolve(__dirname, '..');
   );
   await page.locator(`[data-adult-choice="${answerIndex}"]`).click();
   await page.locator('#adultNext').click();
-  assert.equal(await page.locator('#courseNav').innerText(), 'Grown-ups');
+  assert.equal(await page.locator('#courseNav').innerText(), 'Guidance');
   await page.locator('#courseNav').click();
-  assert.match(await page.locator('h1').innerText(), /guidance/);
+  assert.match(await page.locator('h1').innerText(), /parents & teachers/);
   await page.evaluate(() => {
     skillFreePlay = true;
     skillContext = null;

@@ -203,7 +203,8 @@ const root = path.resolve(__dirname, '..');
     await page.locator(`[data-world-piece="${p}"]`).tap();
     await page.locator(`[data-world-slot="${p}"]`).tap();
   }
-  await page.locator('#libraryNav').tap();
+  // The main navigation replaced the legacy header buttons.
+  await page.locator('#brand').tap();
   await page.clock.runFor(2000);
   assert.equal(await page.locator('[data-support]').count(), 8);
   assert.deepEqual(errors, []);

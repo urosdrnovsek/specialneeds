@@ -10,9 +10,9 @@
   text-align: left;
   padding: 35px;
   border-radius: 28px;
-  border: 1px solid #dae3d1;
-  background: #eaf0e1;
-  color: #355447;
+  border: 1px solid var(--ds-sage-strong);
+  background: var(--ds-sage);
+  color: var(--ds-ink-2);
 }
 .calm-banner h2 {
   font-size: 32px;
@@ -25,7 +25,7 @@
   width: 100%;
 }
 .calm-hero {
-  background: #eaf0e1;
+  background: var(--ds-sage);
 }
 .calm-filters {
   display: flex;
@@ -34,7 +34,7 @@
   margin: 20px 0;
 }
 .calm-filters [aria-pressed='true'] {
-  background: #476c50;
+  background: var(--ds-success);
   color: white;
 }
 .calm-controls {
@@ -57,7 +57,7 @@
   width: 140px;
   height: 145px;
   margin: 0 auto 24px;
-  background: #f3f4e9;
+  background: var(--ds-sage);
   padding: 16px;
   border-radius: 20px;
 }
@@ -84,7 +84,7 @@
 }
 .calm-options .hinted,
 .calm-path .hinted {
-  box-shadow: 0 0 0 5px #debf75;
+  box-shadow: 0 0 0 5px var(--ds-gold);
 }
 .calm-pose-art {
   max-width: 390px;
@@ -125,7 +125,7 @@
   transform: scale(1);
 }
 .calm-routine fieldset {
-  border: 1px solid #d9e2d0;
+  border: 1px solid var(--ds-sage-strong);
   border-radius: 18px;
   padding: 18px;
   margin: 15px 0;
@@ -170,7 +170,7 @@
 }
 .calm-play button:focus-visible,
 .calm-banner:focus-visible {
-  outline: 4px solid #486c88;
+  outline: 4px solid var(--ds-sky-mid);
   outline-offset: 5px;
 }
 .calm-play button {
@@ -262,7 +262,7 @@
 .calm-see-label {
   margin: 0 0 8px;
   font-weight: 700;
-  color: #355447;
+  color: var(--ds-ink-2);
 }
 .calm-see-choose {
   display: flex;
@@ -305,7 +305,7 @@
   right: 4px;
   top: 2px;
   font-weight: 800;
-  color: #2f6b4f;
+  color: var(--ds-success);
 }
 .calm-see-basket {
   position: relative;
@@ -346,8 +346,8 @@
   gap: 10px;
   padding: 14px;
   border-radius: 22px;
-  background: linear-gradient(#f3ead9 0 62%, #d9bf98 62%);
-  border: 1px solid #e3d7bf;
+  background: linear-gradient(var(--ds-cream) 0 62%, #d9bf98 62%);
+  border: 1px solid var(--ds-sand);
 }
 .calm-see-thing,
 .calm-see-gap {
@@ -368,8 +368,8 @@
   height: 100%;
 }
 .calm-see-thing:not(:disabled):hover {
-  border-color: #8eae96;
-  background: #fff;
+  border-color: var(--ds-sage-mid);
+  background: var(--ds-surface);
 }
 .calm-see-thing:disabled {
   cursor: default;
@@ -388,7 +388,7 @@
 .calm-see-whole {
   position: relative;
   aspect-ratio: 1;
-  background: #f6f3e8;
+  background: var(--ds-cream);
   border-radius: 24px;
   padding: 14px;
 }
@@ -406,11 +406,11 @@
   white-space: nowrap;
   font-size: 13px;
   font-weight: 700;
-  background: #fff;
-  border: 1px solid #dce2d6;
+  background: var(--ds-surface);
+  border: 1px solid var(--ds-line);
   border-radius: 999px;
   padding: 3px 12px;
-  color: #355447;
+  color: var(--ds-ink-2);
 }
 .calm-see-details {
   display: flex;
@@ -424,7 +424,7 @@
   padding: 0 !important;
   border-radius: 50% !important;
   overflow: hidden;
-  background: #fffdf7;
+  background: var(--ds-paper);
 }
 .calm-see-lens svg {
   width: 100%;

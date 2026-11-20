@@ -1,15 +1,8 @@
 'use strict';
+// A picture choice can be dragged onto a meaningful target (the model picture, a basket or a goal).
+// Single-tap choices without such a target are no longer given an invented 'Your choice' drop box.
 function courseAnswerPad(stage, reference) {
-  if (reference) return reference;
-  if (!stage) return null;
-  let pad = stage.querySelector('.tp-answer-pad');
-  if (!pad) {
-    pad = document.createElement('div');
-    pad.className = 'tp-answer-pad';
-    pad.textContent = 'Drag your choice here, or tap its picture.';
-    stage.prepend(pad);
-  }
-  return pad;
+  return reference || null;
 }
 function courseChoiceDisplay(pad, choices) {
   if (!pad || !pad.classList.contains('tp-answer-pad')) return;
@@ -138,7 +131,7 @@ TouchPlay.register(bind => {
       const stage = q('.learning-stage'),
         target = courseAnswerPad(stage, q('.reference-strip'));
       courseChoiceDisplay(target, qa('[data-learning-choice]'));
-      qa('[data-learning-choice]').forEach(el => simple(el, target, () => el.click()));
+      if (target) qa('[data-learning-choice]').forEach(el => simple(el, target, () => el.click()));
     }
   }
   if (q('[data-adult-choice]')) {
@@ -157,7 +150,7 @@ TouchPlay.register(bind => {
     } else {
       const target = courseAnswerPad(q('.adult-stage'), q('.adult-reference'));
       courseChoiceDisplay(target, qa('[data-adult-choice]'));
-      qa('[data-adult-choice]').forEach(el => simple(el, target, () => el.click()));
+      if (target) qa('[data-adult-choice]').forEach(el => simple(el, target, () => el.click()));
     }
   }
   if (q('#adultAdd')) {
@@ -199,7 +192,7 @@ TouchPlay.register(bind => {
       );
     } else if (t.options?.length) {
       const target = courseAnswerPad(q('.sen-stage'), q('#senChoiceHome') || q('.sen-reference'));
-      qa('[data-sen-choice]').forEach(el => simple(el, target, () => el.click()));
+      if (target) qa('[data-sen-choice]').forEach(el => simple(el, target, () => el.click()));
     }
     if (t.mode === 'counter') {
       simple(q('#senAdd'), q('.sen-pebbles'), () => q('#senAdd')?.click());
@@ -242,7 +235,8 @@ TouchPlay.register(bind => {
         q('.focus-packed') || q('.focus-choice-home') || q('.focus-goal')
       );
       courseChoiceDisplay(target, qa('[data-focus-choice]'));
-      qa('[data-focus-choice]:not(:disabled)').forEach(el => simple(el, target, () => el.click()));
+      if (target)
+        qa('[data-focus-choice]:not(:disabled)').forEach(el => simple(el, target, () => el.click()));
     }
   }
   if (q('.calm-play') && calmState) {
@@ -255,9 +249,7 @@ TouchPlay.register(bind => {
       const whole = q('.calm-see-whole');
       qa('[data-calm-detail]').forEach(el => simple(el, whole, () => el.click()));
     } else if (q('[data-calm-open]') && !q('.calm-see-choose')) {
-      const pad = courseAnswerPad(q('.game-stage'));
-      courseChoiceDisplay(pad, qa('[data-calm-open]'));
-      qa('[data-calm-open]').forEach(el => simple(el, pad, () => el.click()));
+      // 'Choose my pause' is a one-tap choice: the pressed picture shows it.
     }
     qa('[data-calm-routine]').forEach(el => {
       if (!el.dataset.calmRoutine.endsWith(':2')) simple(el, el.closest('fieldset'), () => el.click());

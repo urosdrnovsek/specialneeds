@@ -212,11 +212,13 @@ const root = path.resolve(__dirname, '..');
   const count = await page.evaluate(() => adultState.answer[0]);
   for (let n = 0; n < count; n++) await drag('#adultAdd', '.sound-counters');
   assert.equal(await page.evaluate(() => adultState.count), count);
-  await launch('communicate', 0);
-  const target = page.locator('.sen-stage .tp-answer-pad');
-  await target.waitFor();
-  await drag('[data-sen-choice="0"]', '.sen-stage .tp-answer-pad');
+  // Activity 0 became the shared Anywhere Adventure Bus; activity 1 is the one-tap picture choice.
+  await launch('communicate', 1);
+  // One-tap picture choices no longer get an invented 'Your choice' drop box; tapping selects.
+  assert.equal(await page.locator('.sen-stage .tp-answer-pad').count(), 0);
+  await page.locator('[data-sen-choice="0"]').tap();
   assert.equal(await page.evaluate(() => senState.selection), 0);
+  assert.equal(await page.locator('[data-sen-choice="0"]').getAttribute('aria-pressed'), 'true');
   // Invalid drops leave an object in place; keyboard selection still works.
   await launch('purpose', 0);
   await drag('[data-pr-picnic="cup"]', '.pr-play h1');

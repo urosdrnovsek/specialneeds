@@ -3,10 +3,10 @@
 }
 .focus-banner,
 .focus-hero {
-  background: #e5ede5;
+  background: var(--ds-sage);
 }
 .focus-goal {
-  background: #f2f5e9;
+  background: var(--ds-sage);
   border-radius: 20px;
   padding: 16px;
   margin-bottom: 20px;
@@ -25,7 +25,7 @@
   display: grid;
   place-items: center;
   border-radius: 14px;
-  background: #fffdf7;
+  background: var(--ds-paper);
   padding: 10px;
 }
 .focus-strip svg {
@@ -59,7 +59,7 @@
   outline-offset: 3px;
 }
 .focus-options .hinted {
-  box-shadow: 0 0 0 5px #e1c781;
+  box-shadow: 0 0 0 5px var(--ds-gold);
 }
 .focus-options .hinted:disabled {
   opacity: 1;
@@ -69,7 +69,7 @@
 }
 .focus-chosen .story-frame {
   min-height: 90px;
-  background: #edf2e3;
+  background: var(--ds-sage);
 }
 .focus-play .play-invitation {
   line-height: 1.7;
@@ -94,7 +94,7 @@
   height: 100%;
 }
 .focus-play button:focus-visible {
-  outline: 4px solid #486b88;
+  outline: 4px solid var(--ds-sky-mid);
   outline-offset: 5px;
 }
 .focus-parent ol {
@@ -106,7 +106,7 @@
   margin: 12px 0;
 }
 .focus-parent a {
-  color: #355f48;
+  color: var(--ds-success);
   text-underline-offset: 3px;
 }
 .focus-play button {

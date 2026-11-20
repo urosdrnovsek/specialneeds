@@ -101,9 +101,9 @@ function readingEvidence(course) {
 function readingRelated(section) {
   const ids = section.readingCourses || [];
   if (!ids.length) return '';
-  return `<details class="support-reading-courses"><summary>Letters & starting to read · ${ids.length} courses</summary><div class="parent-course-links">${ids
+  return `<details class="support-reading-courses"><summary>Letters & starting to read · ${ids.length} ${ids.length === 1 ? 'path' : ids.some(id => id.startsWith('reading-path-')) ? 'reading paths' : 'courses'}</summary><div class="parent-course-links">${ids
     .map(id => {
-      const c = readingCourses.find(c => c.id === id);
+      const c = readingCourses.find(c => c.id === id) || skillCourseGet(id).course;
       return `<a href="#course/${id}" data-home-course="${id}"><span><b>${c.title}</b><small>${c.goal}</small></span><span aria-hidden="true">→</span></a>`;
     })
     .join(

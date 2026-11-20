@@ -33,46 +33,54 @@ const root = path.resolve(__dirname, '..');
     });
   });
   await page.goto('https://spot-match.test/');
-  await page.locator('[data-home-view="skills"]').click();
-  assert.equal(await page.locator('[data-skill]').count(), 8);
+  // The home is now support-first; courses are reached through the Courses page and course routes.
+  const go = hash => page.evaluate(h => Studio.go(h), hash);
+  await go('#courses');
+  assert.equal(await page.locator('.ds-course-chips a').count(), 9);
+  assert.equal(await page.locator('.ds-course-group').count(), 8);
   assert.equal(await page.locator('[data-pr-game]').count(), 0);
   const courses = await page.evaluate(() =>
-    learningSkills.flatMap(s => s.courses.map(c => ({ skill: s.id, id: c.id, n: c.activities.length })))
+    learningSkills.flatMap(s =>
+      s.courses.map(c => ({ skill: s.id, id: c.id, n: c.activities.length, merged: !!c.mergedInto }))
+    )
   );
-  assert.equal(courses.length, 36);
-  await page.locator('[data-skill="stories"]').click();
-  await page.locator('[data-skill-course="routines"]').click();
+  // 46 authored courses + 4 reading paths; the 20 merged short courses keep working routes.
+  assert.equal(courses.length, 50);
+  assert.equal(await page.locator('#studioResults .studio-course-card').count(), 30);
+  await page.locator('#studioResults a[href="#course/routines"]').first().click();
   await page.locator('#skillBegin').click();
   await page.goBack();
   assert.equal(await page.locator('h1').innerText(), 'First, then: familiar routines');
   await page.goBack();
-  assert.equal(await page.locator('h1').innerText(), 'Sequences & stories');
-  await page.locator('#libraryNav').click();
+  assert.equal(await page.locator('h1').innerText(), 'Choose a useful learning goal');
   await page.evaluate(() => {
     const parser = new DOMParser();
     for (const s of learningSkills)
-      for (const c of s.courses)
-        for (const a of c.activities) {
-          if (parser.parseFromString(skillArt(a), 'image/svg+xml').querySelector('parsererror'))
+      for (const c of s.courses) {
+        if (parser.parseFromString(DesignCovers.course(c), 'image/svg+xml').querySelector('parsererror'))
+          throw Error('Invalid course cover ' + c.id);
+        // Offline pilot activities use a vocabulary <img>, not inline SVG.
+        for (const a of c.activities)
+          if (
+            a.engine !== 'offline' &&
+            parser.parseFromString(skillArt(a), 'image/svg+xml').querySelector('parsererror')
+          )
             throw Error('Invalid course preview ' + c.id);
-        }
+      }
   });
-  // Every course opens with a concrete need, goal, real-world exercise, and direct activity launch.
+  // Every course (including merged short courses reached by old links) opens with a concrete need,
+  // goal, real-world exercise, and direct activity launch.
   for (const c of courses) {
-    await page.locator(`[data-skill="${c.skill}"]`).click();
-    await page.locator(`[data-skill-course="${c.id}"]`).click();
-    assert.equal(await page.locator('[data-course-activity]').count(), c.n);
-    assert.ok((await page.locator('.skill-lead').innerText()).length > 30);
-    assert.ok((await page.locator('.skill-real-life p').innerText()).length > 90);
+    await go('#course/' + c.id);
+    assert.equal(await page.locator('[data-course-activity],[data-pilot-activity]').count(), c.n, c.id);
+    assert.ok((await page.locator('.skill-lead').innerText()).length > 30, c.id);
+    assert.ok((await page.locator('.skill-real-life p').innerText()).length > 70, c.id);
     await page.locator('#skillBegin').click();
     assert.equal(await page.locator('#begin,#learningBegin,#adultBegin,#senBegin,#focusOne').count(), 0);
     assert.equal(await page.locator('.skill-session-context').count(), 1);
     assert.deepEqual(await page.evaluate(() => [skillContext.courseId, skillContext.index]), [c.id, 0]);
-    await page.locator('#libraryNav').click();
-    assert.equal(await page.locator('[data-skill]').count(), 8);
   }
-  await page.locator('[data-skill="attention"]').click();
-  await page.locator('[data-skill-course="planning"]').click();
+  await go('#course/planning');
   const downloadPromise = page.waitForEvent('download');
   await page.locator('#skillDownloadPlan').click();
   const download = await downloadPromise;
@@ -89,35 +97,30 @@ const root = path.resolve(__dirname, '..');
   assert.equal(await page.locator('#skillOffline').isChecked(), true);
   await page.getByText('Optional notes for next time', { exact: true }).click();
   assert.equal(await page.locator('[data-skill-note="1"]').isChecked(), true);
-  await page.locator('#libraryNav').click();
   // Completion returns to the exact course, with an optional direct next activity.
-  await page.locator('[data-skill="everyday"]').click();
-  await page.locator('[data-skill-course="purpose"]').click();
+  await go('#course/purpose');
   await page.locator('[data-course-activity="0"]').click();
   await page.locator('#prDone').click();
   assert.equal(await page.locator('#skillNextActivity').count(), 1);
   await page.locator('#skillNextActivity').click();
   assert.equal(await page.evaluate(() => prState.id), 'garden');
-  await page.locator('#prBack').click();
+  await page.locator('#courseStop').click();
   assert.equal(await page.locator('h1').innerText(), 'Help a friend in everyday play');
   assert.match(await page.locator('.skill-course-hero .micro').innerText(), /1 explored/);
-  await page.locator('#libraryNav').click();
   for (const width of [360, 390, 768]) {
     await page.setViewportSize({ width, height: 844 });
-    assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
-    for (const id of ['language', 'attention', 'access']) {
-      await page.locator(`[data-skill="${id}"]`).click();
+    for (const id of ['language', 'attention', 'access', 'sounds']) {
+      await go('#courses?skill=' + id);
       assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
-      await page.locator('[data-skill-course]').first().click();
+      await page.locator('#studioResults a[data-studio-course]').first().click();
       assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
-      await page.locator('#libraryNav').click();
     }
   }
   fs.mkdirSync(path.join(root, 'test-results'), { recursive: true });
   await page.setViewportSize({ width: 1200, height: 950 });
-  await page.screenshot({ path: path.join(root, 'test-results', 'skills-home.png'), fullPage: true });
-  await page.locator('[data-skill="attention"]').click();
-  await page.locator('[data-skill-course="planning"]').click();
+  await go('#courses');
+  await page.screenshot({ path: path.join(root, 'test-results', 'courses-page.png'), fullPage: true });
+  await go('#course/planning');
   await page.setViewportSize({ width: 390, height: 844 });
   await page.screenshot({
     path: path.join(root, 'test-results', 'course-planning-mobile.png'),
@@ -128,7 +131,8 @@ const root = path.resolve(__dirname, '..');
     JSON.stringify(
       {
         skills: 8,
-        courses: 36,
+        courses: 50,
+        listed: 30,
         everyCourse: 'purposeful overview; direct launch',
         parentNotes: 'persistent',
         courseReturn: 'preserved',

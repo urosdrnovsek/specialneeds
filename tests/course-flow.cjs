@@ -103,9 +103,9 @@ const root = path.resolve(__dirname, '..');
     await page.locator(`[data-choice="${i}"]`).tap();
   }
   assert.equal(await page.locator('[data-support]').count(), 8);
-  await page.locator('[data-home-view="skills"]').tap();
-  await page.locator('[data-skill="seeing"]').tap();
-  await page.locator('[data-skill-course="matching"]').tap();
+  // The home toggle was replaced by the Courses page: open the course from its card.
+  await page.locator('#studioNav a[href="#courses"]').tap();
+  await page.locator('#studioResults a[href="#course/matching"]').first().tap();
   await page.locator('#skillBegin').tap();
   assert.equal(await page.evaluate(() => skillContext.courseId), 'matching');
   await settle();
@@ -176,7 +176,7 @@ const root = path.resolve(__dirname, '..');
   }
   assert.equal(await page.evaluate(() => Object.keys(skillNotes.matching.activities).length), 6);
   await page.locator('#courseFinishedHome').tap();
-  assert.equal(await page.locator('[data-skill]').count(), 8);
+  assert.equal(await page.locator('[data-support]').count(), 8);
   assert.equal(
     await page.locator('#homeStartCourse').count(),
     0,
@@ -204,16 +204,24 @@ const root = path.resolve(__dirname, '..');
   await page.evaluate(() => skillLaunch('everyday-word-pictures', 1));
   await settle();
   const target = await page.evaluate(() => vocabularyState.target);
-  await drag(`[data-vocab-choice="${target}"]`, '#vocabChoiceHome');
+  await page.locator(`[data-vocab-choice="${target}"]`).tap();
   await page.clock.runFor(1200);
   assert.equal(await page.evaluate(() => skillContext.index), 2);
   assert.equal(await page.evaluate(() => vocabularyState.mode), 'collect');
   assert.equal(await page.locator('.vocabulary-completion').count(), 0);
-  await page.evaluate(() => skillLaunch('communicate', 0));
+  // Activity 0 became the shared Anywhere Adventure Bus; activity 1 ("Hear It, Find It") is a picture
+  // choice with an answer. Answer each round by tapping until the course moves on by itself.
+  await page.evaluate(() => skillLaunch('communicate', 1));
   await settle();
-  await drag('[data-sen-choice="0"]', '#senChoiceHome');
-  await page.clock.runFor(1300);
-  assert.equal(await page.evaluate(() => skillContext.index), 1);
+  for (let round = 0; round < 6 && (await page.evaluate(() => skillContext.index)) === 1; round++) {
+    const right = await page.evaluate(() =>
+      senState.task.options.findIndex(o => senState.task.answer.includes(o.id))
+    );
+    await page.locator(`[data-sen-choice="${right}"]`).tap();
+    await page.clock.runFor(1500);
+    await settle();
+  }
+  assert.equal(await page.evaluate(() => skillContext.index), 2);
   assert.equal(
     await page.locator('#quickChosenTopic').count(),
     0,
@@ -288,7 +296,8 @@ const root = path.resolve(__dirname, '..');
   await settle();
   assert.equal(await page.evaluate(() => skillContext.index), 2);
   await page.locator('#courseStop').tap();
-  await page.locator('#libraryNav').tap();
+  // The legacy header button was replaced by the main navigation.
+  await page.locator('#studioNav a[href="#support"]').tap();
   for (const width of [360, 390, 768]) {
     await page.setViewportSize({ width, height: 844 });
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);

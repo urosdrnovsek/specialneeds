@@ -415,7 +415,19 @@ assert.deepEqual(Array.from(dataAudit), []);
 assert.equal(new Set(run('readingGames.map(g=>g.id)')).size, 56);
 assert.equal(run('readingCourses.length'), 19);
 assert.equal(run('readingGames.length'), 56);
-assert.equal(run('learningSkills.flatMap(s=>s.courses).length'), 46);
+// 46 authored courses plus 4 reading paths; the 20 short courses merged into paths stay routable but unlisted.
+assert.equal(run('learningSkills.flatMap(s=>s.courses).length'), 50);
+assert.equal(run('readingPaths.length'), 4);
+assert.equal(run('learningSkills.flatMap(s=>s.courses).filter(c=>c.mergedInto).length'), 20);
+assert.equal(run('readingPaths.reduce((n,p)=>n+p.activities.length,0)'), 59);
+assert.deepEqual(
+  Array.from(run("readingPaths.flatMap(p=>p.activities.map(a=>a.from[0]+':'+a.from[1]))")),
+  Array.from(
+    run(
+      "readingPaths.flatMap(p=>p.sources.flatMap(id=>skillCourseGet(id).course.activities.map((_,i)=>id+':'+i)))"
+    )
+  )
+);
 let trials = 0;
 const mechanics = new Set();
 for (const course of run('readingCourses')) {
@@ -497,7 +509,13 @@ assert.equal(state().done, true);
 // Links are present in existing support areas and reloadable courses, not a new home category.
 run("parentSupportDetail('dyslexia')");
 flush();
-assert.equal(document.querySelectorAll('.support-reading-courses [data-home-course]').length, 19);
+// The 19 short reading courses are listed as the 4 reading paths that contain them.
+assert.deepEqual(
+  [...document.querySelectorAll('.support-reading-courses [data-home-course]')].map(
+    a => a.dataset.homeCourse
+  ),
+  Array.from(run('readingPaths.map(p=>p.id)'))
+);
 assert.equal(document.querySelectorAll('.support-game').length, 2);
 assert(!document.querySelector('.support-reading-courses[open]'));
 run("location.hash='#activity/word-builders/1';skillRestoreRoute()");
@@ -542,7 +560,13 @@ assert.equal(state().observations[0].colourCues, false);
 assert.equal(document.querySelectorAll('.reading-ink:not([style*="#345b47"])').length, 0);
 run("readingDisplay.colour=false;parentSupportDetail('dyslexia')");
 flush();
-assert.equal(document.querySelectorAll('.support-reading-courses [data-home-course]').length, 19);
+// The 19 short reading courses are listed as the 4 reading paths that contain them.
+assert.deepEqual(
+  [...document.querySelectorAll('.support-reading-courses [data-home-course]')].map(
+    a => a.dataset.homeCourse
+  ),
+  Array.from(run('readingPaths.map(p=>p.id)'))
+);
 run("skillCourse('letter-lookalikes')");
 assert.match(document.querySelector('.skill-notes:last-child').textContent, /colour|Colour/);
 run("readingOpenGuide('letter-lookalikes')");

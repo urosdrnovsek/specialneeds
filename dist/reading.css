@@ -7,7 +7,7 @@
   font-size: 30px;
   line-height: 1.25;
   margin: 12px 0 7px;
-  color: #345847;
+  color: var(--ds-ink-2);
 }
 .reading-counter {
   font-size: 12px;
@@ -24,7 +24,7 @@
   margin: 0 auto 17px;
   border-radius: 22px;
   overflow: hidden;
-  background: #edf0df;
+  background: var(--ds-sage);
 }
 .reading-illustration > svg {
   display: block;
@@ -36,8 +36,8 @@
   max-width: 780px;
   margin: 0 auto;
   text-align: center;
-  background: #fffdf7;
-  border: 1px solid #dde4d2;
+  background: var(--ds-paper);
+  border: 1px solid var(--ds-line);
   border-radius: 22px;
   padding: 23px 22px;
 }
@@ -60,8 +60,8 @@
 .reading-slot,
 .reading-prop,
 .reading-scene-targets > button {
-  border: 2px solid #d5dfc8;
-  background: #f3f6ea;
+  border: 2px solid var(--ds-sage-strong);
+  background: var(--ds-sage);
   border-radius: 17px;
   min-width: 85px;
   min-height: 85px;
@@ -72,7 +72,7 @@
 .reading-tile:hover,
 .reading-piece:hover {
   border-color: #84a374;
-  background: #ebf2df;
+  background: var(--ds-sage-strong);
 }
 .reading-choice:focus-visible,
 .reading-tile:focus-visible,
@@ -154,7 +154,7 @@
   min-height: 95px;
   font-size: 42px;
   border-style: dashed;
-  background: #fff8e9;
+  background: var(--ds-cream);
   padding: 10px;
 }
 .reading-slot > span {
@@ -163,7 +163,7 @@
 }
 .reading-slot.filled {
   border-style: solid;
-  background: #e8f0dc;
+  background: var(--ds-sage-strong);
   color: #315b41;
 }
 .reading-bank {
@@ -178,7 +178,7 @@
   min-height: 70px;
   font-size: 34px;
   padding: 9px 15px;
-  background: #f2e8ce;
+  background: var(--ds-sand);
   border-color: #d6c8a5;
 }
 .reading-small {
@@ -192,9 +192,9 @@
   max-width: 780px;
   margin: 20px auto 12px;
   padding: 13px 17px;
-  border: 1px solid #dce3d2;
+  border: 1px solid var(--ds-line);
   border-radius: 15px;
-  background: #f0f3e7;
+  background: var(--ds-sage);
   font-size: 13px;
   line-height: 1.9;
 }
@@ -258,7 +258,7 @@
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background: #8aada0;
+  background: var(--ds-sage-mid);
   margin-top: 3px;
 }
 .reading-choice:has(.reading-pebbles) > span:last-child {
@@ -270,7 +270,7 @@
   font-size: 15px;
   line-height: 1.8;
   padding: 19px;
-  background: #f3ead4;
+  background: var(--ds-sand);
   border-radius: 14px;
   color: #6c7558;
 }
@@ -284,7 +284,7 @@
   font-size: 49px;
   border-radius: 12px;
   padding: 9px 17px;
-  background: #f0ead9;
+  background: var(--ds-cream);
   color: #4e6b51;
   min-width: 68px;
 }
@@ -314,7 +314,7 @@
   flex: 1;
   width: 100%;
   height: 42px;
-  accent-color: #5a8c70;
+  accent-color: var(--ds-success-mid);
   touch-action: none;
   cursor: ew-resize;
 }
@@ -333,7 +333,7 @@
 .reading-swap-word .reading-change {
   border-style: dashed;
   border-color: #c19e60;
-  background: #fff1cb;
+  background: var(--ds-sand);
 }
 .reading-reveal {
   margin: 0 auto 8px;
@@ -360,11 +360,11 @@
 .reading-book {
   max-width: 530px;
   margin: auto;
-  background: #fff7e7;
+  background: var(--ds-cream);
   border: 1px solid #e1d2b3;
   border-radius: 18px;
   padding: 15px 20px;
-  box-shadow: 7px 5px 0 #e4dbc1;
+  box-shadow: 7px 5px 0 var(--ds-sand);
 }
 .reading-book-picture {
   max-width: 340px;
@@ -381,7 +381,7 @@
   color: #365a44;
 }
 .reading-helper {
-  background: #eee4bf;
+  background: var(--ds-sand);
   border-radius: 5px;
   padding: 1px 5px;
 }
@@ -398,7 +398,7 @@
   flex-shrink: 0;
 }
 .reading-prop[aria-pressed='true'] {
-  border-color: #668c5d;
+  border-color: var(--ds-success-mid);
   background: #dcebc9;
 }
 .reading-prop > svg,
@@ -414,7 +414,7 @@
 .reading-scene-targets > button {
   width: 130px;
   height: 140px;
-  background: #edf1e3;
+  background: var(--ds-sage);
   padding: 10px;
   border-style: dashed;
 }
@@ -452,14 +452,14 @@
   line-height: 1.5;
 }
 .reading-celebrate {
-  background: #edf5e3;
+  background: var(--ds-sage-strong);
   border-color: #c5dbb6;
 }
 .reading-paused {
   font-size: 15px;
   line-height: 1.8;
   color: #57704b;
-  background: #e8eedc;
+  background: var(--ds-sage-strong);
   border-radius: 15px;
   padding: 17px;
   text-align: center;
@@ -467,8 +467,8 @@
 .support-reading-courses {
   margin: 25px 0;
   padding: 13px 17px;
-  background: #edf2e5;
-  border: 1px solid #dce4cf;
+  background: var(--ds-sage);
+  border: 1px solid var(--ds-sage-strong);
   border-radius: 16px;
 }
 .support-reading-courses > summary {

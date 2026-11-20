@@ -5,8 +5,8 @@
   gap: 16px;
   padding: 12px 17px;
   margin: 3px 0 18px;
-  background: #e9f1df;
-  border: 1px solid #d5e3c8;
+  background: var(--ds-sage-strong);
+  border: 1px solid var(--ds-sage-strong);
   border-radius: 18px;
 }
 .course-flow-bar > div:first-child {
@@ -39,8 +39,8 @@
   max-width: 850px;
   margin: 25px auto 15px;
   padding: 20px 24px;
-  border: 1px solid #dfdfc9;
-  background: #fff6df;
+  border: 1px solid var(--ds-line);
+  background: var(--ds-butter);
   border-radius: 21px;
   text-align: left;
 }
@@ -99,7 +99,7 @@
   line-height: 1.8;
 }
 .course-end-idea {
-  background: #eef3e4;
+  background: var(--ds-sage);
   border-radius: 23px;
   padding: 20px;
   text-align: left;
@@ -118,7 +118,7 @@
   line-height: 1.17;
   letter-spacing: -1px;
   margin: 14px 0;
-  color: #304c40;
+  color: var(--ds-ink-2);
 }
 .home-start-layout p {
   font-size: 17px;
@@ -132,8 +132,8 @@
 }
 .home-start-card {
   padding: 21px;
-  background: #edf2df;
-  border: 1px solid #d6e1c5;
+  background: var(--ds-sage-strong);
+  border: 1px solid var(--ds-sage-strong);
   border-radius: 27px;
 }
 .home-start-card > svg {
