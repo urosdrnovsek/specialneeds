@@ -1,32 +1,457 @@
-.calm-library{margin:50px 0}.calm-banner{width:100%;display:grid;grid-template-columns:1.3fr 1fr;gap:30px;align-items:center;text-align:left;padding:35px;border-radius:28px;border:1px solid #dae3d1;background:#eaf0e1;color:#355447}.calm-banner h2{font-size:32px}.calm-banner-art{max-width:300px;justify-self:center}.calm-banner-art svg{width:100%}.calm-hero{background:#eaf0e1}.calm-filters{display:flex;gap:10px;flex-wrap:wrap;margin:20px 0}.calm-filters [aria-pressed=true]{background:#476c50;color:white}.calm-controls{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;align-items:center;margin:20px 0}.calm-play .game-stage{padding:25px}.calm-play .play-invitation{line-height:1.7;max-width:710px;margin:18px auto 26px}.calm-model{width:140px;height:145px;margin:0 auto 24px;background:#f3f4e9;padding:16px;border-radius:20px}.calm-model svg{width:100%;height:100%}.calm-options{justify-content:center}.calm-options .learning-option{min-width:90px}.calm-options small{display:block;font-size:13px;line-height:1.6;margin-top:8px}.calm-options .selected,.calm-routine .selected{outline:4px solid #607f4e;outline-offset:3px}.calm-options .hinted,.calm-path .hinted{box-shadow:0 0 0 5px #debf75}.calm-pose-art{max-width:390px;margin:auto}.calm-pose-art svg{width:100%;max-height:340px}.calm-path{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.calm-path button{min-width:0;max-width:none;width:100%}.calm-path svg{width:100%}.calm-path span{display:block}.calm-flower{width:240px;max-width:80%;margin:20px auto;transform:scale(.8);transition:transform 2s ease}.calm-flower svg{width:100%;height:220px}.calm-flower.open{transform:scale(1)}.calm-routine fieldset{border:1px solid #d9e2d0;border-radius:18px;padding:18px;margin:15px 0;display:flex;gap:15px;justify-content:center;flex-wrap:wrap}.calm-routine legend{padding:0 10px;font-size:14px}.calm-routine .secondary{width:40%;min-width:100px}.calm-routine svg{display:block;width:90px;height:90px;margin:auto}.calm-routine span{display:block;font-size:13px;line-height:1.6;margin-top:8px}.calm-play .completion-friend{height:170px}.calm-play .completion-friend svg{height:100%}.calm-play .feedback{min-height:45px;line-height:1.7;margin-top:20px}.calm-play .quiet-notes{line-height:1.8}.calm-play button:focus-visible,.calm-banner:focus-visible{outline:4px solid #486c88;outline-offset:5px}.calm-play button{touch-action:manipulation}.calm-play .hinted:disabled{opacity:1}.calm-play .learning-option:disabled:not(.hinted){opacity:.65}.calm-play .learning-option small{overflow-wrap:anywhere}@media(max-width:600px){.calm-banner{padding:24px;grid-template-columns:1fr;gap:20px}.calm-banner-art{max-width:220px}.calm-banner h2{font-size:28px}.calm-play .game-stage{padding:20px 12px}.calm-options{gap:12px}.calm-options .learning-option{min-width:75px;padding:10px}.calm-options:has(small){display:grid;grid-template-columns:1fr}.calm-options:has(small) .learning-option{max-width:100%;width:100%}.calm-path{gap:10px}.calm-path button{padding:10px}.calm-path svg{max-height:90px}.calm-routine fieldset{padding:15px 9px;gap:12px}.calm-routine .secondary{min-width:85px}.calm-controls button{min-height:48px}.calm-play .play-invitation{font-size:18px}.calm-play h1{overflow-wrap:anywhere}}@media(prefers-reduced-motion:reduce){.calm-flower{transition:none;transform:none}.calm-flower.open{transform:none}}
+.calm-library {
+  margin: 50px 0;
+}
+.calm-banner {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 30px;
+  align-items: center;
+  text-align: left;
+  padding: 35px;
+  border-radius: 28px;
+  border: 1px solid #dae3d1;
+  background: #eaf0e1;
+  color: #355447;
+}
+.calm-banner h2 {
+  font-size: 32px;
+}
+.calm-banner-art {
+  max-width: 300px;
+  justify-self: center;
+}
+.calm-banner-art svg {
+  width: 100%;
+}
+.calm-hero {
+  background: #eaf0e1;
+}
+.calm-filters {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 20px 0;
+}
+.calm-filters [aria-pressed='true'] {
+  background: #476c50;
+  color: white;
+}
+.calm-controls {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0;
+}
+.calm-play .game-stage {
+  padding: 25px;
+}
+.calm-play .play-invitation {
+  line-height: 1.7;
+  max-width: 710px;
+  margin: 18px auto 26px;
+}
+.calm-model {
+  width: 140px;
+  height: 145px;
+  margin: 0 auto 24px;
+  background: #f3f4e9;
+  padding: 16px;
+  border-radius: 20px;
+}
+.calm-model svg {
+  width: 100%;
+  height: 100%;
+}
+.calm-options {
+  justify-content: center;
+}
+.calm-options .learning-option {
+  min-width: 90px;
+}
+.calm-options small {
+  display: block;
+  font-size: 13px;
+  line-height: 1.6;
+  margin-top: 8px;
+}
+.calm-options .selected,
+.calm-routine .selected {
+  outline: 4px solid #607f4e;
+  outline-offset: 3px;
+}
+.calm-options .hinted,
+.calm-path .hinted {
+  box-shadow: 0 0 0 5px #debf75;
+}
+.calm-pose-art {
+  max-width: 390px;
+  margin: auto;
+}
+.calm-pose-art svg {
+  width: 100%;
+  max-height: 340px;
+}
+.calm-path {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+.calm-path button {
+  min-width: 0;
+  max-width: none;
+  width: 100%;
+}
+.calm-path svg {
+  width: 100%;
+}
+.calm-path span {
+  display: block;
+}
+.calm-flower {
+  width: 240px;
+  max-width: 80%;
+  margin: 20px auto;
+  transform: scale(0.8);
+  transition: transform 2s ease;
+}
+.calm-flower svg {
+  width: 100%;
+  height: 220px;
+}
+.calm-flower.open {
+  transform: scale(1);
+}
+.calm-routine fieldset {
+  border: 1px solid #d9e2d0;
+  border-radius: 18px;
+  padding: 18px;
+  margin: 15px 0;
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.calm-routine legend {
+  padding: 0 10px;
+  font-size: 14px;
+}
+.calm-routine .secondary {
+  width: 40%;
+  min-width: 100px;
+}
+.calm-routine svg {
+  display: block;
+  width: 90px;
+  height: 90px;
+  margin: auto;
+}
+.calm-routine span {
+  display: block;
+  font-size: 13px;
+  line-height: 1.6;
+  margin-top: 8px;
+}
+.calm-play .completion-friend {
+  height: 170px;
+}
+.calm-play .completion-friend svg {
+  height: 100%;
+}
+.calm-play .feedback {
+  min-height: 45px;
+  line-height: 1.7;
+  margin-top: 20px;
+}
+.calm-play .quiet-notes {
+  line-height: 1.8;
+}
+.calm-play button:focus-visible,
+.calm-banner:focus-visible {
+  outline: 4px solid #486c88;
+  outline-offset: 5px;
+}
+.calm-play button {
+  touch-action: manipulation;
+}
+.calm-play .hinted:disabled {
+  opacity: 1;
+}
+.calm-play .learning-option:disabled:not(.hinted) {
+  opacity: 0.65;
+}
+.calm-play .learning-option small {
+  overflow-wrap: anywhere;
+}
+@media (max-width: 600px) {
+  .calm-banner {
+    padding: 24px;
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .calm-banner-art {
+    max-width: 220px;
+  }
+  .calm-banner h2 {
+    font-size: 28px;
+  }
+  .calm-play .game-stage {
+    padding: 20px 12px;
+  }
+  .calm-options {
+    gap: 12px;
+  }
+  .calm-options .learning-option {
+    min-width: 75px;
+    padding: 10px;
+  }
+  .calm-options:has(small) {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+  .calm-options:has(small) .learning-option {
+    max-width: 100%;
+    width: 100%;
+  }
+  .calm-path {
+    gap: 10px;
+  }
+  .calm-path button {
+    padding: 10px;
+  }
+  .calm-path svg {
+    max-height: 90px;
+  }
+  .calm-routine fieldset {
+    padding: 15px 9px;
+    gap: 12px;
+  }
+  .calm-routine .secondary {
+    min-width: 85px;
+  }
+  .calm-controls button {
+    min-height: 48px;
+  }
+  .calm-play .play-invitation {
+    font-size: 18px;
+  }
+  .calm-play h1 {
+    overflow-wrap: anywhere;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .calm-flower {
+    transition: none;
+    transform: none;
+  }
+  .calm-flower.open {
+    transform: none;
+  }
+}
 
 /* I-spy room ("Here Around Me") and close-up details ("A Slow Little Look") */
-.calm-see{display:grid;grid-template-columns:220px 1fr;gap:20px;align-items:start;text-align:left}
-.calm-see-label{margin:0 0 8px;font-weight:700;color:#355447}
-.calm-see-choose{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:0 auto 14px}
-.calm-see-side .calm-see-choose{justify-content:flex-start}
-.calm-see-choose .learning-option{position:relative;width:88px;height:88px;padding:8px;min-height:0}
-.calm-see-side .calm-see-choose{flex-wrap:nowrap;gap:8px}.calm-see .calm-see-side .calm-see-choose .learning-option{width:64px;height:64px;min-width:0;min-height:0;padding:6px;flex:0 0 auto}
-.calm-see-choose .learning-option svg{width:100%;height:100%}
-.calm-see-choose .calm-see-done{opacity:.55}
-.calm-see-tick{position:absolute;right:4px;top:2px;font-weight:800;color:#2f6b4f}
-.calm-see-basket{position:relative;margin-top:10px;width:200px;max-width:100%}
-.calm-see-basket>svg{position:relative;z-index:1;width:100%;height:auto;display:block}
-.calm-see-slots{position:absolute;z-index:0;left:17%;right:17%;top:27%;display:flex;justify-content:center;gap:0}
-.calm-see-slots span{width:33%;aspect-ratio:1;display:block}
-.calm-see-slots .filled svg{width:100%;height:100%;filter:drop-shadow(0 1px 1px rgba(0,0,0,.2))}
-.calm-see-room{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:14px;border-radius:22px;background:linear-gradient(#f3ead9 0 62%,#d9bf98 62%);border:1px solid #e3d7bf}
-.calm-see-thing,.calm-see-gap{aspect-ratio:1;border-radius:16px;min-height:0}
-.calm-see-thing{display:grid;place-items:center;padding:10px;background:rgba(255,255,255,.72);border:2px solid transparent;cursor:pointer}
-.calm-see-thing svg{width:100%;height:100%}
-.calm-see-thing:not(:disabled):hover{border-color:#8eae96;background:#fff}
-.calm-see-thing:disabled{cursor:default;opacity:1}
-.calm-see-gap{border:2px dashed rgba(53,84,71,.3);background:rgba(255,255,255,.25)}
-.calm-see-look{display:grid;grid-template-columns:minmax(160px,260px) 1fr;gap:22px;align-items:center}
-.calm-see-whole{position:relative;aspect-ratio:1;background:#f6f3e8;border-radius:24px;padding:14px}
-.calm-see-whole>svg{position:absolute;inset:14px;width:calc(100% - 28px);height:calc(100% - 28px)}
-.calm-see-count{position:absolute;left:50%;bottom:-12px;transform:translateX(-50%);white-space:nowrap;font-size:13px;font-weight:700;background:#fff;border:1px solid #dce2d6;border-radius:999px;padding:3px 12px;color:#355447}
-.calm-see-details{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
-.calm-see-lens{width:118px;height:118px;padding:0!important;border-radius:50%!important;overflow:hidden;background:#fffdf7}
-.calm-see-lens svg{width:100%;height:100%}
-@media(max-width:640px){.calm-see,.calm-see-look{grid-template-columns:1fr}.calm-see-side .calm-see-choose{justify-content:center}.calm-see-basket{margin:0 auto;width:170px}.calm-see-whole{width:min(220px,70vw);margin:0 auto 10px}.calm-see-lens{width:92px;height:92px}.calm-see-choose .learning-option{width:76px;height:76px}}
+.calm-see {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 20px;
+  align-items: start;
+  text-align: left;
+}
+.calm-see-label {
+  margin: 0 0 8px;
+  font-weight: 700;
+  color: #355447;
+}
+.calm-see-choose {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 0 auto 14px;
+}
+.calm-see-side .calm-see-choose {
+  justify-content: flex-start;
+}
+.calm-see-choose .learning-option {
+  position: relative;
+  width: 88px;
+  height: 88px;
+  padding: 8px;
+  min-height: 0;
+}
+.calm-see-side .calm-see-choose {
+  flex-wrap: nowrap;
+  gap: 8px;
+}
+.calm-see .calm-see-side .calm-see-choose .learning-option {
+  width: 64px;
+  height: 64px;
+  min-width: 0;
+  min-height: 0;
+  padding: 6px;
+  flex: 0 0 auto;
+}
+.calm-see-choose .learning-option svg {
+  width: 100%;
+  height: 100%;
+}
+.calm-see-choose .calm-see-done {
+  opacity: 0.55;
+}
+.calm-see-tick {
+  position: absolute;
+  right: 4px;
+  top: 2px;
+  font-weight: 800;
+  color: #2f6b4f;
+}
+.calm-see-basket {
+  position: relative;
+  margin-top: 10px;
+  width: 200px;
+  max-width: 100%;
+}
+.calm-see-basket > svg {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.calm-see-slots {
+  position: absolute;
+  z-index: 0;
+  left: 17%;
+  right: 17%;
+  top: 27%;
+  display: flex;
+  justify-content: center;
+  gap: 0;
+}
+.calm-see-slots span {
+  width: 33%;
+  aspect-ratio: 1;
+  display: block;
+}
+.calm-see-slots .filled svg {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.2));
+}
+.calm-see-room {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  padding: 14px;
+  border-radius: 22px;
+  background: linear-gradient(#f3ead9 0 62%, #d9bf98 62%);
+  border: 1px solid #e3d7bf;
+}
+.calm-see-thing,
+.calm-see-gap {
+  aspect-ratio: 1;
+  border-radius: 16px;
+  min-height: 0;
+}
+.calm-see-thing {
+  display: grid;
+  place-items: center;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.72);
+  border: 2px solid transparent;
+  cursor: pointer;
+}
+.calm-see-thing svg {
+  width: 100%;
+  height: 100%;
+}
+.calm-see-thing:not(:disabled):hover {
+  border-color: #8eae96;
+  background: #fff;
+}
+.calm-see-thing:disabled {
+  cursor: default;
+  opacity: 1;
+}
+.calm-see-gap {
+  border: 2px dashed rgba(53, 84, 71, 0.3);
+  background: rgba(255, 255, 255, 0.25);
+}
+.calm-see-look {
+  display: grid;
+  grid-template-columns: minmax(160px, 260px) 1fr;
+  gap: 22px;
+  align-items: center;
+}
+.calm-see-whole {
+  position: relative;
+  aspect-ratio: 1;
+  background: #f6f3e8;
+  border-radius: 24px;
+  padding: 14px;
+}
+.calm-see-whole > svg {
+  position: absolute;
+  inset: 14px;
+  width: calc(100% - 28px);
+  height: calc(100% - 28px);
+}
+.calm-see-count {
+  position: absolute;
+  left: 50%;
+  bottom: -12px;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  font-size: 13px;
+  font-weight: 700;
+  background: #fff;
+  border: 1px solid #dce2d6;
+  border-radius: 999px;
+  padding: 3px 12px;
+  color: #355447;
+}
+.calm-see-details {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.calm-see-lens {
+  width: 118px;
+  height: 118px;
+  padding: 0 !important;
+  border-radius: 50% !important;
+  overflow: hidden;
+  background: #fffdf7;
+}
+.calm-see-lens svg {
+  width: 100%;
+  height: 100%;
+}
+@media (max-width: 640px) {
+  .calm-see,
+  .calm-see-look {
+    grid-template-columns: 1fr;
+  }
+  .calm-see-side .calm-see-choose {
+    justify-content: center;
+  }
+  .calm-see-basket {
+    margin: 0 auto;
+    width: 170px;
+  }
+  .calm-see-whole {
+    width: min(220px, 70vw);
+    margin: 0 auto 10px;
+  }
+  .calm-see-lens {
+    width: 92px;
+    height: 92px;
+  }
+  .calm-see-choose .learning-option {
+    width: 76px;
+    height: 76px;
+  }
+}

@@ -1,79 +1,587 @@
-const {parseHTML}=require('linkedom'),fs=require('fs'),vm=require('vm'),path=require('path'),assert=require('node:assert/strict');
-const root=process.env.APP_DIST||path.resolve(__dirname,'../dist'),html=fs.readFileSync(path.join(root,'index.html'),'utf8'),{window}=parseHTML(html),document=window.document;
-const values=new Map(),location={pathname:'/',search:process.argv.includes('--manual')?'?flow=manual':'',hash:''};
-const storage={getItem:k=>values.get(k)||null,setItem:(k,v)=>values.set(k,String(v)),removeItem:k=>values.delete(k)};
-const history={replaceState(s,t,u){if(u){const n=new URL(u,'https://app.test');Object.assign(location,{pathname:n.pathname,search:n.search,hash:n.hash});}},pushState(s,t,u){this.replaceState(s,t,u)}};
-window.Element.prototype.scrollIntoView=function(){};window.Element.prototype.focus=function(){};
-let timerId=0;const timers=new Map(),micro=[];const sandbox={document,console,localStorage:storage,location,history,URL,URLSearchParams,Map,Set,Blob,TextEncoder,structuredClone,performance,window:null,navigator:{},MutationObserver:class{observe(){} disconnect(){}},setTimeout:(fn,ms)=>{const id=++timerId;timers.set(id,{fn,ms});return id;},clearTimeout:id=>timers.delete(id),requestAnimationFrame:()=>++timerId,cancelAnimationFrame(){},queueMicrotask:fn=>micro.push(fn),matchMedia:()=>({matches:true,addEventListener(){}}),addEventListener(){},scrollTo(){},getComputedStyle:()=>({})};sandbox.window=sandbox;sandbox.globalThis=sandbox;const c=vm.createContext(sandbox);
-for(const tag of document.querySelectorAll('script[src]')){const file=tag.getAttribute('src').split('?')[0];try{vm.runInContext(fs.readFileSync(path.join(root,file),'utf8'),c,{filename:file});}catch(e){console.error(file+': '+e.message);throw e;}}
-const run=s=>vm.runInContext(s,c);run('skillHome()');
+const { parseHTML } = require('linkedom'),
+  fs = require('fs'),
+  vm = require('vm'),
+  path = require('path'),
+  assert = require('node:assert/strict');
+const root = process.env.APP_DIST || path.resolve(__dirname, '../dist'),
+  html = fs.readFileSync(path.join(root, 'index.html'), 'utf8'),
+  { window } = parseHTML(html),
+  document = window.document;
+const values = new Map(),
+  location = { pathname: '/', search: process.argv.includes('--manual') ? '?flow=manual' : '', hash: '' };
+const storage = {
+  getItem: k => values.get(k) || null,
+  setItem: (k, v) => values.set(k, String(v)),
+  removeItem: k => values.delete(k)
+};
+const history = {
+  replaceState(s, t, u) {
+    if (u) {
+      const n = new URL(u, 'https://app.test');
+      Object.assign(location, { pathname: n.pathname, search: n.search, hash: n.hash });
+    }
+  },
+  pushState(s, t, u) {
+    this.replaceState(s, t, u);
+  }
+};
+window.Element.prototype.scrollIntoView = function () {};
+window.Element.prototype.focus = function () {};
+let timerId = 0;
+const timers = new Map(),
+  micro = [];
+const sandbox = {
+  document,
+  console,
+  localStorage: storage,
+  location,
+  history,
+  URL,
+  URLSearchParams,
+  Map,
+  Set,
+  Blob,
+  TextEncoder,
+  structuredClone,
+  performance,
+  window: null,
+  navigator: {},
+  MutationObserver: class {
+    observe() {}
+    disconnect() {}
+  },
+  setTimeout: (fn, ms) => {
+    const id = ++timerId;
+    timers.set(id, { fn, ms });
+    return id;
+  },
+  clearTimeout: id => timers.delete(id),
+  requestAnimationFrame: () => ++timerId,
+  cancelAnimationFrame() {},
+  queueMicrotask: fn => micro.push(fn),
+  matchMedia: () => ({ matches: true, addEventListener() {} }),
+  addEventListener() {},
+  scrollTo() {},
+  getComputedStyle: () => ({})
+};
+sandbox.window = sandbox;
+sandbox.globalThis = sandbox;
+const c = vm.createContext(sandbox);
+for (const tag of document.querySelectorAll('script[src]')) {
+  const file = tag.getAttribute('src').split('?')[0];
+  try {
+    vm.runInContext(fs.readFileSync(path.join(root, file), 'utf8'), c, { filename: file });
+  } catch (e) {
+    console.error(file + ': ' + e.message);
+    throw e;
+  }
+}
+const run = s => vm.runInContext(s, c);
+run('skillHome()');
 
-function flush(){let n=0;while(micro.length){micro.shift()();if(++n>500)throw Error('Microtask loop');}}
-function advance(){const id=run('readingTimer');if(id===null&&document.querySelector('#readingContinue')){click('#readingContinue');return;}assert(id!==null,'Reading transition should be scheduled');const t=timers.get(id);assert(t,'Scheduled transition should exist');timers.delete(id);t.fn();flush();}
-function click(selector){const el=document.querySelector(selector);assert(el,'Missing '+selector);assert(!el.disabled,'Disabled '+selector);el.onclick?el.onclick({preventDefault(){}}):el.dispatchEvent(new window.Event('click'));flush();}
-function launch(course,index){run(`skillLaunch('${course}',${index})`);flush();assert(document.querySelector('.reading-play'));assert(document.querySelector('#coursePurpose'));}
-function state(){return run('readingState');}
-function solve(){const s=state(),g=run('readingGame(readingState.id)'),mode=g.mode;if(g.extended){solveMore();return;}
- if(mode==='parts'){click('[data-reading-part="x"]');assert.equal(state().done,false);const count=run('readingLetterPaths[readingState.item].length');for(let i=0;i<count;i++)click(`[data-reading-part="${i}"]`);}
- else if(['case','font','mnemonic','sound','retrieve','count','swap','meaning','note','action','ending'].includes(mode)){
- let answer=s.item;if(mode==='count')answer=String(s.word.tiles.length);if(mode==='swap')answer=s.word.tiles[s.change];if(mode==='meaning')answer=s.word.picture;if(mode==='note')answer=run("readingWord(readingState.item.replace(/[.!]/g,'').split(' ').at(-1)).picture");if(mode==='ending')answer=s.item.includes('naps')?'nap':s.item.includes('sits')?'sit':'tap';const wrong=[...document.querySelectorAll('[data-reading-choice]')].find(b=>b.dataset.readingChoice!==answer);assert(wrong);click(`[data-reading-choice="${wrong.dataset.readingChoice}"]`);assert.equal(state().done,false);assert(document.querySelector('.reading-feedback').textContent);click(`[data-reading-choice="${answer}"]`);
- }else if(['boxes','spell','bridge','digraph','missing'].includes(mode)){
- const first=s.slots.indexOf(null),bad=s.bank.findIndex(t=>!s.word.tiles.includes(t));click(`[data-reading-tile="${bad}"]`);assert.equal(state().slots[first],bad);assert(document.querySelector(`[data-reading-slot="${first}"]`).textContent);click(`[data-reading-slot="${first}"]`);assert.equal(state().slots[first],null);
- while(state().slots.includes(null)){const i=state().slots.indexOf(null),tile=state().word.tiles[i],bank=state().bank.findIndex((v,j)=>v===tile&&!state().slots.includes(j));click(`[data-reading-tile="${bank}"]`);if(state().done)break;}
- if(mode==='bridge'){assert.equal(state().phase,'blend');const slider=document.querySelector('#readingSlide');slider.value='100';slider.dispatchEvent(new window.Event('input'));slider.dispatchEvent(new window.Event('change'));flush();}
- }else if(mode==='slide'){const slider=document.querySelector('#readingSlide');slider.value='40';slider.dispatchEvent(new window.Event('input'));assert.equal(state().done,false);slider.value='100';slider.dispatchEvent(new window.Event('input'));slider.dispatchEvent(new window.Event('change'));flush();}
- else if(['parcel','pretend','book'].includes(mode)){click('#readingObserve');assert.equal(state().lastKind,'shared');assert(!/correct|independent|passed/i.test(state().message));}
- else if(mode==='scene'){click('#readingProp');const answer=s.item==='cat in bag'?'bag':s.item==='hat on cat'?'cat':'mat';const wrong=[...document.querySelectorAll('[data-reading-target]')].find(el=>el.dataset.readingTarget!==answer);click(`[data-reading-target="${wrong.dataset.readingTarget}"]`);assert.equal(state().done,false);click(`[data-reading-target="${answer}"]`);}
- else throw Error('Untested mode '+mode);
- assert.equal(state().done,true,mode+' should finish');assert(document.querySelector('.reading-result'));assert(run('readingTimer!==null')||document.querySelector('#readingContinue'));
+function flush() {
+  let n = 0;
+  while (micro.length) {
+    micro.shift()();
+    if (++n > 500) throw Error('Microtask loop');
+  }
 }
-function solveWordQuest(){const s=state(),g=run('readingGame(readingState.id)'),q=g.quest;
- if(q==='change'){const[from,to]=s.item.split('>'),i=[...from].findIndex((c,j)=>c!==to[j]);click(`[data-wq-letter="${s.wp.bank.indexOf(to[i])}"]`);click(`[data-wq-change-slot="${i}"]`);}
- else if(q==='crossword'){for(const [i,letter]of Object.entries(s.wp.answers)){const n=state().wp.bank.findIndex((v,j)=>v===letter&&!Object.values(state().wp.grid).includes(j));click(`[data-wq-bank="${n}"]`);click(`[data-wq-cell="${i}"]`);}}
- else if(q==='search'){for(const i of [...s.wp.path])click(`[data-wq-search="${i}"]`);}
- else if(q==='pairs'){for(const word of s.item.split('|')){const a=s.wp.cards.findIndex(c=>c.word===word&&c.kind==='word'),b=s.wp.cards.findIndex(c=>c.word===word&&c.kind==='picture');click(`[data-wq-pair="${a}"]`);click(`[data-wq-pair="${b}"]`);}}
- else if(q==='sort'){for(const word of s.item.split('|')){click(`[data-wq-sort="${word}"]`);click(`[data-wq-bin="${['cat','dog','pig','fish'].includes(word)?'animal':'object'}"]`);}}
- else if(q==='inventory'){click(`[data-wq-missing="${s.wp.missing}"]`);click('#wqMissing');}
- else if(q==='comic'){for(const action of ['sit','nap','tap'])click(`[data-wq-action="${action}"]`);assert.equal(state().lastKind,'shared');}
- else if(q==='paint'){click(`[data-wq-paint="${s.item.split(' ')[0]}"]`);click('#wqCanvas');}
- else if(q==='quantity'){while(!state().done)click('#wqAdd');}
- else if(q==='safe'){for(let i=0;i<3;i++){let turns=0;while(!state().done&&state().wp.dials[i][state().wp.settings[i]]!==state().wp.targets[i]){click(`[data-wq-dial="${i}"]`);assert(++turns<=3);}}}
- else if(q==='recipe'){for(const [i,word]of s.item.split('|').entries()){click(`[data-wq-food="${word}"]`);click(`[data-wq-recipe-slot="${i}"]`);}}
- else if(q==='spaces'){click(`[data-wq-cut="${s.item.indexOf(' ')}"]`);assert.equal(state().wp.phase,'meaning');click(`[data-wq-caption="${s.item}"]`);}
- else if(q==='bingo'){for(const word of [...s.wp.queue])click(`[data-wq-bingo="${word}"]`);}
- else if(q==='mosaic'){for(const [i,word]of s.wp.tiles.entries())if(word===s.item.split('|')[0])click(`[data-wq-mosaic="${i}"]`);}
- else if(q==='beats'){const n=run('wordPlaySyllables[readingState.item]?.length||1');click(`[data-wq-beat="${n}"]`);assert.equal(state().wp.phase,'meaning');click(`[data-wq-beat-picture="${s.item}"]`);}
- else throw Error('Untested quest '+q);assert(state().done,q+' should finish');assert(document.querySelector('.wq-result'));assert(run('readingTimer!==null')||document.querySelector('#readingContinue'));
+function advance() {
+  const id = run('readingTimer');
+  if (id === null && document.querySelector('#readingContinue')) {
+    click('#readingContinue');
+    return;
+  }
+  assert(id !== null, 'Reading transition should be scheduled');
+  const t = timers.get(id);
+  assert(t, 'Scheduled transition should exist');
+  timers.delete(id);
+  t.fn();
+  flush();
 }
-function solveWordPlay(){if(run('!!wordQuestGame()')){solveWordQuest();return;}const s=state(),mode=run('readingGame(readingState.id).mode');
- if(mode==='word-fishing'){const wrong=[...document.querySelectorAll('[data-wp-fish]')].find(e=>e.dataset.wpFish!==s.item);click(`[data-wp-fish="${wrong.dataset.wpFish}"]`);assert(!state().done);click(`[data-wp-fish="${s.item}"]`);}
- else if(mode==='word-trolley'){for(const word of s.item.split('|')){click(`[data-wp-cargo="${word}"]`);click('#wpTrolley');assert(state().wp.loaded.includes(word));}}
- else if(mode==='word-stickers'){const words=s.item.split('|').slice(0,s.wp.labels.length);while(!state().done){const i=words.findIndex((x,j)=>state().wp.labels[j]!==x),j=state().wp.labels.indexOf(words[i]);click(`[data-wp-label="${i}"]`);click(`[data-wp-label="${j}"]`);}}
- else if(mode==='word-dominoes'){for(const word of s.item.split('|')){click(`[data-wp-domino="${word}"]`);click('#wpPath');}}
- else if(mode==='word-syllables'){for(const chunk of run('wordPlaySyllables[readingState.item]')){const index=run('wordPlayOrder(wordPlaySyllables[readingState.item],1)').indexOf(chunk);click(`[data-wp-chunk="${index}"]`);}assert.equal(state().wp.phase,'meaning');assert(!state().done);click(`[data-wp-meaning="${s.item}"]`);}
- else throw Error('Untested word game '+mode);assert(state().done);assert(document.querySelector('.wp-result'));assert(run('readingTimer!==null')||document.querySelector('#readingContinue'));
+function click(selector) {
+  const el = document.querySelector(selector);
+  assert(el, 'Missing ' + selector);
+  assert(!el.disabled, 'Disabled ' + selector);
+  el.onclick ? el.onclick({ preventDefault() {} }) : el.dispatchEvent(new window.Event('click'));
+  flush();
 }
-function solveMore(){const s=state(),g=run('readingGame(readingState.id)'),mode=g.mode;
- if(g.wordPlay){solveWordPlay();return;}
- if(mode==='delivery-route'){const cargo=run('readingDeliveryMissions[readingState.round].cargo');click('[data-ra-door="b"]');assert.equal(state().mission.delivered.length,0);for(let i=0;i<cargo.length;i++){click(`[data-ra-parcel="${i}"]`);const wrong=cargo[i][0]==='b'?'d':'b';click(`[data-ra-door="${wrong}"]`);assert.equal(state().mission.delivered.length,i);assert.equal(state().mission.loaded,i);click(`[data-ra-door="${cargo[i][0]}"]`);assert.equal(state().mission.delivered.length,i+1);}
- }else if(mode==='clue-rebuild'){const clues=run('readingMysteryClues[readingState.round]');for(const place of Object.keys(clues).reverse())click(`[data-ra-search="${place}"]`);assert.equal(state().mystery.found.length,2);const answer=run("readingMysteries[readingState.round].letter==='p'?'left':'right'");click(`[data-ra-stem="${answer==='left'?'right':'left'}"]`);assert.equal(state().done,false);assert(document.querySelector('.ra-fixed-bowl path'));click(`[data-ra-stem="${answer}"]`);
- }else if(mode==='puppet-program'){assert(document.querySelector('#readingColourToggle').disabled);const target=run('readingPuppetScripts[readingState.round]');for(let i=0;i<target.length;i++)click('[data-ra-command="b"]');assert.equal(state().done,false);for(let i=0;i<target.length;i++)click(`[data-ra-show-slot="${i}"]`);for(const command of target)click(`[data-ra-command="${command}"]`);
- }else if(['cluster-build','order-words'].includes(mode)){const bad=s.bank.findIndex(t=>!s.word.tiles.includes(t)),first=s.slots.indexOf(null);click(`[data-reading-tile="${bad}"]`);assert.equal(state().slots[first],bad);click(`[data-reading-slot="${first}"]`);while(state().slots.includes(null)){const i=state().slots.indexOf(null),bank=state().bank.findIndex((v,j)=>v===state().word.tiles[i]&&!state().slots.includes(j));click(`[data-reading-tile="${bank}"]`);if(state().done)break;}
- }else{if(document.querySelector('#readingLetterLens')){click('#readingLetterLens');assert.equal(state().showDetail,true);}const answer=run('readingMoreAnswer()');const wrong=[...document.querySelectorAll('[data-reading-choice]')].find(el=>el.dataset.readingChoice!==answer);assert(wrong);click(`[data-reading-choice="${wrong.dataset.readingChoice}"]`);assert.equal(state().done,false);click(`[data-reading-choice="${answer}"]`);}
- assert.equal(state().done,true,mode);assert(document.querySelector('.reading-result'));assert(run('readingTimer!==null')||document.querySelector('#readingContinue'));if(mode==='ending-build')assert.equal(document.querySelector('.reading-plural-pictures').children.length,2);
+function launch(course, index) {
+  run(`skillLaunch('${course}',${index})`);
+  flush();
+  assert(document.querySelector('.reading-play'));
+  assert(document.querySelector('#coursePurpose'));
 }
-flush();if(process.argv.includes('--manual')){launch('letter-forms',0);for(let i=0;i<3;i++){solve();advance();}assert(document.querySelector('.reading-complete'));click('#readingNextActivity');assert.equal(run('skillContext.index'),1);console.log(JSON.stringify({manualPacing:true,manualNextActivity:true}));process.exit(0);}const dataAudit=run(`(()=>{const errors=[];for(const [word,d]of Object.entries(readingWords))if(d.tiles.join('')!==word)errors.push(word);for(const g of readingGames){if(!g.why||!g.adult||g.items.length<3)errors.push(g.id);if(g.mode==='swap')for(const item of g.items){const [a,b]=item.split('>'),x=readingWord(a).tiles,y=readingWord(b).tiles;if(x.length!==y.length||x.filter((v,i)=>v!==y[i]).length!==1)errors.push(item);}}return errors;})()`);assert.deepEqual(Array.from(dataAudit),[]);assert.equal(new Set(run('readingGames.map(g=>g.id)')).size,56);assert.equal(run('readingCourses.length'),19);assert.equal(run('readingGames.length'),56);assert.equal(run('learningSkills.flatMap(s=>s.courses).length'),46);let trials=0;const mechanics=new Set;
-for(const course of run('readingCourses')){for(let index=0;index<course.activities.length;index++){launch(course.id,index);const id=course.activities[index].key;mechanics.add(run('readingGame(readingState.id).mode'));const total=state().total;for(let round=0;round<total;round++){assert.equal(state().id,id);assert.equal(state().round,round);solve();trials++;advance();}assert(run(`skillNotes['${course.id}'].activities[${index}]`));const record=run(`skillNotes['${course.id}'].readingPractice[${index}]`);assert.equal(record.responses.length,total);assert(!('score'in record));}}
+function state() {
+  return run('readingState');
+}
+function solve() {
+  const s = state(),
+    g = run('readingGame(readingState.id)'),
+    mode = g.mode;
+  if (g.extended) {
+    solveMore();
+    return;
+  }
+  if (mode === 'parts') {
+    click('[data-reading-part="x"]');
+    assert.equal(state().done, false);
+    const count = run('readingLetterPaths[readingState.item].length');
+    for (let i = 0; i < count; i++) click(`[data-reading-part="${i}"]`);
+  } else if (
+    [
+      'case',
+      'font',
+      'mnemonic',
+      'sound',
+      'retrieve',
+      'count',
+      'swap',
+      'meaning',
+      'note',
+      'action',
+      'ending'
+    ].includes(mode)
+  ) {
+    let answer = s.item;
+    if (mode === 'count') answer = String(s.word.tiles.length);
+    if (mode === 'swap') answer = s.word.tiles[s.change];
+    if (mode === 'meaning') answer = s.word.picture;
+    if (mode === 'note')
+      answer = run("readingWord(readingState.item.replace(/[.!]/g,'').split(' ').at(-1)).picture");
+    if (mode === 'ending') answer = s.item.includes('naps') ? 'nap' : s.item.includes('sits') ? 'sit' : 'tap';
+    const wrong = [...document.querySelectorAll('[data-reading-choice]')].find(
+      b => b.dataset.readingChoice !== answer
+    );
+    assert(wrong);
+    click(`[data-reading-choice="${wrong.dataset.readingChoice}"]`);
+    assert.equal(state().done, false);
+    assert(document.querySelector('.reading-feedback').textContent);
+    click(`[data-reading-choice="${answer}"]`);
+  } else if (['boxes', 'spell', 'bridge', 'digraph', 'missing'].includes(mode)) {
+    const first = s.slots.indexOf(null),
+      bad = s.bank.findIndex(t => !s.word.tiles.includes(t));
+    click(`[data-reading-tile="${bad}"]`);
+    assert.equal(state().slots[first], bad);
+    assert(document.querySelector(`[data-reading-slot="${first}"]`).textContent);
+    click(`[data-reading-slot="${first}"]`);
+    assert.equal(state().slots[first], null);
+    while (state().slots.includes(null)) {
+      const i = state().slots.indexOf(null),
+        tile = state().word.tiles[i],
+        bank = state().bank.findIndex((v, j) => v === tile && !state().slots.includes(j));
+      click(`[data-reading-tile="${bank}"]`);
+      if (state().done) break;
+    }
+    if (mode === 'bridge') {
+      assert.equal(state().phase, 'blend');
+      const slider = document.querySelector('#readingSlide');
+      slider.value = '100';
+      slider.dispatchEvent(new window.Event('input'));
+      slider.dispatchEvent(new window.Event('change'));
+      flush();
+    }
+  } else if (mode === 'slide') {
+    const slider = document.querySelector('#readingSlide');
+    slider.value = '40';
+    slider.dispatchEvent(new window.Event('input'));
+    assert.equal(state().done, false);
+    slider.value = '100';
+    slider.dispatchEvent(new window.Event('input'));
+    slider.dispatchEvent(new window.Event('change'));
+    flush();
+  } else if (['parcel', 'pretend', 'book'].includes(mode)) {
+    click('#readingObserve');
+    assert.equal(state().lastKind, 'shared');
+    assert(!/correct|independent|passed/i.test(state().message));
+  } else if (mode === 'scene') {
+    click('#readingProp');
+    const answer = s.item === 'cat in bag' ? 'bag' : s.item === 'hat on cat' ? 'cat' : 'mat';
+    const wrong = [...document.querySelectorAll('[data-reading-target]')].find(
+      el => el.dataset.readingTarget !== answer
+    );
+    click(`[data-reading-target="${wrong.dataset.readingTarget}"]`);
+    assert.equal(state().done, false);
+    click(`[data-reading-target="${answer}"]`);
+  } else throw Error('Untested mode ' + mode);
+  assert.equal(state().done, true, mode + ' should finish');
+  assert(document.querySelector('.reading-result'));
+  assert(run('readingTimer!==null') || document.querySelector('#readingContinue'));
+}
+function solveWordQuest() {
+  const s = state(),
+    g = run('readingGame(readingState.id)'),
+    q = g.quest;
+  if (q === 'change') {
+    const [from, to] = s.item.split('>'),
+      i = [...from].findIndex((c, j) => c !== to[j]);
+    click(`[data-wq-letter="${s.wp.bank.indexOf(to[i])}"]`);
+    click(`[data-wq-change-slot="${i}"]`);
+  } else if (q === 'crossword') {
+    for (const [i, letter] of Object.entries(s.wp.answers)) {
+      const n = state().wp.bank.findIndex(
+        (v, j) => v === letter && !Object.values(state().wp.grid).includes(j)
+      );
+      click(`[data-wq-bank="${n}"]`);
+      click(`[data-wq-cell="${i}"]`);
+    }
+  } else if (q === 'search') {
+    for (const i of [...s.wp.path]) click(`[data-wq-search="${i}"]`);
+  } else if (q === 'pairs') {
+    for (const word of s.item.split('|')) {
+      const a = s.wp.cards.findIndex(c => c.word === word && c.kind === 'word'),
+        b = s.wp.cards.findIndex(c => c.word === word && c.kind === 'picture');
+      click(`[data-wq-pair="${a}"]`);
+      click(`[data-wq-pair="${b}"]`);
+    }
+  } else if (q === 'sort') {
+    for (const word of s.item.split('|')) {
+      click(`[data-wq-sort="${word}"]`);
+      click(`[data-wq-bin="${['cat', 'dog', 'pig', 'fish'].includes(word) ? 'animal' : 'object'}"]`);
+    }
+  } else if (q === 'inventory') {
+    click(`[data-wq-missing="${s.wp.missing}"]`);
+    click('#wqMissing');
+  } else if (q === 'comic') {
+    for (const action of ['sit', 'nap', 'tap']) click(`[data-wq-action="${action}"]`);
+    assert.equal(state().lastKind, 'shared');
+  } else if (q === 'paint') {
+    click(`[data-wq-paint="${s.item.split(' ')[0]}"]`);
+    click('#wqCanvas');
+  } else if (q === 'quantity') {
+    while (!state().done) click('#wqAdd');
+  } else if (q === 'safe') {
+    for (let i = 0; i < 3; i++) {
+      let turns = 0;
+      while (!state().done && state().wp.dials[i][state().wp.settings[i]] !== state().wp.targets[i]) {
+        click(`[data-wq-dial="${i}"]`);
+        assert(++turns <= 3);
+      }
+    }
+  } else if (q === 'recipe') {
+    for (const [i, word] of s.item.split('|').entries()) {
+      click(`[data-wq-food="${word}"]`);
+      click(`[data-wq-recipe-slot="${i}"]`);
+    }
+  } else if (q === 'spaces') {
+    click(`[data-wq-cut="${s.item.indexOf(' ')}"]`);
+    assert.equal(state().wp.phase, 'meaning');
+    click(`[data-wq-caption="${s.item}"]`);
+  } else if (q === 'bingo') {
+    for (const word of [...s.wp.queue]) click(`[data-wq-bingo="${word}"]`);
+  } else if (q === 'mosaic') {
+    for (const [i, word] of s.wp.tiles.entries())
+      if (word === s.item.split('|')[0]) click(`[data-wq-mosaic="${i}"]`);
+  } else if (q === 'beats') {
+    const n = run('wordPlaySyllables[readingState.item]?.length||1');
+    click(`[data-wq-beat="${n}"]`);
+    assert.equal(state().wp.phase, 'meaning');
+    click(`[data-wq-beat-picture="${s.item}"]`);
+  } else throw Error('Untested quest ' + q);
+  assert(state().done, q + ' should finish');
+  assert(document.querySelector('.wq-result'));
+  assert(run('readingTimer!==null') || document.querySelector('#readingContinue'));
+}
+function solveWordPlay() {
+  if (run('!!wordQuestGame()')) {
+    solveWordQuest();
+    return;
+  }
+  const s = state(),
+    mode = run('readingGame(readingState.id).mode');
+  if (mode === 'word-fishing') {
+    const wrong = [...document.querySelectorAll('[data-wp-fish]')].find(e => e.dataset.wpFish !== s.item);
+    click(`[data-wp-fish="${wrong.dataset.wpFish}"]`);
+    assert(!state().done);
+    click(`[data-wp-fish="${s.item}"]`);
+  } else if (mode === 'word-trolley') {
+    for (const word of s.item.split('|')) {
+      click(`[data-wp-cargo="${word}"]`);
+      click('#wpTrolley');
+      assert(state().wp.loaded.includes(word));
+    }
+  } else if (mode === 'word-stickers') {
+    const words = s.item.split('|').slice(0, s.wp.labels.length);
+    while (!state().done) {
+      const i = words.findIndex((x, j) => state().wp.labels[j] !== x),
+        j = state().wp.labels.indexOf(words[i]);
+      click(`[data-wp-label="${i}"]`);
+      click(`[data-wp-label="${j}"]`);
+    }
+  } else if (mode === 'word-dominoes') {
+    for (const word of s.item.split('|')) {
+      click(`[data-wp-domino="${word}"]`);
+      click('#wpPath');
+    }
+  } else if (mode === 'word-syllables') {
+    for (const chunk of run('wordPlaySyllables[readingState.item]')) {
+      const index = run('wordPlayOrder(wordPlaySyllables[readingState.item],1)').indexOf(chunk);
+      click(`[data-wp-chunk="${index}"]`);
+    }
+    assert.equal(state().wp.phase, 'meaning');
+    assert(!state().done);
+    click(`[data-wp-meaning="${s.item}"]`);
+  } else throw Error('Untested word game ' + mode);
+  assert(state().done);
+  assert(document.querySelector('.wp-result'));
+  assert(run('readingTimer!==null') || document.querySelector('#readingContinue'));
+}
+function solveMore() {
+  const s = state(),
+    g = run('readingGame(readingState.id)'),
+    mode = g.mode;
+  if (g.wordPlay) {
+    solveWordPlay();
+    return;
+  }
+  if (mode === 'delivery-route') {
+    const cargo = run('readingDeliveryMissions[readingState.round].cargo');
+    click('[data-ra-door="b"]');
+    assert.equal(state().mission.delivered.length, 0);
+    for (let i = 0; i < cargo.length; i++) {
+      click(`[data-ra-parcel="${i}"]`);
+      const wrong = cargo[i][0] === 'b' ? 'd' : 'b';
+      click(`[data-ra-door="${wrong}"]`);
+      assert.equal(state().mission.delivered.length, i);
+      assert.equal(state().mission.loaded, i);
+      click(`[data-ra-door="${cargo[i][0]}"]`);
+      assert.equal(state().mission.delivered.length, i + 1);
+    }
+  } else if (mode === 'clue-rebuild') {
+    const clues = run('readingMysteryClues[readingState.round]');
+    for (const place of Object.keys(clues).reverse()) click(`[data-ra-search="${place}"]`);
+    assert.equal(state().mystery.found.length, 2);
+    const answer = run("readingMysteries[readingState.round].letter==='p'?'left':'right'");
+    click(`[data-ra-stem="${answer === 'left' ? 'right' : 'left'}"]`);
+    assert.equal(state().done, false);
+    assert(document.querySelector('.ra-fixed-bowl path'));
+    click(`[data-ra-stem="${answer}"]`);
+  } else if (mode === 'puppet-program') {
+    assert(document.querySelector('#readingColourToggle').disabled);
+    const target = run('readingPuppetScripts[readingState.round]');
+    for (let i = 0; i < target.length; i++) click('[data-ra-command="b"]');
+    assert.equal(state().done, false);
+    for (let i = 0; i < target.length; i++) click(`[data-ra-show-slot="${i}"]`);
+    for (const command of target) click(`[data-ra-command="${command}"]`);
+  } else if (['cluster-build', 'order-words'].includes(mode)) {
+    const bad = s.bank.findIndex(t => !s.word.tiles.includes(t)),
+      first = s.slots.indexOf(null);
+    click(`[data-reading-tile="${bad}"]`);
+    assert.equal(state().slots[first], bad);
+    click(`[data-reading-slot="${first}"]`);
+    while (state().slots.includes(null)) {
+      const i = state().slots.indexOf(null),
+        bank = state().bank.findIndex((v, j) => v === state().word.tiles[i] && !state().slots.includes(j));
+      click(`[data-reading-tile="${bank}"]`);
+      if (state().done) break;
+    }
+  } else {
+    if (document.querySelector('#readingLetterLens')) {
+      click('#readingLetterLens');
+      assert.equal(state().showDetail, true);
+    }
+    const answer = run('readingMoreAnswer()');
+    const wrong = [...document.querySelectorAll('[data-reading-choice]')].find(
+      el => el.dataset.readingChoice !== answer
+    );
+    assert(wrong);
+    click(`[data-reading-choice="${wrong.dataset.readingChoice}"]`);
+    assert.equal(state().done, false);
+    click(`[data-reading-choice="${answer}"]`);
+  }
+  assert.equal(state().done, true, mode);
+  assert(document.querySelector('.reading-result'));
+  assert(run('readingTimer!==null') || document.querySelector('#readingContinue'));
+  if (mode === 'ending-build')
+    assert.equal(document.querySelector('.reading-plural-pictures').children.length, 2);
+}
+flush();
+if (process.argv.includes('--manual')) {
+  launch('letter-forms', 0);
+  for (let i = 0; i < 3; i++) {
+    solve();
+    advance();
+  }
+  assert(document.querySelector('.reading-complete'));
+  click('#readingNextActivity');
+  assert.equal(run('skillContext.index'), 1);
+  console.log(JSON.stringify({ manualPacing: true, manualNextActivity: true }));
+  process.exit(0);
+}
+const dataAudit = run(
+  `(()=>{const errors=[];for(const [word,d]of Object.entries(readingWords))if(d.tiles.join('')!==word)errors.push(word);for(const g of readingGames){if(!g.why||!g.adult||g.items.length<3)errors.push(g.id);if(g.mode==='swap')for(const item of g.items){const [a,b]=item.split('>'),x=readingWord(a).tiles,y=readingWord(b).tiles;if(x.length!==y.length||x.filter((v,i)=>v!==y[i]).length!==1)errors.push(item);}}return errors;})()`
+);
+assert.deepEqual(Array.from(dataAudit), []);
+assert.equal(new Set(run('readingGames.map(g=>g.id)')).size, 56);
+assert.equal(run('readingCourses.length'), 19);
+assert.equal(run('readingGames.length'), 56);
+assert.equal(run('learningSkills.flatMap(s=>s.courses).length'), 46);
+let trials = 0;
+const mechanics = new Set();
+for (const course of run('readingCourses')) {
+  for (let index = 0; index < course.activities.length; index++) {
+    launch(course.id, index);
+    const id = course.activities[index].key;
+    mechanics.add(run('readingGame(readingState.id).mode'));
+    const total = state().total;
+    for (let round = 0; round < total; round++) {
+      assert.equal(state().id, id);
+      assert.equal(state().round, round);
+      solve();
+      trials++;
+      advance();
+    }
+    assert(run(`skillNotes['${course.id}'].activities[${index}]`));
+    const record = run(`skillNotes['${course.id}'].readingPractice[${index}]`);
+    assert.equal(record.responses.length, total);
+    assert(!('score' in record));
+  }
+}
 // The last game of a course arrives at the normal course-end screen.
 assert(document.querySelector('.course-finished'));
-launch('letter-links',1);const before=state().item;solve();run('CourseFlow.setPaused(true)');flush();assert.equal(run('readingTimer'),null);assert.equal(state().paused,true);run("readingChoose('s')");assert.equal(state().item,before);run('CourseFlow.setPaused(false)');flush();advance();assert.equal(state().round,1);
-solve();run('CourseFlow.stop()');flush();assert.equal(run('skillContext.index'),null);assert.equal(run('readingTimer'),null);const timer=run('readingTimer');if(timer!==null){const task=timers.get(timer);if(task){timers.delete(timer);task.fn();flush();}}assert(document.querySelector('#skillBegin'));assert.equal(run('skillContext.index'),null);
+launch('letter-links', 1);
+const before = state().item;
+solve();
+run('CourseFlow.setPaused(true)');
+flush();
+assert.equal(run('readingTimer'), null);
+assert.equal(state().paused, true);
+run("readingChoose('s')");
+assert.equal(state().item, before);
+run('CourseFlow.setPaused(false)');
+flush();
+advance();
+assert.equal(state().round, 1);
+solve();
+run('CourseFlow.stop()');
+flush();
+assert.equal(run('skillContext.index'), null);
+assert.equal(run('readingTimer'), null);
+const timer = run('readingTimer');
+if (timer !== null) {
+  const task = timers.get(timer);
+  if (task) {
+    timers.delete(timer);
+    task.fn();
+    flush();
+  }
+}
+assert(document.querySelector('#skillBegin'));
+assert.equal(run('skillContext.index'), null);
 // Exercise the same drag descriptors used by Pointer Events without claiming physical touch QA.
-run('const readingTestBindings=new WeakMap();const readingOriginalBind=TouchPlay.bind;TouchPlay.bind=(el,d)=>{readingTestBindings.set(el,d);readingOriginalBind(el,d);};');launch('word-builders',1);const tile=state().bank.findIndex(v=>v===state().word.tiles[1]);run(`readingTestBindings.get(app.querySelector('[data-reading-tile="${tile}"]')).drop(app.querySelector('[data-reading-slot="1"]'))`);flush();assert.equal(state().slots[1],tile);assert.equal(document.querySelector('[data-reading-slot="1"]').textContent,state().word.tiles[1]);run("readingTestBindings.get(app.querySelector('[data-reading-slot=\"1\"]')).drop(app.querySelector('[data-reading-slot=\"0\"]'))");flush();assert.equal(state().slots[0],tile);assert.equal(state().slots[1],null);click('[data-reading-slot="0"]');assert.equal(state().slots[0],null);
-launch('meaningful-reading',0);run("readingTestBindings.get(app.querySelector('#readingProp')).drop(app.querySelector('[data-reading-target=\"mat\"]'))");flush();assert.equal(state().done,true);
+run(
+  'const readingTestBindings=new WeakMap();const readingOriginalBind=TouchPlay.bind;TouchPlay.bind=(el,d)=>{readingTestBindings.set(el,d);readingOriginalBind(el,d);};'
+);
+launch('word-builders', 1);
+const tile = state().bank.findIndex(v => v === state().word.tiles[1]);
+run(
+  `readingTestBindings.get(app.querySelector('[data-reading-tile="${tile}"]')).drop(app.querySelector('[data-reading-slot="1"]'))`
+);
+flush();
+assert.equal(state().slots[1], tile);
+assert.equal(document.querySelector('[data-reading-slot="1"]').textContent, state().word.tiles[1]);
+run(
+  'readingTestBindings.get(app.querySelector(\'[data-reading-slot="1"]\')).drop(app.querySelector(\'[data-reading-slot="0"]\'))'
+);
+flush();
+assert.equal(state().slots[0], tile);
+assert.equal(state().slots[1], null);
+click('[data-reading-slot="0"]');
+assert.equal(state().slots[0], null);
+launch('meaningful-reading', 0);
+run(
+  "readingTestBindings.get(app.querySelector('#readingProp')).drop(app.querySelector('[data-reading-target=\"mat\"]'))"
+);
+flush();
+assert.equal(state().done, true);
 // Links are present in existing support areas and reloadable courses, not a new home category.
-run("parentSupportDetail('dyslexia')");flush();assert.equal(document.querySelectorAll('.support-reading-courses [data-home-course]').length,19);assert.equal(document.querySelectorAll('.support-game').length,2);assert(!document.querySelector('.support-reading-courses[open]'));run("location.hash='#activity/word-builders/1';skillRestoreRoute()");flush();assert.equal(state().id,'make-label');run("prParents('research')");flush();assert([...document.querySelectorAll('.pr-research-section summary')].some(el=>el.textContent==='Letters & starting to read'));
-run("skillCourse('letter-links')");document.querySelector('#skillEvidence').onclick();flush();assert([...document.querySelectorAll('.pr-research-section[open] summary')].some(el=>el.textContent==='Letters & starting to read'));document.querySelector('#prParentBack').onclick();assert(document.querySelector('#skillBegin'));launch('letter-lookalikes',0);const original=state().item;assert(document.querySelector('.reading-ink[style*="#244f91"]'));const colourToggle=document.querySelector('#readingColourToggle');colourToggle.checked=false;colourToggle.onchange();flush();assert.equal(state().item,original);assert.equal(state().done,false);assert.equal(JSON.parse(storage.getItem('spotmatch-reading-display-v1')).colour,false);for(const el of document.querySelectorAll('.reading-ink'))assert.match(el.getAttribute('style'),/#345b47/);const backOn=document.querySelector('#readingColourToggle');backOn.checked=true;backOn.onchange();flush();assert.equal(run('readingDisplay.colour'),true);launch('letter-lookalikes',2);solve();assert.equal(state().observations[0].colourCues,false);assert.equal(document.querySelectorAll('.reading-ink:not([style*="#345b47"])').length,0);
-run("readingDisplay.colour=false;parentSupportDetail('dyslexia')");flush();assert.equal(document.querySelectorAll('.support-reading-courses [data-home-course]').length,19);run("skillCourse('letter-lookalikes')");assert.match(document.querySelector('.skill-notes:last-child').textContent,/colour|Colour/);run("readingOpenGuide('letter-lookalikes')");flush();assert.match(document.querySelector('.pr-parent-content').textContent,/reversal alone does not diagnose/);
-function luminance(hex){const rgb=hex.slice(1).match(/../g).map(v=>parseInt(v,16)/255).map(v=>v<=.04045?v/12.92:((v+.055)/1.055)**2.4);return .2126*rgb[0]+.7152*rgb[1]+.0722*rgb[2];}for(const ink of Object.values(run('readingColourMap')))for(const paper of ['#fffdf7','#f3f6ea','#f2e8ce','#fff8e9','#e8f0dc','#f0efdb','#fffdf3'])assert((luminance(paper)+.05)/(luminance(ink)+.05)>=4.5,ink+' on '+paper);
-const sources=run('readingSources');assert(sources.length>=7);sources.forEach(s=>assert.match(s.url,/^https:\/\//));for(const name of ['reading-data.js','reading-art.js','reading.js'])assert(fs.readFileSync(path.join(root,name),'utf8').length>1000);console.log(JSON.stringify({courses:19,games:56,challenges:trials,activityModes:mechanics.size,wrongAnswerRetry:true,automaticCourseProgress:true,pauseResume:true,stopCancels:true,retainedDrops:true,slotMoveAndUndo:true,reloadable:true,adultObservedResponsesSeparate:true,colourToggleRetainsTask:true,plainPrintPractice:true,colourTextContrast:true,physicalTouchAndLayout:'unverified',domOnly:true}));
+run("parentSupportDetail('dyslexia')");
+flush();
+assert.equal(document.querySelectorAll('.support-reading-courses [data-home-course]').length, 19);
+assert.equal(document.querySelectorAll('.support-game').length, 2);
+assert(!document.querySelector('.support-reading-courses[open]'));
+run("location.hash='#activity/word-builders/1';skillRestoreRoute()");
+flush();
+assert.equal(state().id, 'make-label');
+run("prParents('research')");
+flush();
+assert(
+  [...document.querySelectorAll('.pr-research-section summary')].some(
+    el => el.textContent === 'Letters & starting to read'
+  )
+);
+run("skillCourse('letter-links')");
+document.querySelector('#skillEvidence').onclick();
+flush();
+assert(
+  [...document.querySelectorAll('.pr-research-section[open] summary')].some(
+    el => el.textContent === 'Letters & starting to read'
+  )
+);
+document.querySelector('#prParentBack').onclick();
+assert(document.querySelector('#skillBegin'));
+launch('letter-lookalikes', 0);
+const original = state().item;
+assert(document.querySelector('.reading-ink[style*="#244f91"]'));
+const colourToggle = document.querySelector('#readingColourToggle');
+colourToggle.checked = false;
+colourToggle.onchange();
+flush();
+assert.equal(state().item, original);
+assert.equal(state().done, false);
+assert.equal(JSON.parse(storage.getItem('spotmatch-reading-display-v1')).colour, false);
+for (const el of document.querySelectorAll('.reading-ink')) assert.match(el.getAttribute('style'), /#345b47/);
+const backOn = document.querySelector('#readingColourToggle');
+backOn.checked = true;
+backOn.onchange();
+flush();
+assert.equal(run('readingDisplay.colour'), true);
+launch('letter-lookalikes', 2);
+solve();
+assert.equal(state().observations[0].colourCues, false);
+assert.equal(document.querySelectorAll('.reading-ink:not([style*="#345b47"])').length, 0);
+run("readingDisplay.colour=false;parentSupportDetail('dyslexia')");
+flush();
+assert.equal(document.querySelectorAll('.support-reading-courses [data-home-course]').length, 19);
+run("skillCourse('letter-lookalikes')");
+assert.match(document.querySelector('.skill-notes:last-child').textContent, /colour|Colour/);
+run("readingOpenGuide('letter-lookalikes')");
+flush();
+assert.match(document.querySelector('.pr-parent-content').textContent, /reversal alone does not diagnose/);
+function luminance(hex) {
+  const rgb = hex
+    .slice(1)
+    .match(/../g)
+    .map(v => parseInt(v, 16) / 255)
+    .map(v => (v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4));
+  return 0.2126 * rgb[0] + 0.7152 * rgb[1] + 0.0722 * rgb[2];
+}
+for (const ink of Object.values(run('readingColourMap')))
+  for (const paper of ['#fffdf7', '#f3f6ea', '#f2e8ce', '#fff8e9', '#e8f0dc', '#f0efdb', '#fffdf3'])
+    assert((luminance(paper) + 0.05) / (luminance(ink) + 0.05) >= 4.5, ink + ' on ' + paper);
+const sources = run('readingSources');
+assert(sources.length >= 7);
+sources.forEach(s => assert.match(s.url, /^https:\/\//));
+for (const name of ['reading-data.js', 'reading-art.js', 'reading.js'])
+  assert(fs.readFileSync(path.join(root, name), 'utf8').length > 1000);
+console.log(
+  JSON.stringify({
+    courses: 19,
+    games: 56,
+    challenges: trials,
+    activityModes: mechanics.size,
+    wrongAnswerRetry: true,
+    automaticCourseProgress: true,
+    pauseResume: true,
+    stopCancels: true,
+    retainedDrops: true,
+    slotMoveAndUndo: true,
+    reloadable: true,
+    adultObservedResponsesSeparate: true,
+    colourToggleRetainsTask: true,
+    plainPrintPractice: true,
+    colourTextContrast: true,
+    physicalTouchAndLayout: 'unverified',
+    domOnly: true
+  })
+);

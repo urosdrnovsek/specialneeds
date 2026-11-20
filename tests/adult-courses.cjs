@@ -1,29 +1,163 @@
-const {chromium}=require('playwright');const fs=require('node:fs');const path=require('node:path');const assert=require('node:assert/strict');
-const root=path.resolve(__dirname,'..');const results=path.join(root,'test-results');fs.mkdirSync(results,{recursive:true});
-(async()=>{const browser=await chromium.launch({...(process.env.CHROMIUM_PATH?{executablePath:process.env.CHROMIUM_PATH}:fs.existsSync('/usr/bin/chromium')?{executablePath:'/usr/bin/chromium'}:{}),headless:true});const context=await browser.newContext({viewport:{width:1280,height:900},reducedMotion:'reduce'});const page=await context.newPage();const errors=[];page.on('pageerror',e=>errors.push(e.message));
-await page.addInitScript(()=>localStorage.setItem('spotmatch-course-flow','manual'));await page.route('https://spot-match.test/**',route=>{const name=new URL(route.request().url()).pathname.slice(1)||'index.html';if(!/^(?:[a-z-]+\.(?:html|css|js)|vocabulary\/pictures\/[a-z0-9-]+\.svg|vocabulary\/catalog\.json)$/.test(name))return route.fulfill({status:404,body:''});return route.fulfill({contentType:name.endsWith('.js')?'application/javascript':name.endsWith('.css')?'text/css':name.endsWith('.svg')?'image/svg+xml':name.endsWith('.json')?'application/json':'text/html',body:fs.readFileSync(path.join(root,'dist',name))});});await page.goto('https://spot-match.test/?library=full&flow=manual',{waitUntil:'load'});
-assert.equal(await page.locator('[data-course]').count(),7);assert.equal(await page.locator('#course-library .adult-badge').count(),3);let total=0;
-for(const key of ['words','sentences','sounds']){
- await page.locator(`[data-course="${key}"]`).click();assert.equal(await page.locator('[data-learning-game]').count(),20);assert.match(await page.locator('.together-note').innerText(),/Play together/);
- for(let g=0;g<20;g++){
-  await page.locator(`[data-learning-game="${g}"]`).click();assert.match(await page.locator('#adultBegin').innerText(),/play together/i);await page.locator('#adultBegin').click();
-  for(let r=0;r<3;r++){
-   assert.equal(await page.locator('#adultReady').count(),0);assert.equal(await page.evaluate(()=>adultState.ready),true);assert.equal(await page.locator('.together-play-pill').count(),1);
-   const mode=await page.evaluate(()=>adultState.mode);
-   if(mode==='counter')assert.equal(await page.locator('#adultAdd').isDisabled(),false);else assert.equal(await page.locator('[data-adult-choice]').first().isDisabled(),false);
-   if(mode==='counter'){const n=await page.evaluate(()=>adultState.answer[0]);for(let j=0;j<n;j++)await page.locator('#adultAdd').click();await page.locator('#adultCheck').click();}
-   else if(mode==='order'){const ids=await page.evaluate(()=>adultState.answer.map(id=>adultState.options.findIndex(o=>o.id===id)));for(const i of ids)await page.locator(`[data-adult-choice="${i}"]`).click();await page.locator('#adultCheck').click();}
-   else{const i=await page.evaluate(()=>adultState.options.findIndex(o=>adultState.answer.includes(o.id)));await page.locator(`[data-adult-choice="${i}"]`).click();}
-   assert.equal(await page.evaluate(()=>adultState.answered),true,`${key}/${g}/${r}`);await page.locator('#adultNext').click();total++;
+const { chromium } = require('playwright');
+const fs = require('node:fs');
+const path = require('node:path');
+const assert = require('node:assert/strict');
+const root = path.resolve(__dirname, '..');
+const results = path.join(root, 'test-results');
+fs.mkdirSync(results, { recursive: true });
+(async () => {
+  const browser = await chromium.launch({
+    ...(process.env.CHROMIUM_PATH
+      ? { executablePath: process.env.CHROMIUM_PATH }
+      : fs.existsSync('/usr/bin/chromium')
+        ? { executablePath: '/usr/bin/chromium' }
+        : {}),
+    headless: true
+  });
+  const context = await browser.newContext({
+    viewport: { width: 1280, height: 900 },
+    reducedMotion: 'reduce'
+  });
+  const page = await context.newPage();
+  const errors = [];
+  page.on('pageerror', e => errors.push(e.message));
+  await page.addInitScript(() => localStorage.setItem('spotmatch-course-flow', 'manual'));
+  await page.route('https://spot-match.test/**', route => {
+    const name = new URL(route.request().url()).pathname.slice(1) || 'index.html';
+    if (
+      !/^(?:[a-z-]+\.(?:html|css|js)|vocabulary\/pictures\/[a-z0-9-]+\.svg|vocabulary\/catalog\.json)$/.test(
+        name
+      )
+    )
+      return route.fulfill({ status: 404, body: '' });
+    return route.fulfill({
+      contentType: name.endsWith('.js')
+        ? 'application/javascript'
+        : name.endsWith('.css')
+          ? 'text/css'
+          : name.endsWith('.svg')
+            ? 'image/svg+xml'
+            : name.endsWith('.json')
+              ? 'application/json'
+              : 'text/html',
+      body: fs.readFileSync(path.join(root, 'dist', name))
+    });
+  });
+  await page.goto('https://spot-match.test/?library=full&flow=manual', { waitUntil: 'load' });
+  assert.equal(await page.locator('[data-course]').count(), 7);
+  assert.equal(await page.locator('#course-library .adult-badge').count(), 3);
+  let total = 0;
+  for (const key of ['words', 'sentences', 'sounds']) {
+    await page.locator(`[data-course="${key}"]`).click();
+    assert.equal(await page.locator('[data-learning-game]').count(), 20);
+    assert.match(await page.locator('.together-note').innerText(), /Play together/);
+    for (let g = 0; g < 20; g++) {
+      await page.locator(`[data-learning-game="${g}"]`).click();
+      assert.match(await page.locator('#adultBegin').innerText(), /play together/i);
+      await page.locator('#adultBegin').click();
+      for (let r = 0; r < 3; r++) {
+        assert.equal(await page.locator('#adultReady').count(), 0);
+        assert.equal(await page.evaluate(() => adultState.ready), true);
+        assert.equal(await page.locator('.together-play-pill').count(), 1);
+        const mode = await page.evaluate(() => adultState.mode);
+        if (mode === 'counter') assert.equal(await page.locator('#adultAdd').isDisabled(), false);
+        else assert.equal(await page.locator('[data-adult-choice]').first().isDisabled(), false);
+        if (mode === 'counter') {
+          const n = await page.evaluate(() => adultState.answer[0]);
+          for (let j = 0; j < n; j++) await page.locator('#adultAdd').click();
+          await page.locator('#adultCheck').click();
+        } else if (mode === 'order') {
+          const ids = await page.evaluate(() =>
+            adultState.answer.map(id => adultState.options.findIndex(o => o.id === id))
+          );
+          for (const i of ids) await page.locator(`[data-adult-choice="${i}"]`).click();
+          await page.locator('#adultCheck').click();
+        } else {
+          const i = await page.evaluate(() =>
+            adultState.options.findIndex(o => adultState.answer.includes(o.id))
+          );
+          await page.locator(`[data-adult-choice="${i}"]`).click();
+        }
+        assert.equal(await page.evaluate(() => adultState.answered), true, `${key}/${g}/${r}`);
+        await page.locator('#adultNext').click();
+        total++;
+      }
+      assert.match(await page.locator('.completion-stat').textContent(), /adult-supported rounds/);
+      assert.equal(
+        await page.evaluate(() => learningProgress[activeLearningCourse][adultState.index].adultSupported),
+        true
+      );
+      await page.locator('#learningBack').click();
+    }
+    assert.match(await page.locator('.progress-label').innerText(), /20 of 20/);
+    await page.locator('#toLibrary').click();
+    console.log(`${key}: 20 games and 60 shared-play rounds passed`);
   }
-  assert.match(await page.locator('.completion-stat').textContent(),/adult-supported rounds/);assert.equal(await page.evaluate(()=>learningProgress[activeLearningCourse][adultState.index].adultSupported),true);await page.locator('#learningBack').click();
- }
- assert.match(await page.locator('.progress-label').innerText(),/20 of 20/);await page.locator('#toLibrary').click();console.log(`${key}: 20 games and 60 shared-play rounds passed`);
-}
-await page.reload();assert.equal(await page.evaluate(()=>courseCompleted('sounds')),20);assert.equal(await page.evaluate(()=>courseCompleted('words')),20);
-// Hint, retry, immediate next-round access, clearing, and course-specific reset.
-await page.locator('[data-course="sounds"]').click();await page.locator('[data-learning-game="0"]').click();await page.locator('#adultBegin').click();await page.locator('#adultCheck').click();assert.equal(await page.evaluate(()=>adultState.missed),true);assert.equal(await page.evaluate(()=>adultState.hints),0);await page.locator('#adultHint').click();await page.locator('#adultHint').click();assert.equal(await page.evaluate(()=>adultState.hints),1);await page.locator('#adultCheck').click();assert.equal(await page.evaluate(()=>adultState.independent),0);await page.locator('#adultNext').click();assert.equal(await page.locator('#adultAdd').isDisabled(),false);await page.locator('#learningBack').click();await page.locator('#toLibrary').click();
-await page.setViewportSize({width:390,height:844});assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);
-for(const key of ['words','sentences','sounds']){await page.locator(`[data-course="${key}"]`).click();assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);if(!await page.locator('#learningGuide').isVisible())await page.locator('.course-about > summary').click();await page.locator('#learningGuide').click();assert.match(await page.locator('dialog.learning-guide').innerText(),/Adult support is required throughout|Adult spoken support is required throughout/);await page.locator('dialog.learning-guide .close').click();await page.locator(`[data-learning-game="${key==='sentences'?17:key==='sounds'?16:19}"]`).click();await page.locator('#adultBegin').click();assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);await page.screenshot({path:path.join(results,`${key}-adult-mobile.png`),fullPage:true});await page.locator('#learningBack').click();await page.locator('#toLibrary').click();}
-await page.locator('[data-course="sentences"]').click();await page.locator('[data-learning-game="16"]').click();await page.locator('#adultBegin').click();await page.locator('[data-adult-choice]').first().click();await page.locator('#adultClear').click();assert.equal(await page.evaluate(()=>adultState.selected.length),0);await page.locator('#learningBack').click();if(!await page.locator('#learningGuide').isVisible())await page.locator('.course-about > summary').click();await page.locator('#learningGuide').click();page.once('dialog',d=>d.accept());await page.locator('#resetLearning').click();assert.equal(await page.evaluate(()=>courseCompleted('sentences')),0);assert.equal(await page.evaluate(()=>courseCompleted('sounds')),20);
-assert.deepEqual(errors,[]);console.log(JSON.stringify({adultCourses:3,games:60,rounds:total,immediatePlay:'passed',mobile:390,pageErrors:errors},null,2));await browser.close();})().catch(e=>{console.error(e);process.exit(1)});
+  await page.reload();
+  assert.equal(await page.evaluate(() => courseCompleted('sounds')), 20);
+  assert.equal(await page.evaluate(() => courseCompleted('words')), 20);
+  // Hint, retry, immediate next-round access, clearing, and course-specific reset.
+  await page.locator('[data-course="sounds"]').click();
+  await page.locator('[data-learning-game="0"]').click();
+  await page.locator('#adultBegin').click();
+  await page.locator('#adultCheck').click();
+  assert.equal(await page.evaluate(() => adultState.missed), true);
+  assert.equal(await page.evaluate(() => adultState.hints), 0);
+  await page.locator('#adultHint').click();
+  await page.locator('#adultHint').click();
+  assert.equal(await page.evaluate(() => adultState.hints), 1);
+  await page.locator('#adultCheck').click();
+  assert.equal(await page.evaluate(() => adultState.independent), 0);
+  await page.locator('#adultNext').click();
+  assert.equal(await page.locator('#adultAdd').isDisabled(), false);
+  await page.locator('#learningBack').click();
+  await page.locator('#toLibrary').click();
+  await page.setViewportSize({ width: 390, height: 844 });
+  assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
+  for (const key of ['words', 'sentences', 'sounds']) {
+    await page.locator(`[data-course="${key}"]`).click();
+    assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
+    if (!(await page.locator('#learningGuide').isVisible()))
+      await page.locator('.course-about > summary').click();
+    await page.locator('#learningGuide').click();
+    assert.match(
+      await page.locator('dialog.learning-guide').innerText(),
+      /Adult support is required throughout|Adult spoken support is required throughout/
+    );
+    await page.locator('dialog.learning-guide .close').click();
+    await page
+      .locator(`[data-learning-game="${key === 'sentences' ? 17 : key === 'sounds' ? 16 : 19}"]`)
+      .click();
+    await page.locator('#adultBegin').click();
+    assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
+    await page.screenshot({ path: path.join(results, `${key}-adult-mobile.png`), fullPage: true });
+    await page.locator('#learningBack').click();
+    await page.locator('#toLibrary').click();
+  }
+  await page.locator('[data-course="sentences"]').click();
+  await page.locator('[data-learning-game="16"]').click();
+  await page.locator('#adultBegin').click();
+  await page.locator('[data-adult-choice]').first().click();
+  await page.locator('#adultClear').click();
+  assert.equal(await page.evaluate(() => adultState.selected.length), 0);
+  await page.locator('#learningBack').click();
+  if (!(await page.locator('#learningGuide').isVisible()))
+    await page.locator('.course-about > summary').click();
+  await page.locator('#learningGuide').click();
+  page.once('dialog', d => d.accept());
+  await page.locator('#resetLearning').click();
+  assert.equal(await page.evaluate(() => courseCompleted('sentences')), 0);
+  assert.equal(await page.evaluate(() => courseCompleted('sounds')), 20);
+  assert.deepEqual(errors, []);
+  console.log(
+    JSON.stringify(
+      { adultCourses: 3, games: 60, rounds: total, immediatePlay: 'passed', mobile: 390, pageErrors: errors },
+      null,
+      2
+    )
+  );
+  await browser.close();
+})().catch(e => {
+  console.error(e);
+  process.exit(1);
+});

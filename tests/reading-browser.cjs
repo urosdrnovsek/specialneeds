@@ -1,15 +1,184 @@
 // Browser/device QA fixture. Run only when the session's browser workflow is available.
-const{chromium}=require('playwright'),fs=require('fs'),path=require('path'),assert=require('node:assert/strict');
-(async()=>{const b=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||'/usr/bin/chromium',headless:true});const context=await b.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true,reducedMotion:'reduce'}),p=await context.newPage(),root=path.resolve(__dirname,'../dist'),errors=[];p.on('pageerror',e=>errors.push(e.message));await p.route('https://reading.test/**',r=>{const n=new URL(r.request().url()).pathname.slice(1)||'index.html';return r.fulfill({body:fs.readFileSync(path.join(root,n)),contentType:n.endsWith('.js')?'application/javascript':n.endsWith('.css')?'text/css':n.endsWith('.svg')?'image/svg+xml':n.endsWith('.json')?'application/json':'text/html'});});await p.goto('https://reading.test/');await p.clock.install();await p.clock.pauseAt(new Date());const cdp=await context.newCDPSession(p);
-async function launch(id,index){await p.evaluate(([c,i])=>skillLaunch(c,i),[id,index]);await p.clock.runFor(40);await p.locator('.reading-play').waitFor();}
-async function drag(a,b,mouse=false){await p.evaluate(([a,b])=>{const x=document.querySelector(a).getBoundingClientRect(),y=document.querySelector(b).getBoundingClientRect();scrollTo(0,Math.max(0,Math.min(x.top,y.top)+scrollY-110));},[a,b]);const x=await p.locator(a).boundingBox(),y=await p.locator(b).boundingBox(),start={x:x.x+x.width/2,y:x.y+x.height/2},end={x:y.x+y.width/2,y:y.y+y.height/2};if(mouse){await p.mouse.move(start.x,start.y);await p.mouse.down();await p.mouse.move(end.x,end.y,{steps:12});await p.mouse.up();}else{await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{...start,id:1}]});for(let i=1;i<=12;i++)await cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:start.x+(end.x-start.x)*i/12,y:start.y+(end.y-start.y)*i/12,id:1}]});await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});}await p.clock.runFor(40);assert.equal(await p.locator('.tp-ghost').count(),0);}
-await launch('letter-forms',1);let answer=await p.evaluate(()=>readingState.item);await drag(`[data-reading-choice="${answer}"]`,'[data-reading-home="choice"]');assert.equal(await p.evaluate(()=>readingState.done),true);await p.locator('#coursePause').tap();await p.clock.runFor(2000);assert.equal(await p.evaluate(()=>readingState.round),0);await p.locator('#coursePause').tap();await p.clock.runFor(900);assert.equal(await p.evaluate(()=>readingState.round),1);
-await launch('word-builders',1);const tile=await p.evaluate(()=>readingState.bank.findIndex(v=>v===readingState.word.tiles[1]));await drag(`[data-reading-tile="${tile}"]`,'[data-reading-slot="1"]');assert.equal(await p.evaluate(()=>readingState.slots[1]),tile);await drag('[data-reading-slot="1"]','[data-reading-slot="0"]',true);assert.equal(await p.evaluate(()=>readingState.slots[0]),tile);await p.locator('[data-reading-slot="0"]').focus();await p.keyboard.press('Enter');assert.equal(await p.evaluate(()=>readingState.slots[0]),null);
-await launch('smooth-blending',0);await p.locator('#readingSlide').focus();await p.keyboard.press('End');assert.equal(await p.evaluate(()=>readingState.done),true);assert.equal(await p.evaluate(()=>readingState.lastKind),'shared');await p.locator('#courseStop').tap();await p.clock.runFor(3000);assert.equal(await p.evaluate(()=>skillContext.index),null);
-await launch('letter-lookalikes',0);await drag('[data-ra-parcel="0"]','#raVan');assert.equal(await p.evaluate(()=>readingState.mission.loaded),0);await drag('#raVan','[data-ra-door="d"]');assert.equal(await p.evaluate(()=>readingState.mission.delivered.length),0);await drag('#raVan','[data-ra-door="b"]');assert.equal(await p.evaluate(()=>readingState.mission.delivered.length),1);await p.locator('[data-ra-parcel="1"]').focus();await p.keyboard.press('Enter');assert.equal(await p.evaluate(()=>readingState.mission.loaded),1);await p.locator('[data-ra-door="d"]').focus();await p.keyboard.press('Enter');assert.equal(await p.evaluate(()=>readingState.mission.delivered.length),2);
-await launch('letter-lookalikes',1);await drag('#raMagnifier','[data-ra-search="tree"]');await p.locator('[data-ra-search="tent"]').tap();assert.equal(await p.evaluate(()=>readingState.mystery.found.length),2);await drag('[data-ra-clue="stem"]','[data-ra-stem="left"]');assert.equal(await p.evaluate(()=>readingState.done),true);
-await launch('letter-lookalikes',2);await p.locator('[data-ra-actor="duck"]').tap();await drag('[data-ra-command="d"]','[data-ra-show-slot="0"]');await drag('[data-ra-command="b"]','[data-ra-show-slot="1"]');assert.equal(await p.evaluate(()=>readingState.done),false);await drag('[data-ra-show-slot="1"]','[data-ra-show-slot="0"]',true);assert.equal(await p.evaluate(()=>readingState.done),true);
-await launch('letter-lookalikes',0);const sameCargo=await p.evaluate(()=>JSON.stringify(readingState.mission));await p.locator('#readingColourToggle').uncheck();assert.equal(await p.evaluate(()=>JSON.stringify(readingState.mission)),sameCargo);assert.equal(await p.evaluate(()=>[...app.querySelectorAll('.reading-ink')].every(el=>getComputedStyle(el).color==='rgb(52, 91, 71)')),true);
-await launch('read-and-repair',0);for(let i=0;i<3;i++){const tile=await p.evaluate(i=>readingState.bank.findIndex((v,j)=>v===readingState.word.tiles[i]&&!readingState.slots.includes(j)),i);await p.locator(`[data-reading-tile="${tile}"]`).focus();await p.keyboard.press('Enter');await p.clock.runFor(30);}assert.equal(await p.evaluate(()=>readingState.done),true);
-const courses=await p.evaluate(()=>readingCourses.map(c=>({id:c.id,n:c.activities.length})));for(const width of [360,390,768]){await p.setViewportSize({width,height:844});for(const c of courses)for(let i=0;i<c.n;i++){await launch(c.id,i);assert.equal(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true,c.id+'/'+i+' overflow at '+width);assert(await p.locator('#coursePurpose').isVisible());}}
-assert.deepEqual(errors,[]);console.log(JSON.stringify({physicalTouchDrop:true,mouseSlotMove:true,keyboardUndoAndSlider:true,pauseResume:true,stop:true,responsiveActivities:courses.reduce((n,c)=>n+c.n,0)*3,pageErrors:errors}));await b.close();})().catch(e=>{console.error(e);process.exit(1)});
+const { chromium } = require('playwright'),
+  fs = require('fs'),
+  path = require('path'),
+  assert = require('node:assert/strict');
+(async () => {
+  const b = await chromium.launch({
+    executablePath: process.env.CHROMIUM_PATH || '/usr/bin/chromium',
+    headless: true
+  });
+  const context = await b.newContext({
+      viewport: { width: 390, height: 844 },
+      isMobile: true,
+      hasTouch: true,
+      reducedMotion: 'reduce'
+    }),
+    p = await context.newPage(),
+    root = path.resolve(__dirname, '../dist'),
+    errors = [];
+  p.on('pageerror', e => errors.push(e.message));
+  await p.route('https://reading.test/**', r => {
+    const n = new URL(r.request().url()).pathname.slice(1) || 'index.html';
+    return r.fulfill({
+      body: fs.readFileSync(path.join(root, n)),
+      contentType: n.endsWith('.js')
+        ? 'application/javascript'
+        : n.endsWith('.css')
+          ? 'text/css'
+          : n.endsWith('.svg')
+            ? 'image/svg+xml'
+            : n.endsWith('.json')
+              ? 'application/json'
+              : 'text/html'
+    });
+  });
+  await p.goto('https://reading.test/');
+  await p.clock.install();
+  await p.clock.pauseAt(new Date());
+  const cdp = await context.newCDPSession(p);
+  async function launch(id, index) {
+    await p.evaluate(([c, i]) => skillLaunch(c, i), [id, index]);
+    await p.clock.runFor(40);
+    await p.locator('.reading-play').waitFor();
+  }
+  async function drag(a, b, mouse = false) {
+    await p.evaluate(
+      ([a, b]) => {
+        const x = document.querySelector(a).getBoundingClientRect(),
+          y = document.querySelector(b).getBoundingClientRect();
+        scrollTo(0, Math.max(0, Math.min(x.top, y.top) + scrollY - 110));
+      },
+      [a, b]
+    );
+    const x = await p.locator(a).boundingBox(),
+      y = await p.locator(b).boundingBox(),
+      start = { x: x.x + x.width / 2, y: x.y + x.height / 2 },
+      end = { x: y.x + y.width / 2, y: y.y + y.height / 2 };
+    if (mouse) {
+      await p.mouse.move(start.x, start.y);
+      await p.mouse.down();
+      await p.mouse.move(end.x, end.y, { steps: 12 });
+      await p.mouse.up();
+    } else {
+      await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ ...start, id: 1 }] });
+      for (let i = 1; i <= 12; i++)
+        await cdp.send('Input.dispatchTouchEvent', {
+          type: 'touchMove',
+          touchPoints: [
+            { x: start.x + ((end.x - start.x) * i) / 12, y: start.y + ((end.y - start.y) * i) / 12, id: 1 }
+          ]
+        });
+      await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+    }
+    await p.clock.runFor(40);
+    assert.equal(await p.locator('.tp-ghost').count(), 0);
+  }
+  await launch('letter-forms', 1);
+  let answer = await p.evaluate(() => readingState.item);
+  await drag(`[data-reading-choice="${answer}"]`, '[data-reading-home="choice"]');
+  assert.equal(await p.evaluate(() => readingState.done), true);
+  await p.locator('#coursePause').tap();
+  await p.clock.runFor(2000);
+  assert.equal(await p.evaluate(() => readingState.round), 0);
+  await p.locator('#coursePause').tap();
+  await p.clock.runFor(900);
+  assert.equal(await p.evaluate(() => readingState.round), 1);
+  await launch('word-builders', 1);
+  const tile = await p.evaluate(() => readingState.bank.findIndex(v => v === readingState.word.tiles[1]));
+  await drag(`[data-reading-tile="${tile}"]`, '[data-reading-slot="1"]');
+  assert.equal(await p.evaluate(() => readingState.slots[1]), tile);
+  await drag('[data-reading-slot="1"]', '[data-reading-slot="0"]', true);
+  assert.equal(await p.evaluate(() => readingState.slots[0]), tile);
+  await p.locator('[data-reading-slot="0"]').focus();
+  await p.keyboard.press('Enter');
+  assert.equal(await p.evaluate(() => readingState.slots[0]), null);
+  await launch('smooth-blending', 0);
+  await p.locator('#readingSlide').focus();
+  await p.keyboard.press('End');
+  assert.equal(await p.evaluate(() => readingState.done), true);
+  assert.equal(await p.evaluate(() => readingState.lastKind), 'shared');
+  await p.locator('#courseStop').tap();
+  await p.clock.runFor(3000);
+  assert.equal(await p.evaluate(() => skillContext.index), null);
+  await launch('letter-lookalikes', 0);
+  await drag('[data-ra-parcel="0"]', '#raVan');
+  assert.equal(await p.evaluate(() => readingState.mission.loaded), 0);
+  await drag('#raVan', '[data-ra-door="d"]');
+  assert.equal(await p.evaluate(() => readingState.mission.delivered.length), 0);
+  await drag('#raVan', '[data-ra-door="b"]');
+  assert.equal(await p.evaluate(() => readingState.mission.delivered.length), 1);
+  await p.locator('[data-ra-parcel="1"]').focus();
+  await p.keyboard.press('Enter');
+  assert.equal(await p.evaluate(() => readingState.mission.loaded), 1);
+  await p.locator('[data-ra-door="d"]').focus();
+  await p.keyboard.press('Enter');
+  assert.equal(await p.evaluate(() => readingState.mission.delivered.length), 2);
+  await launch('letter-lookalikes', 1);
+  await drag('#raMagnifier', '[data-ra-search="tree"]');
+  await p.locator('[data-ra-search="tent"]').tap();
+  assert.equal(await p.evaluate(() => readingState.mystery.found.length), 2);
+  await drag('[data-ra-clue="stem"]', '[data-ra-stem="left"]');
+  assert.equal(await p.evaluate(() => readingState.done), true);
+  await launch('letter-lookalikes', 2);
+  await p.locator('[data-ra-actor="duck"]').tap();
+  await drag('[data-ra-command="d"]', '[data-ra-show-slot="0"]');
+  await drag('[data-ra-command="b"]', '[data-ra-show-slot="1"]');
+  assert.equal(await p.evaluate(() => readingState.done), false);
+  await drag('[data-ra-show-slot="1"]', '[data-ra-show-slot="0"]', true);
+  assert.equal(await p.evaluate(() => readingState.done), true);
+  await launch('letter-lookalikes', 0);
+  const sameCargo = await p.evaluate(() => JSON.stringify(readingState.mission));
+  await p.locator('#readingColourToggle').uncheck();
+  assert.equal(await p.evaluate(() => JSON.stringify(readingState.mission)), sameCargo);
+  assert.equal(
+    await p.evaluate(() =>
+      [...app.querySelectorAll('.reading-ink')].every(el => getComputedStyle(el).color === 'rgb(52, 91, 71)')
+    ),
+    true
+  );
+  await launch('read-and-repair', 0);
+  for (let i = 0; i < 3; i++) {
+    const tile = await p.evaluate(
+      i =>
+        readingState.bank.findIndex(
+          (v, j) => v === readingState.word.tiles[i] && !readingState.slots.includes(j)
+        ),
+      i
+    );
+    await p.locator(`[data-reading-tile="${tile}"]`).focus();
+    await p.keyboard.press('Enter');
+    await p.clock.runFor(30);
+  }
+  assert.equal(await p.evaluate(() => readingState.done), true);
+  const courses = await p.evaluate(() => readingCourses.map(c => ({ id: c.id, n: c.activities.length })));
+  for (const width of [360, 390, 768]) {
+    await p.setViewportSize({ width, height: 844 });
+    for (const c of courses)
+      for (let i = 0; i < c.n; i++) {
+        await launch(c.id, i);
+        assert.equal(
+          await p.evaluate(() => document.documentElement.scrollWidth <= innerWidth),
+          true,
+          c.id + '/' + i + ' overflow at ' + width
+        );
+        assert(await p.locator('#coursePurpose').isVisible());
+      }
+  }
+  assert.deepEqual(errors, []);
+  console.log(
+    JSON.stringify({
+      physicalTouchDrop: true,
+      mouseSlotMove: true,
+      keyboardUndoAndSlider: true,
+      pauseResume: true,
+      stop: true,
+      responsiveActivities: courses.reduce((n, c) => n + c.n, 0) * 3,
+      pageErrors: errors
+    })
+  );
+  await b.close();
+})().catch(e => {
+  console.error(e);
+  process.exit(1);
+});

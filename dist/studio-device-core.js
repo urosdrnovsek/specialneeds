@@ -1,25 +1,210 @@
-(function(root){
- 'use strict';
- const object=v=>!!v&&typeof v==='object'&&!Array.isArray(v),decode=(s,k,fallback)=>{try{return s[k]?JSON.parse(s[k]):fallback;}catch{return fallback;}};
- const preferenceKeys=['spotmatch-comfort','spotmatch-answer-pace','spotmatch-course-flow','spotmatch-word-play-v1','spotmatch-reading-display-v1'];
- const histories=['spotmatch-v1','spotmatch-learning-v1','spotmatch-support-v1','spotmatch-calm-v1','spotmatch-focus-v1','spotmatch-playroom-v1','spotmatch-world-v1'];
- const allowed=[...histories,...preferenceKeys,'spotmatch-vocabulary-saved-v1','spotmatch-picture-visits','spotmatch-word-visits-v1','spotmatch-last-course-v1'];
- function observation(v){if(!object(v))return null;const out={};for(const[k,x]of Object.entries(v)){if(['response','kind','observation','displayMode'].includes(k)&&typeof x==='string'&&/^[a-z-]{1,40}$/.test(x))out[k]=x;else if(['adultCueOrHint','colourCues','helpUsed'].includes(k)&&typeof x==='boolean')out[k]=x;else if(['round','retries','pictureChoiceSetting'].includes(k)&&Number.isSafeInteger(x)&&x>=0&&x<10000)out[k]=x;}return out;}
- function cleanHistory(v){if(!object(v))return {};const out={};for(const[k,x]of Object.entries(v)){if(['complete','explored'].includes(k)&&typeof x==='boolean')out[k]=x;else if(['independent','hints'].includes(k)&&Number.isSafeInteger(x)&&x>=0&&x<10000)out[k]=x;else if(k==='date'&&typeof x==='string'&&Number.isFinite(Date.parse(x)))out[k]=x;else if(['records','responses'].includes(k)&&Array.isArray(x))out[k]=x.slice(0,200).map(observation).filter(Boolean);}return out;}
- function pack(snapshot,courses,core){const notes=decode(snapshot,'spotmatch-course-notes-v1',{}),observations={};for(const c of courses){if(!notes[c.id]?.readingPractice)continue;const activities={};c.activities.forEach((a,i)=>{const v=notes[c.id].readingPractice[i];if(v&&(!a.version||notes[c.id]?.activityVersions?.[a.id]===a.version))activities[core.activityId(a,i)]=cleanHistory(v);});if(Object.keys(activities).length)observations[c.id]={version:c.version||1,activities};}
- return{app:'spot-and-match',schemaVersion:1,exportedAt:new Date().toISOString(),practice:core.pack(notes,courses),observations,data:Object.fromEntries(allowed.filter(k=>snapshot[k]!==undefined).map(k=>{if(!histories.includes(k))return[k,snapshot[k]];const v=decode(snapshot,k,{}),nested=['spotmatch-learning-v1','spotmatch-support-v1'].includes(k);return[k,JSON.stringify(Object.fromEntries(Object.entries(v).map(([id,x])=>[id,nested?Object.fromEntries(Object.entries(x).map(([i,r])=>[i,cleanHistory(r)])):cleanHistory(x)])))];})),migrations:{directObjects:snapshot['spotmatch-direct-objects-v1']==='true'}};}
- function mergeValues(current,incoming){if(typeof current==='boolean'&&typeof incoming==='boolean')return current||incoming;if(typeof current==='number'&&typeof incoming==='number')return Math.max(current,incoming);if(Array.isArray(current)&&Array.isArray(incoming)){const values=[...current,...incoming];return [...new Map(values.map(x=>[JSON.stringify(x),x])).values()].slice(-200);}if(object(current)&&object(incoming)){const out={...current};for(const[k,v]of Object.entries(incoming))out[k]=Object.hasOwn(out,k)?mergeValues(out[k],v):v;return out;}return incoming;}
- function plan(file,snapshot,courses,core,storage,refs,{settings=false}={}){if(file?.app!=='spot-and-match'||file.schemaVersion!==1||!object(file.data)||!storage.safe(file))throw Error('Choose a Spot & Match device backup (version 1).');const current=decode(snapshot,'spotmatch-course-notes-v1',{}),result=core.unpack(file.practice,courses,current),entries={},warnings=[];
- for(const c of courses){const imported=file.observations?.[c.id];if(!imported||imported.version!==(c.version||1))continue;const record=result.notes[c.id]??={};record.readingPractice??={};for(const[i,a]of c.activities.entries()){if(a.version&&record.activityVersions?.[a.id]!==a.version)continue;const v=imported.activities?.[core.activityId(a,i)];if(object(v))record.readingPractice[i]=mergeValues(record.readingPractice[i],cleanHistory(v));}}
- entries['spotmatch-course-notes-v1']=JSON.stringify(result.notes);
- for(const[k,raw]of Object.entries(file.data)){if(!allowed.includes(k)){warnings.push('Unsupported data group omitted.');continue;}if(!storage.valid(k,raw)||raw===null){warnings.push('Invalid data group omitted: '+k);continue;}if(preferenceKeys.includes(k)){if(settings)entries[k]=raw;continue;}
- let value=JSON.parse(raw),previous=decode(snapshot,k,{});
- if(histories.includes(k)){const nested=['spotmatch-learning-v1','spotmatch-support-v1'].includes(k),known=refs.histories[k]||{};const keep={};for(const[id,item]of Object.entries(value)){if(!Object.hasOwn(known,id))continue;if(nested){const group={};for(const[index,record]of Object.entries(item)){if(!known[id].includes(index))continue;if(k==='spotmatch-support-v1'&&refs.replacedSupport.includes(id+':'+index)&&file.migrations?.directObjects!==true)continue;group[index]=cleanHistory(record);}keep[id]=group;}else keep[id]=cleanHistory(item);}value=mergeValues(previous,keep);}
- else if(k==='spotmatch-vocabulary-saved-v1')value=[...new Set([...(Array.isArray(previous)?previous:[]),...value.filter(id=>refs.pictureIds.includes(id))])];
- else if(k==='spotmatch-last-course-v1'){const c=courses.find(c=>c.id===value.courseId);if(!c||!Number.isInteger(value.index)||value.index<0||value.index>=c.activities.length)continue;if(snapshot[k])continue;}
- else if(k==='spotmatch-word-visits-v1'||k==='spotmatch-picture-visits')value=mergeValues(previous,value);
- entries[k]=JSON.stringify(value);
- }
- return{entries,skippedVersions:result.skipped,warnings,groups:Object.keys(entries).length};}
- const api={pack,plan,observation,cleanHistory,mergeValues,preferenceKeys};root.StudioDeviceCore=api;if(typeof module!=='undefined')module.exports=api;
+(function (root) {
+  'use strict';
+  const object = v => !!v && typeof v === 'object' && !Array.isArray(v),
+    decode = (s, k, fallback) => {
+      try {
+        return s[k] ? JSON.parse(s[k]) : fallback;
+      } catch {
+        return fallback;
+      }
+    };
+  const preferenceKeys = [
+    'spotmatch-comfort',
+    'spotmatch-answer-pace',
+    'spotmatch-course-flow',
+    'spotmatch-word-play-v1',
+    'spotmatch-reading-display-v1'
+  ];
+  const histories = [
+    'spotmatch-v1',
+    'spotmatch-learning-v1',
+    'spotmatch-support-v1',
+    'spotmatch-calm-v1',
+    'spotmatch-focus-v1',
+    'spotmatch-playroom-v1',
+    'spotmatch-world-v1'
+  ];
+  const allowed = [
+    ...histories,
+    ...preferenceKeys,
+    'spotmatch-vocabulary-saved-v1',
+    'spotmatch-picture-visits',
+    'spotmatch-word-visits-v1',
+    'spotmatch-last-course-v1'
+  ];
+  function observation(v) {
+    if (!object(v)) return null;
+    const out = {};
+    for (const [k, x] of Object.entries(v)) {
+      if (
+        ['response', 'kind', 'observation', 'displayMode'].includes(k) &&
+        typeof x === 'string' &&
+        /^[a-z-]{1,40}$/.test(x)
+      )
+        out[k] = x;
+      else if (['adultCueOrHint', 'colourCues', 'helpUsed'].includes(k) && typeof x === 'boolean') out[k] = x;
+      else if (
+        ['round', 'retries', 'pictureChoiceSetting'].includes(k) &&
+        Number.isSafeInteger(x) &&
+        x >= 0 &&
+        x < 10000
+      )
+        out[k] = x;
+    }
+    return out;
+  }
+  function cleanHistory(v) {
+    if (!object(v)) return {};
+    const out = {};
+    for (const [k, x] of Object.entries(v)) {
+      if (['complete', 'explored'].includes(k) && typeof x === 'boolean') out[k] = x;
+      else if (['independent', 'hints'].includes(k) && Number.isSafeInteger(x) && x >= 0 && x < 10000)
+        out[k] = x;
+      else if (k === 'date' && typeof x === 'string' && Number.isFinite(Date.parse(x))) out[k] = x;
+      else if (['records', 'responses'].includes(k) && Array.isArray(x))
+        out[k] = x.slice(0, 200).map(observation).filter(Boolean);
+    }
+    return out;
+  }
+  function pack(snapshot, courses, core) {
+    const notes = decode(snapshot, 'spotmatch-course-notes-v1', {}),
+      observations = {};
+    for (const c of courses) {
+      if (!notes[c.id]?.readingPractice) continue;
+      const activities = {};
+      c.activities.forEach((a, i) => {
+        const v = notes[c.id].readingPractice[i];
+        if (v && (!a.version || notes[c.id]?.activityVersions?.[a.id] === a.version))
+          activities[core.activityId(a, i)] = cleanHistory(v);
+      });
+      if (Object.keys(activities).length) observations[c.id] = { version: c.version || 1, activities };
+    }
+    return {
+      app: 'spot-and-match',
+      schemaVersion: 1,
+      exportedAt: new Date().toISOString(),
+      practice: core.pack(notes, courses),
+      observations,
+      data: Object.fromEntries(
+        allowed
+          .filter(k => snapshot[k] !== undefined)
+          .map(k => {
+            if (!histories.includes(k)) return [k, snapshot[k]];
+            const v = decode(snapshot, k, {}),
+              nested = ['spotmatch-learning-v1', 'spotmatch-support-v1'].includes(k);
+            return [
+              k,
+              JSON.stringify(
+                Object.fromEntries(
+                  Object.entries(v).map(([id, x]) => [
+                    id,
+                    nested
+                      ? Object.fromEntries(Object.entries(x).map(([i, r]) => [i, cleanHistory(r)]))
+                      : cleanHistory(x)
+                  ])
+                )
+              )
+            ];
+          })
+      ),
+      migrations: { directObjects: snapshot['spotmatch-direct-objects-v1'] === 'true' }
+    };
+  }
+  function mergeValues(current, incoming) {
+    if (typeof current === 'boolean' && typeof incoming === 'boolean') return current || incoming;
+    if (typeof current === 'number' && typeof incoming === 'number') return Math.max(current, incoming);
+    if (Array.isArray(current) && Array.isArray(incoming)) {
+      const values = [...current, ...incoming];
+      return [...new Map(values.map(x => [JSON.stringify(x), x])).values()].slice(-200);
+    }
+    if (object(current) && object(incoming)) {
+      const out = { ...current };
+      for (const [k, v] of Object.entries(incoming))
+        out[k] = Object.hasOwn(out, k) ? mergeValues(out[k], v) : v;
+      return out;
+    }
+    return incoming;
+  }
+  function plan(file, snapshot, courses, core, storage, refs, { settings = false } = {}) {
+    if (
+      file?.app !== 'spot-and-match' ||
+      file.schemaVersion !== 1 ||
+      !object(file.data) ||
+      !storage.safe(file)
+    )
+      throw Error('Choose a Spot & Match device backup (version 1).');
+    const current = decode(snapshot, 'spotmatch-course-notes-v1', {}),
+      result = core.unpack(file.practice, courses, current),
+      entries = {},
+      warnings = [];
+    for (const c of courses) {
+      const imported = file.observations?.[c.id];
+      if (!imported || imported.version !== (c.version || 1)) continue;
+      const record = (result.notes[c.id] ??= {});
+      record.readingPractice ??= {};
+      for (const [i, a] of c.activities.entries()) {
+        if (a.version && record.activityVersions?.[a.id] !== a.version) continue;
+        const v = imported.activities?.[core.activityId(a, i)];
+        if (object(v)) record.readingPractice[i] = mergeValues(record.readingPractice[i], cleanHistory(v));
+      }
+    }
+    entries['spotmatch-course-notes-v1'] = JSON.stringify(result.notes);
+    for (const [k, raw] of Object.entries(file.data)) {
+      if (!allowed.includes(k)) {
+        warnings.push('Unsupported data group omitted.');
+        continue;
+      }
+      if (!storage.valid(k, raw) || raw === null) {
+        warnings.push('Invalid data group omitted: ' + k);
+        continue;
+      }
+      if (preferenceKeys.includes(k)) {
+        if (settings) entries[k] = raw;
+        continue;
+      }
+      let value = JSON.parse(raw),
+        previous = decode(snapshot, k, {});
+      if (histories.includes(k)) {
+        const nested = ['spotmatch-learning-v1', 'spotmatch-support-v1'].includes(k),
+          known = refs.histories[k] || {};
+        const keep = {};
+        for (const [id, item] of Object.entries(value)) {
+          if (!Object.hasOwn(known, id)) continue;
+          if (nested) {
+            const group = {};
+            for (const [index, record] of Object.entries(item)) {
+              if (!known[id].includes(index)) continue;
+              if (
+                k === 'spotmatch-support-v1' &&
+                refs.replacedSupport.includes(id + ':' + index) &&
+                file.migrations?.directObjects !== true
+              )
+                continue;
+              group[index] = cleanHistory(record);
+            }
+            keep[id] = group;
+          } else keep[id] = cleanHistory(item);
+        }
+        value = mergeValues(previous, keep);
+      } else if (k === 'spotmatch-vocabulary-saved-v1')
+        value = [
+          ...new Set([
+            ...(Array.isArray(previous) ? previous : []),
+            ...value.filter(id => refs.pictureIds.includes(id))
+          ])
+        ];
+      else if (k === 'spotmatch-last-course-v1') {
+        const c = courses.find(c => c.id === value.courseId);
+        if (!c || !Number.isInteger(value.index) || value.index < 0 || value.index >= c.activities.length)
+          continue;
+        if (snapshot[k]) continue;
+      } else if (k === 'spotmatch-word-visits-v1' || k === 'spotmatch-picture-visits')
+        value = mergeValues(previous, value);
+      entries[k] = JSON.stringify(value);
+    }
+    return { entries, skippedVersions: result.skipped, warnings, groups: Object.keys(entries).length };
+  }
+  const api = { pack, plan, observation, cleanHistory, mergeValues, preferenceKeys };
+  root.StudioDeviceCore = api;
+  if (typeof module !== 'undefined') module.exports = api;
 })(globalThis);

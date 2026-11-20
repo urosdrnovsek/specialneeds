@@ -1,25 +1,241 @@
-const {parseHTML}=require('linkedom'),fs=require('fs'),vm=require('vm'),path=require('path'),assert=require('node:assert/strict');
-const root=process.env.APP_DIST||path.resolve(__dirname,'../dist'),html=fs.readFileSync(path.join(root,'index.html'),'utf8'),{window}=parseHTML(html),document=window.document;
-let blocked=process.argv.includes('--blocked');const seed=process.argv.includes('--corrupt')?{'spotmatch-course-notes-v1':'{"broken":{"supports":"wrong"}}','spotmatch-learning-v1':'{"events":null}','spotmatch-comfort':'[]','spotmatch-picture-visits':'{"x":"many"}'}:{};const values=new Map(Object.entries(seed)),location={pathname:'/',search:process.argv.includes('--manual')?'?flow=manual':'',hash:process.env.STUDIO_ROUTE||''};
-const storage={getItem:k=>{if(blocked)throw Error('Storage blocked');return values.get(k)||null},setItem:(k,v)=>{if(blocked)throw Error('Storage blocked');values.set(k,String(v))},removeItem:k=>{if(blocked)throw Error('Storage blocked');values.delete(k)}};
-const history={replaceState(s,t,u){if(u){const n=new URL(u,'https://app.test');Object.assign(location,{pathname:n.pathname,search:n.search,hash:n.hash});}},pushState(s,t,u){this.replaceState(s,t,u)}};
-window.Element.prototype.scrollIntoView=function(){};window.Element.prototype.focus=function(){};
-let timerId=0;const timers=new Map(),micro=[];const sandbox={document,console,localStorage:storage,location,history,URL,URLSearchParams,Map,Set,Blob,TextEncoder,structuredClone,performance,window:null,navigator:{},MutationObserver:class{observe(){} disconnect(){}},setTimeout:(fn,ms)=>{const id=++timerId;timers.set(id,{fn,ms});return id;},clearTimeout:id=>timers.delete(id),requestAnimationFrame:()=>++timerId,cancelAnimationFrame(){},queueMicrotask:fn=>micro.push(fn),matchMedia:()=>({matches:true,addEventListener(){}}),addEventListener(){},scrollTo(){},getComputedStyle:()=>({})};sandbox.window=sandbox;sandbox.globalThis=sandbox;const c=vm.createContext(sandbox);
-for(const tag of document.querySelectorAll('script[src]')){const file=tag.getAttribute('src').split('?')[0];try{vm.runInContext(fs.readFileSync(path.join(root,file),'utf8'),c,{filename:file});}catch(e){console.error(file+': '+e.message);throw e;}}
-const run=s=>vm.runInContext(s,c);if(!process.env.STUDIO_ROUTE)run('skillHome()');
+const { parseHTML } = require('linkedom'),
+  fs = require('fs'),
+  vm = require('vm'),
+  path = require('path'),
+  assert = require('node:assert/strict');
+const root = process.env.APP_DIST || path.resolve(__dirname, '../dist'),
+  html = fs.readFileSync(path.join(root, 'index.html'), 'utf8'),
+  { window } = parseHTML(html),
+  document = window.document;
+let blocked = process.argv.includes('--blocked');
+const seed = process.argv.includes('--corrupt')
+  ? {
+      'spotmatch-course-notes-v1': '{"broken":{"supports":"wrong"}}',
+      'spotmatch-learning-v1': '{"events":null}',
+      'spotmatch-comfort': '[]',
+      'spotmatch-picture-visits': '{"x":"many"}'
+    }
+  : {};
+const values = new Map(Object.entries(seed)),
+  location = {
+    pathname: '/',
+    search: process.argv.includes('--manual') ? '?flow=manual' : '',
+    hash: process.env.STUDIO_ROUTE || ''
+  };
+const storage = {
+  getItem: k => {
+    if (blocked) throw Error('Storage blocked');
+    return values.get(k) || null;
+  },
+  setItem: (k, v) => {
+    if (blocked) throw Error('Storage blocked');
+    values.set(k, String(v));
+  },
+  removeItem: k => {
+    if (blocked) throw Error('Storage blocked');
+    values.delete(k);
+  }
+};
+const history = {
+  replaceState(s, t, u) {
+    if (u) {
+      const n = new URL(u, 'https://app.test');
+      Object.assign(location, { pathname: n.pathname, search: n.search, hash: n.hash });
+    }
+  },
+  pushState(s, t, u) {
+    this.replaceState(s, t, u);
+  }
+};
+window.Element.prototype.scrollIntoView = function () {};
+window.Element.prototype.focus = function () {};
+let timerId = 0;
+const timers = new Map(),
+  micro = [];
+const sandbox = {
+  document,
+  console,
+  localStorage: storage,
+  location,
+  history,
+  URL,
+  URLSearchParams,
+  Map,
+  Set,
+  Blob,
+  TextEncoder,
+  structuredClone,
+  performance,
+  window: null,
+  navigator: {},
+  MutationObserver: class {
+    observe() {}
+    disconnect() {}
+  },
+  setTimeout: (fn, ms) => {
+    const id = ++timerId;
+    timers.set(id, { fn, ms });
+    return id;
+  },
+  clearTimeout: id => timers.delete(id),
+  requestAnimationFrame: () => ++timerId,
+  cancelAnimationFrame() {},
+  queueMicrotask: fn => micro.push(fn),
+  matchMedia: () => ({ matches: true, addEventListener() {} }),
+  addEventListener() {},
+  scrollTo() {},
+  getComputedStyle: () => ({})
+};
+sandbox.window = sandbox;
+sandbox.globalThis = sandbox;
+const c = vm.createContext(sandbox);
+for (const tag of document.querySelectorAll('script[src]')) {
+  const file = tag.getAttribute('src').split('?')[0];
+  try {
+    vm.runInContext(fs.readFileSync(path.join(root, file), 'utf8'), c, { filename: file });
+  } catch (e) {
+    console.error(file + ': ' + e.message);
+    throw e;
+  }
+}
+const run = s => vm.runInContext(s, c);
+if (!process.env.STUDIO_ROUTE) run('skillHome()');
 
-function flush(){let n=0;while(micro.length){micro.shift()();if(++n>500)throw Error('Microtask loop');}}
-function advance(){const id=run('readingTimer');if(id===null&&document.querySelector('#readingContinue')){click('#readingContinue');return;}assert(id!==null,'Reading transition should be scheduled');const t=timers.get(id);assert(t,'Scheduled transition should exist');timers.delete(id);t.fn();flush();}
-function click(selector){const el=document.querySelector(selector);assert(el,'Missing '+selector);assert(!el.disabled,'Disabled '+selector);el.onclick?el.onclick({preventDefault(){}}):el.dispatchEvent(new window.Event('click'));flush();}
-function launch(course,index){run(`skillLaunch('${course}',${index})`);flush();assert(document.querySelector('.reading-play'));assert(document.querySelector('#coursePurpose'));}
-function state(){return run('readingState');}
+function flush() {
+  let n = 0;
+  while (micro.length) {
+    micro.shift()();
+    if (++n > 500) throw Error('Microtask loop');
+  }
+}
+function advance() {
+  const id = run('readingTimer');
+  if (id === null && document.querySelector('#readingContinue')) {
+    click('#readingContinue');
+    return;
+  }
+  assert(id !== null, 'Reading transition should be scheduled');
+  const t = timers.get(id);
+  assert(t, 'Scheduled transition should exist');
+  timers.delete(id);
+  t.fn();
+  flush();
+}
+function click(selector) {
+  const el = document.querySelector(selector);
+  assert(el, 'Missing ' + selector);
+  assert(!el.disabled, 'Disabled ' + selector);
+  el.onclick ? el.onclick({ preventDefault() {} }) : el.dispatchEvent(new window.Event('click'));
+  flush();
+}
+function launch(course, index) {
+  run(`skillLaunch('${course}',${index})`);
+  flush();
+  assert(document.querySelector('.reading-play'));
+  assert(document.querySelector('#coursePurpose'));
+}
+function state() {
+  return run('readingState');
+}
 
-(async()=>{flush();run("Studio.go('#device')");assert(document.querySelector('#deviceExport'));assert(run('StudioDevice.refs().pictureIds.length')>=1000);
-if(process.argv.includes('--corrupt')){assert(run('AppStorage.status().damaged.length')>=4);assert(!document.querySelector('#deviceNotice').hidden);assert(!document.querySelector('#deviceRecovery').disabled);assert.equal(values.get('spotmatch-comfort'),'[]');}
-if(blocked){assert(!run('AppStorage.status().persistent'));assert(document.querySelector('#deviceState').textContent.includes('unavailable'));run("skillLaunch('everyday-words-v2',0)");flush();click('#studioTried');assert(run("skillNotes['everyday-words-v2'].activities[0]"));run("Studio.go('#review');StudioReview.save(StudioReview.records()[0],'changes','Keep this review note')");assert.equal(run('StudioReview.decision(StudioReview.records()[0]).notes'),'Keep this review note');const note=document.querySelector('[data-review-notes]');note.value='Session feedback';note.oninput();assert(document.querySelector('[data-review-saved]').textContent.includes('this visit'));run("Studio.go('#device')");blocked=false;click('#deviceRetry');assert(run('AppStorage.status().persistent'));assert(values.has('spotmatch-course-notes-v1'));}
-run("skillNotes={};skillSave();StudioReview.save(StudioReview.records()[0],'changes','Keep my expert notes');AppStorage.setItem('spotmatch-vocabulary-saved-v1',JSON.stringify(['cup']));AppStorage.setItem('spotmatch-comfort','false');AppStorage.setItem('spotmatch-course-flow','auto');AppStorage.setItem('spotmatch-word-play-v1',JSON.stringify({ink:'plain',choices:2}));StudioDevice.apply(true)");
-const course='short-words-v2';const backup=run('StudioDeviceCore.pack(AppStorage.snapshot(),Studio.registry(),StudioCore)');const actualId=run("StudioCore.activityId(skillCourseGet('short-words-v2').course.activities[0],0)");backup.practice.courses[course]={version:3,activities:{[actualId]:true},supports:[2],offline:false};backup.observations[course]={version:3,activities:{[actualId]:{explored:true,responses:[{response:'meaning',adultCueOrHint:true}]}}};backup.data['spotmatch-vocabulary-saved-v1']='["hat"]';backup.data['spotmatch-comfort']='true';backup.data['spotmatch-course-flow']='manual';backup.data['spotmatch-word-play-v1']='{"ink":"letters","choices":3}';
-run("Studio.go('#device')");document.querySelector('#deviceSettings').checked=true;await document.querySelector('#deviceImport').onchange({target:{files:[{size:5000,text:async()=>JSON.stringify(backup)}]}});flush();assert(!document.querySelector('#deviceRestore').disabled,document.querySelector('#devicePreview').textContent);click('#deviceRestore');assert(run("skillNotes['short-words-v2'].activities[0]"));assert.equal(run("skillNotes['short-words-v2'].readingPractice[0].responses[0].response"),'meaning');assert(run('vocabularySaved.includes("hat")&&vocabularySaved.includes("cup")'));assert(run('largerPictures'));assert.equal(run('wordPlayDisplay.ink'),'letters');assert(!run('CourseFlow.enabled'));assert.equal(run('StudioReview.decision(StudioReview.records()[0]).notes'),'Keep my expert notes');click('#deviceUndo');assert(!run("skillNotes['short-words-v2']?.activities?.[0]"));assert(!run('largerPictures'));assert.equal(run('wordPlayDisplay.ink'),'plain');assert(run('CourseFlow.enabled'));assert(!run('vocabularySaved.includes("hat")'));assert.equal(run('StudioReview.decision(StudioReview.records()[0]).notes'),'Keep my expert notes');
-await document.querySelector('#deviceImport').onchange({target:{files:[{size:10,text:async()=>'not json'}]}});assert(document.querySelector('#deviceRestore').disabled);
-run("Studio.go('#not-a-page')");assert(document.querySelector('h1').textContent.includes('not available'));assert(document.querySelector('[href="#courses"]'));run("Studio.go('#course/missing-course')");assert(document.querySelector('h1').textContent.includes('not available'));run("Studio.go('#practice')");assert(document.querySelector('[href="#device"]'));console.log('Device page: real backup preview/restore/undo, merged observations and pictures, settings applied in memory, expert notes isolated, invalid files rejected; '+(process.argv.includes('--blocked')?'blocked-storage recovery':process.argv.includes('--corrupt')?'corrupt-data recovery':'normal storage')+' passed (DOM only).');
-})().catch(error=>{console.error(error);process.exitCode=1});
+(async () => {
+  flush();
+  run("Studio.go('#device')");
+  assert(document.querySelector('#deviceExport'));
+  assert(run('StudioDevice.refs().pictureIds.length') >= 1000);
+  if (process.argv.includes('--corrupt')) {
+    assert(run('AppStorage.status().damaged.length') >= 4);
+    assert(!document.querySelector('#deviceNotice').hidden);
+    assert(!document.querySelector('#deviceRecovery').disabled);
+    assert.equal(values.get('spotmatch-comfort'), '[]');
+  }
+  if (blocked) {
+    assert(!run('AppStorage.status().persistent'));
+    assert(document.querySelector('#deviceState').textContent.includes('unavailable'));
+    run("skillLaunch('everyday-words-v2',0)");
+    flush();
+    click('#studioTried');
+    assert(run("skillNotes['everyday-words-v2'].activities[0]"));
+    run(
+      "Studio.go('#review');StudioReview.save(StudioReview.records()[0],'changes','Keep this review note')"
+    );
+    assert.equal(run('StudioReview.decision(StudioReview.records()[0]).notes'), 'Keep this review note');
+    const note = document.querySelector('[data-review-notes]');
+    note.value = 'Session feedback';
+    note.oninput();
+    assert(document.querySelector('[data-review-saved]').textContent.includes('this visit'));
+    run("Studio.go('#device')");
+    blocked = false;
+    click('#deviceRetry');
+    assert(run('AppStorage.status().persistent'));
+    assert(values.has('spotmatch-course-notes-v1'));
+  }
+  run(
+    "skillNotes={};skillSave();StudioReview.save(StudioReview.records()[0],'changes','Keep my expert notes');AppStorage.setItem('spotmatch-vocabulary-saved-v1',JSON.stringify(['cup']));AppStorage.setItem('spotmatch-comfort','false');AppStorage.setItem('spotmatch-course-flow','auto');AppStorage.setItem('spotmatch-word-play-v1',JSON.stringify({ink:'plain',choices:2}));StudioDevice.apply(true)"
+  );
+  const course = 'short-words-v2';
+  const backup = run('StudioDeviceCore.pack(AppStorage.snapshot(),Studio.registry(),StudioCore)');
+  const actualId = run("StudioCore.activityId(skillCourseGet('short-words-v2').course.activities[0],0)");
+  backup.practice.courses[course] = {
+    version: 3,
+    activities: { [actualId]: true },
+    supports: [2],
+    offline: false
+  };
+  backup.observations[course] = {
+    version: 3,
+    activities: { [actualId]: { explored: true, responses: [{ response: 'meaning', adultCueOrHint: true }] } }
+  };
+  backup.data['spotmatch-vocabulary-saved-v1'] = '["hat"]';
+  backup.data['spotmatch-comfort'] = 'true';
+  backup.data['spotmatch-course-flow'] = 'manual';
+  backup.data['spotmatch-word-play-v1'] = '{"ink":"letters","choices":3}';
+  run("Studio.go('#device')");
+  document.querySelector('#deviceSettings').checked = true;
+  await document
+    .querySelector('#deviceImport')
+    .onchange({ target: { files: [{ size: 5000, text: async () => JSON.stringify(backup) }] } });
+  flush();
+  assert(
+    !document.querySelector('#deviceRestore').disabled,
+    document.querySelector('#devicePreview').textContent
+  );
+  click('#deviceRestore');
+  assert(run("skillNotes['short-words-v2'].activities[0]"));
+  assert.equal(run("skillNotes['short-words-v2'].readingPractice[0].responses[0].response"), 'meaning');
+  assert(run('vocabularySaved.includes("hat")&&vocabularySaved.includes("cup")'));
+  assert(run('largerPictures'));
+  assert.equal(run('wordPlayDisplay.ink'), 'letters');
+  assert(!run('CourseFlow.enabled'));
+  assert.equal(run('StudioReview.decision(StudioReview.records()[0]).notes'), 'Keep my expert notes');
+  click('#deviceUndo');
+  assert(!run("skillNotes['short-words-v2']?.activities?.[0]"));
+  assert(!run('largerPictures'));
+  assert.equal(run('wordPlayDisplay.ink'), 'plain');
+  assert(run('CourseFlow.enabled'));
+  assert(!run('vocabularySaved.includes("hat")'));
+  assert.equal(run('StudioReview.decision(StudioReview.records()[0]).notes'), 'Keep my expert notes');
+  await document
+    .querySelector('#deviceImport')
+    .onchange({ target: { files: [{ size: 10, text: async () => 'not json' }] } });
+  assert(document.querySelector('#deviceRestore').disabled);
+  run("Studio.go('#not-a-page')");
+  assert(document.querySelector('h1').textContent.includes('not available'));
+  assert(document.querySelector('[href="#courses"]'));
+  run("Studio.go('#course/missing-course')");
+  assert(document.querySelector('h1').textContent.includes('not available'));
+  run("Studio.go('#practice')");
+  assert(document.querySelector('[href="#device"]'));
+  console.log(
+    'Device page: real backup preview/restore/undo, merged observations and pictures, settings applied in memory, expert notes isolated, invalid files rejected; ' +
+      (process.argv.includes('--blocked')
+        ? 'blocked-storage recovery'
+        : process.argv.includes('--corrupt')
+          ? 'corrupt-data recovery'
+          : 'normal storage') +
+      ' passed (DOM only).'
+  );
+})().catch(error => {
+  console.error(error);
+  process.exitCode = 1;
+});

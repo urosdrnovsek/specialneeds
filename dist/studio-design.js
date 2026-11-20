@@ -1,49 +1,274 @@
 'use strict';
 // Home illustration: the product in one picture. Two matching cards are linked and checked,
 // a third card waits, and letter tiles hint at early reading. Built from the shared picture set.
-function designHeroArt(){
- const pic=(id,x,y,size)=>pictureIcon(id).replace('<svg ',`<svg x="${x}" y="${y}" width="${size}" height="${size}" `);
- const card=(id,cx,cy,rot,fill)=>`<g transform="rotate(${rot} ${cx} ${cy})"><rect x="${cx-78}" y="${cy-94}" width="156" height="188" rx="22" fill="#1f3a31" opacity=".08" transform="translate(4 8)"/><rect x="${cx-78}" y="${cy-94}" width="156" height="188" rx="22" fill="${fill}" stroke="#d7dfd0" stroke-width="2"/>${pic(id,cx-58,cy-66,116)}</g>`;
- const tile=(ch,x,y,fill)=>`<g><rect x="${x}" y="${y}" width="58" height="58" rx="12" fill="${fill}" stroke="#1f3a31" stroke-opacity=".12" stroke-width="2"/><text x="${x+29}" y="${y+41}" text-anchor="middle" font-family="system-ui,-apple-system,Segoe UI,sans-serif" font-size="34" font-weight="700" fill="#1f3a31">${ch}</text></g>`;
- return `<svg class="ds-hero-art" viewBox="0 0 640 470" role="presentation" focusable="false">
+function designHeroArt() {
+  const pic = (id, x, y, size) =>
+    pictureIcon(id).replace('<svg ', `<svg x="${x}" y="${y}" width="${size}" height="${size}" `);
+  const card = (id, cx, cy, rot, fill) =>
+    `<g transform="rotate(${rot} ${cx} ${cy})"><rect x="${cx - 78}" y="${cy - 94}" width="156" height="188" rx="22" fill="#1f3a31" opacity=".08" transform="translate(4 8)"/><rect x="${cx - 78}" y="${cy - 94}" width="156" height="188" rx="22" fill="${fill}" stroke="#d7dfd0" stroke-width="2"/>${pic(id, cx - 58, cy - 66, 116)}</g>`;
+  const tile = (ch, x, y, fill) =>
+    `<g><rect x="${x}" y="${y}" width="58" height="58" rx="12" fill="${fill}" stroke="#1f3a31" stroke-opacity=".12" stroke-width="2"/><text x="${x + 29}" y="${y + 41}" text-anchor="middle" font-family="system-ui,-apple-system,Segoe UI,sans-serif" font-size="34" font-weight="700" fill="#1f3a31">${ch}</text></g>`;
+  return `<svg class="ds-hero-art" viewBox="0 0 640 470" role="presentation" focusable="false">
 <path d="M70 120C110 40 250 18 360 40C480 64 600 70 612 180C624 290 560 410 420 430C280 452 120 440 64 350C20 280 40 180 70 120Z" fill="#e8efe0"/>
 <circle cx="560" cy="70" r="34" fill="#f6d77e"/><circle cx="96" cy="402" r="12" fill="#f2c7b0"/><circle cx="592" cy="380" r="8" fill="#b7cbe6"/>
-${card('duck',170,196,-9,'#fffdf7')}${card('apple',330,170,0,'#ffffff')}${card('apple',482,214,8,'#ffffff')}
+${card('duck', 170, 196, -9, '#fffdf7')}${card('apple', 330, 170, 0, '#ffffff')}${card('apple', 482, 214, 8, '#ffffff')}
 <path d="M396 110C430 76 470 86 486 116" fill="none" stroke="#244f91" stroke-width="4" stroke-linecap="round" stroke-dasharray="2 10"/>
 <g transform="translate(540 116)"><circle r="26" fill="#2f6b4f"/><path d="M-11 1l7 8l15-17" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></g>
-${tile('c',210,352,'#fbefe6')}${tile('a',278,352,'#e7eef8')}${tile('t',346,352,'#fbefe6')}
+${tile('c', 210, 352, '#fbefe6')}${tile('a', 278, 352, '#e7eef8')}${tile('t', 346, 352, '#fbefe6')}
 <path d="M110 300l6 14l14 6l-14 6l-6 14l-6-14l-14-6l14-6z" fill="#f2b84b"/>
-</svg>`;}
+</svg>`;
+}
 
-const StudioDesign={
- home({app,esc,registry,bind,go}){
-  skillContext=null;prLibraryMode=false;prDirectLegacy=false;skillFreePlay=false;activeLearningCourse=null;senActive=null;
-  let recent=null;try{recent=JSON.parse(AppStorage.getItem('spotmatch-last-course-v1')||'null');}catch{}
-  const course=recent&&registry().find(c=>c.id===recent.courseId),next=course?Math.max(0,Math.min(course.activities.length-1,Number.isInteger(recent.index)?recent.index:0)):0;
-  const labels={language:['Language & understanding','Build words, meanings and useful messages.'],dyslexia:['Starting to read','Explore letters, sounds and short words.'],attention:['Attention & planning','Try small steps and visible reminders.'],autism:['Autism support','Explore meaning, communication and shared play.'],development:['Development & learning','Build skills with models and smaller steps.'],speech:['Speech & communication','Join in through speech, signs, pointing or AAC.'],motor:['Motor access','Find comfortable ways to take part.'],calm:['Calm & movement','Make room for a pause, a stretch or quiet play.']};
-  const order=['language','dyslexia','attention','autism','development','speech','motor','calm'];
-  app.innerHTML='<section class="studio-welcome"><div class="studio-welcome-copy"><span class="eyebrow">FOR PARENTS & TEACHERS</span><h1>Little steps.<br>Useful discoveries.</h1><p>Games and guidance for children with special educational needs. Find a starting point for the child you support.</p><form id="studioHomeSearch" role="search"><label class="studio-sr" for="studioHomeQuery">Search learning goals or courses</label><input id="studioHomeQuery" type="search" placeholder="What would you like to help with?"><button class="primary">Find a course <span aria-hidden="true">→</span></button></form><span class="studio-welcome-note">Play together. Choose the support that helps.</span></div><div class="studio-welcome-art" aria-hidden="true">'+designHeroArt()+'<span>Small steps, shared together</span></div></section>'+(course?'<section class="studio-resume"><span class="studio-resume-symbol" aria-hidden="true">↗</span><div><small>PICK UP WHERE YOU LEFT OFF</small><b>'+esc(course.title)+'</b></div><a href="#activity/'+course.id+'/'+next+'" id="studioResume">Continue <span aria-hidden="true">→</span></a></section>':'')+'<section class="studio-needs" aria-labelledby="studioNeedHeading"><div class="studio-section-heading"><div><span class="eyebrow">A USEFUL PLACE TO BEGIN</span><h2 id="studioNeedHeading">What would you like to support?</h2></div><a href="#courses" data-studio-go>Browse all courses <span aria-hidden="true">→</span></a></div><div class="studio-needs-grid">'+order.map(id=>{const s=parentSupportSections.find(s=>s.id===id),[title,copy]=labels[id];return '<a class="studio-need" data-need="'+id+'" data-support="'+id+'" href="#support/'+id+'"><div class="studio-need-art" aria-hidden="true">'+worldScene(...s.scene)+'</div><div class="studio-need-copy"><h3>'+title+'</h3><p>'+copy+'</p><span>Explore support <b aria-hidden="true">↗</b></span></div></a>';}).join('')+'</div></section><section class="studio-paths"><div class="studio-section-heading"><div><span class="eyebrow">A LITTLE MORE STRUCTURE</span><h2>Follow a learning path</h2></div><span>One small activity at a time.</span></div><div class="studio-pilots">'+studioPilots.map((c,i)=>'<a href="#course/'+c.id+'" data-studio-course="'+c.id+'"><small>PATH 0'+(i+1)+'</small><b>'+esc(c.title)+'</b><span>16 activities · Adult joins in <i aria-hidden="true">→</i></span></a>').join('')+'</div></section><section class="studio-resource-strip"><div><span class="eyebrow">IDEAS YOU CAN UNDERSTAND</span><h2>Know why you’re trying it.</h2><p>Explore research notes, practical adaptations and clear learning goals.</p></div><a href="#research" data-studio-go>Explore the research →</a><a href="#vocabulary" data-studio-go>Browse word pictures →</a></section>';
-  app.querySelector('#studioHomeSearch').onsubmit=e=>{e.preventDefault();go('#courses?q='+encodeURIComponent(app.querySelector('#studioHomeQuery').value.trim()));};
-  app.querySelectorAll('[data-support]').forEach(a=>a.onclick=e=>{if(e.ctrlKey||e.metaKey||e.shiftKey||e.altKey)return;e.preventDefault();parentSupportDetail(a.dataset.support);});
-  if(course)app.querySelector('#studioResume').onclick=e=>{if(e.ctrlKey||e.metaKey)return;e.preventDefault();skillLaunch(course.id,next);};bind();
- },
- courseMatches(c,query){
-  const q=query.trim().toLowerCase();if(!q)return true;if([c.title,c.goal,c.need,c.skillTitle].join(' ').toLowerCase().includes(q))return true;
-  const aliases={language:['language','vocabulary'],dyslexia:['dyslexia','reading'],attention:['adhd','add','attention'],autism:['autism','autistic'],development:['development','disability'],speech:['speech','aac','communication'],motor:['motor'],calm:['relaxation','calm','yoga']};
-  for(const[id,words]of Object.entries(aliases)){if(!words.some(w=>new RegExp('\\b'+w+'\\b').test(q)))continue;const section=parentSupportSections.find(s=>s.id===id);if([...section.courses,...(section.readingCourses||[])].includes(c.id))return true;if(c.pilot&&(['dyslexia'].includes(id)?c.id==='short-words-v2':['language','speech','development','autism'].includes(id)?c.id==='everyday-words-v2':id==='attention'))return true;}return false;
- },
- card(c,{esc,art}){
-  const count=c.activities.filter((a,i)=>skillExplored(a,c.id,i)).length,next=Math.max(0,c.activities.findIndex((a,i)=>!skillExplored(a,c.id,i)));
-  return '<article class="studio-card studio-course-card"><div class="studio-card-art" aria-hidden="true">'+art(c.activities[0])+'</div><div class="studio-card-body"><div class="studio-card-meta"><small>'+esc(c.skillTitle||skillGet(c.skill).title)+'</small><span>'+c.activities.length+' activities</span></div><h2><a href="#course/'+c.id+'" data-studio-course="'+c.id+'">'+esc(c.title)+'</a></h2><p>'+esc(c.goal)+'</p><span class="studio-card-status">'+(count?count+' explored · '+(count===c.activities.length?'Revisit any activity':'Pick up at activity '+(next+1)):'Play with a grown-up · Start anywhere')+'</span><div class="studio-card-actions"><a href="'+(count?'#activity/'+c.id+'/'+next:'#course/'+c.id)+'" '+(count?'data-studio-activity="'+c.id+':'+next+'"':'data-studio-course="'+c.id+'"')+'>'+(count?(count===c.activities.length?'Explore again':'Continue activity'):'View course')+' <span aria-hidden="true">→</span></a><details><summary>Who might this help?</summary><p>'+esc(c.need)+'</p></details></div></div></article>';
- },
- stages(c,esc){
-  const first=c.activities.findIndex((a,i)=>!skillExplored(a,c.id,i)),active=first<0?0:Math.floor(first/4),labels=['Explore together','Practise with support','Try new examples','Use and revisit'];
-  return '<div class="studio-course-map"><span>FOUR SMALL STAGES</span><p>Start with one activity. You can enter any stage and keep useful support.</p></div>'+labels.map((label,stage)=>{const items=c.activities.slice(stage*4,stage*4+4),done=items.filter((a,j)=>skillExplored(a,c.id,stage*4+j)).length;return '<details class="studio-stage" '+(stage===active?'open':'')+'><summary><span class="studio-stage-number">'+(stage+1)+'</span><span><b>'+label+'</b><small>'+done+' of '+items.length+' explored</small></span><span class="studio-stage-expand" aria-hidden="true">＋</span></summary><div class="studio-stage-items">'+items.map((a,j)=>{const index=stage*4+j,explored=skillExplored(a,c.id,index);return '<button data-pilot-activity="'+index+'"><span class="studio-activity-index" aria-hidden="true">'+(explored?'✓':String(index+1).padStart(2,'0'))+'</span><span><b>'+esc(a.title)+'</b><small>'+esc(a.purpose)+'</small><em>'+(a.engine==='offline'?'Together away from the screen':a.engine==='mission'?'Interactive game':a.reused?'Shared adventure game':a.instructionMode==='adult-read'?'Picture play · Adult reads':'Interactive game')+'</em></span><span aria-hidden="true">→</span></button>';}).join('')+'</div></details>';}).join('');
- },
- polishCourse(c,esc){
-  const hero=app.querySelector('.skill-course-hero');if(hero){hero.classList.add('studio-course-hero');const tag=hero.querySelector('.eyebrow');if(tag)tag.textContent='GUIDED COURSE · AN ADULT JOINS IN';}
-  const crumb=app.querySelector('.skill-crumb');if(crumb){crumb.classList.add('studio-breadcrumb');crumb.insertAdjacentHTML('afterbegin','<a href="#support" data-studio-go>Find support</a><span aria-hidden="true">/</span><a href="#courses" data-studio-go>Courses</a><span aria-hidden="true">/</span>');}
-  if(hero){const choices=document.createElement('label');choices.className='studio-course-pace';choices.innerHTML='<input id="studioCourseAutomatic" type="checkbox" '+(CourseFlow.enabled?'checked':'')+'> Continue automatically after a successful task';hero.querySelector('div').append(choices);choices.querySelector('input').onchange=e=>CourseFlow.setAutomatic(e.target.checked);}
-  const list=app.querySelector('.skill-activity-list');if(list)list.setAttribute('aria-label','Choose an activity');
- }
+const StudioDesign = {
+  home({ app, esc, registry, bind, go }) {
+    skillContext = null;
+    prLibraryMode = false;
+    prDirectLegacy = false;
+    skillFreePlay = false;
+    activeLearningCourse = null;
+    senActive = null;
+    let recent = null;
+    try {
+      recent = JSON.parse(AppStorage.getItem('spotmatch-last-course-v1') || 'null');
+    } catch {}
+    const course = recent && registry().find(c => c.id === recent.courseId),
+      next = course
+        ? Math.max(
+            0,
+            Math.min(course.activities.length - 1, Number.isInteger(recent.index) ? recent.index : 0)
+          )
+        : 0;
+    const labels = {
+      language: ['Language & understanding', 'Build words, meanings and useful messages.'],
+      dyslexia: ['Starting to read', 'Explore letters, sounds and short words.'],
+      attention: ['Attention & planning', 'Try small steps and visible reminders.'],
+      autism: ['Autism support', 'Explore meaning, communication and shared play.'],
+      development: ['Development & learning', 'Build skills with models and smaller steps.'],
+      speech: ['Speech & communication', 'Join in through speech, signs, pointing or AAC.'],
+      motor: ['Motor access', 'Find comfortable ways to take part.'],
+      calm: ['Calm & movement', 'Make room for a pause, a stretch or quiet play.']
+    };
+    const order = ['language', 'dyslexia', 'attention', 'autism', 'development', 'speech', 'motor', 'calm'];
+    app.innerHTML =
+      '<section class="studio-welcome"><div class="studio-welcome-copy"><span class="eyebrow">FOR PARENTS & TEACHERS</span><h1>Little steps.<br>Useful discoveries.</h1><p>Games and guidance for children with special educational needs. Find a starting point for the child you support.</p><form id="studioHomeSearch" role="search"><label class="studio-sr" for="studioHomeQuery">Search learning goals or courses</label><input id="studioHomeQuery" type="search" placeholder="What would you like to help with?"><button class="primary">Find a course <span aria-hidden="true">→</span></button></form><span class="studio-welcome-note">Play together. Choose the support that helps.</span></div><div class="studio-welcome-art" aria-hidden="true">' +
+      designHeroArt() +
+      '<span>Small steps, shared together</span></div></section>' +
+      (course
+        ? '<section class="studio-resume"><span class="studio-resume-symbol" aria-hidden="true">↗</span><div><small>PICK UP WHERE YOU LEFT OFF</small><b>' +
+          esc(course.title) +
+          '</b></div><a href="#activity/' +
+          course.id +
+          '/' +
+          next +
+          '" id="studioResume">Continue <span aria-hidden="true">→</span></a></section>'
+        : '') +
+      '<section class="studio-needs" aria-labelledby="studioNeedHeading"><div class="studio-section-heading"><div><span class="eyebrow">A USEFUL PLACE TO BEGIN</span><h2 id="studioNeedHeading">What would you like to support?</h2></div><a href="#courses" data-studio-go>Browse all courses <span aria-hidden="true">→</span></a></div><div class="studio-needs-grid">' +
+      order
+        .map(id => {
+          const s = parentSupportSections.find(s => s.id === id),
+            [title, copy] = labels[id];
+          return (
+            '<a class="studio-need" data-need="' +
+            id +
+            '" data-support="' +
+            id +
+            '" href="#support/' +
+            id +
+            '"><div class="studio-need-art" aria-hidden="true">' +
+            worldScene(...s.scene) +
+            '</div><div class="studio-need-copy"><h3>' +
+            title +
+            '</h3><p>' +
+            copy +
+            '</p><span>Explore support <b aria-hidden="true">↗</b></span></div></a>'
+          );
+        })
+        .join('') +
+      '</div></section><section class="studio-paths"><div class="studio-section-heading"><div><span class="eyebrow">A LITTLE MORE STRUCTURE</span><h2>Follow a learning path</h2></div><span>One small activity at a time.</span></div><div class="studio-pilots">' +
+      studioPilots
+        .map(
+          (c, i) =>
+            '<a href="#course/' +
+            c.id +
+            '" data-studio-course="' +
+            c.id +
+            '"><small>PATH 0' +
+            (i + 1) +
+            '</small><b>' +
+            esc(c.title) +
+            '</b><span>16 activities · Adult joins in <i aria-hidden="true">→</i></span></a>'
+        )
+        .join('') +
+      '</div></section><section class="studio-resource-strip"><div><span class="eyebrow">IDEAS YOU CAN UNDERSTAND</span><h2>Know why you’re trying it.</h2><p>Explore research notes, practical adaptations and clear learning goals.</p></div><a href="#research" data-studio-go>Explore the research →</a><a href="#vocabulary" data-studio-go>Browse word pictures →</a></section>';
+    app.querySelector('#studioHomeSearch').onsubmit = e => {
+      e.preventDefault();
+      go('#courses?q=' + encodeURIComponent(app.querySelector('#studioHomeQuery').value.trim()));
+    };
+    app.querySelectorAll('[data-support]').forEach(
+      a =>
+        (a.onclick = e => {
+          if (e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) return;
+          e.preventDefault();
+          parentSupportDetail(a.dataset.support);
+        })
+    );
+    if (course)
+      app.querySelector('#studioResume').onclick = e => {
+        if (e.ctrlKey || e.metaKey) return;
+        e.preventDefault();
+        skillLaunch(course.id, next);
+      };
+    bind();
+  },
+  courseMatches(c, query) {
+    const q = query.trim().toLowerCase();
+    if (!q) return true;
+    if ([c.title, c.goal, c.need, c.skillTitle].join(' ').toLowerCase().includes(q)) return true;
+    const aliases = {
+      language: ['language', 'vocabulary'],
+      dyslexia: ['dyslexia', 'reading'],
+      attention: ['adhd', 'add', 'attention'],
+      autism: ['autism', 'autistic'],
+      development: ['development', 'disability'],
+      speech: ['speech', 'aac', 'communication'],
+      motor: ['motor'],
+      calm: ['relaxation', 'calm', 'yoga']
+    };
+    for (const [id, words] of Object.entries(aliases)) {
+      if (!words.some(w => new RegExp('\\b' + w + '\\b').test(q))) continue;
+      const section = parentSupportSections.find(s => s.id === id);
+      if ([...section.courses, ...(section.readingCourses || [])].includes(c.id)) return true;
+      if (
+        c.pilot &&
+        (['dyslexia'].includes(id)
+          ? c.id === 'short-words-v2'
+          : ['language', 'speech', 'development', 'autism'].includes(id)
+            ? c.id === 'everyday-words-v2'
+            : id === 'attention')
+      )
+        return true;
+    }
+    return false;
+  },
+  card(c, { esc, art }) {
+    const count = c.activities.filter((a, i) => skillExplored(a, c.id, i)).length,
+      next = Math.max(
+        0,
+        c.activities.findIndex((a, i) => !skillExplored(a, c.id, i))
+      );
+    return (
+      '<article class="studio-card studio-course-card"><div class="studio-card-art" aria-hidden="true">' +
+      art(c.activities[0]) +
+      '</div><div class="studio-card-body"><div class="studio-card-meta"><small>' +
+      esc(c.skillTitle || skillGet(c.skill).title) +
+      '</small><span>' +
+      c.activities.length +
+      ' activities</span></div><h2><a href="#course/' +
+      c.id +
+      '" data-studio-course="' +
+      c.id +
+      '">' +
+      esc(c.title) +
+      '</a></h2><p>' +
+      esc(c.goal) +
+      '</p><span class="studio-card-status">' +
+      (count
+        ? count +
+          ' explored · ' +
+          (count === c.activities.length ? 'Revisit any activity' : 'Pick up at activity ' + (next + 1))
+        : 'Play with a grown-up · Start anywhere') +
+      '</span><div class="studio-card-actions"><a href="' +
+      (count ? '#activity/' + c.id + '/' + next : '#course/' + c.id) +
+      '" ' +
+      (count ? 'data-studio-activity="' + c.id + ':' + next + '"' : 'data-studio-course="' + c.id + '"') +
+      '>' +
+      (count ? (count === c.activities.length ? 'Explore again' : 'Continue activity') : 'View course') +
+      ' <span aria-hidden="true">→</span></a><details><summary>Who might this help?</summary><p>' +
+      esc(c.need) +
+      '</p></details></div></div></article>'
+    );
+  },
+  stages(c, esc) {
+    const first = c.activities.findIndex((a, i) => !skillExplored(a, c.id, i)),
+      active = first < 0 ? 0 : Math.floor(first / 4),
+      labels = ['Explore together', 'Practise with support', 'Try new examples', 'Use and revisit'];
+    return (
+      '<div class="studio-course-map"><span>FOUR SMALL STAGES</span><p>Start with one activity. You can enter any stage and keep useful support.</p></div>' +
+      labels
+        .map((label, stage) => {
+          const items = c.activities.slice(stage * 4, stage * 4 + 4),
+            done = items.filter((a, j) => skillExplored(a, c.id, stage * 4 + j)).length;
+          return (
+            '<details class="studio-stage" ' +
+            (stage === active ? 'open' : '') +
+            '><summary><span class="studio-stage-number">' +
+            (stage + 1) +
+            '</span><span><b>' +
+            label +
+            '</b><small>' +
+            done +
+            ' of ' +
+            items.length +
+            ' explored</small></span><span class="studio-stage-expand" aria-hidden="true">＋</span></summary><div class="studio-stage-items">' +
+            items
+              .map((a, j) => {
+                const index = stage * 4 + j,
+                  explored = skillExplored(a, c.id, index);
+                return (
+                  '<button data-pilot-activity="' +
+                  index +
+                  '"><span class="studio-activity-index" aria-hidden="true">' +
+                  (explored ? '✓' : String(index + 1).padStart(2, '0')) +
+                  '</span><span><b>' +
+                  esc(a.title) +
+                  '</b><small>' +
+                  esc(a.purpose) +
+                  '</small><em>' +
+                  (a.engine === 'offline'
+                    ? 'Together away from the screen'
+                    : a.engine === 'mission'
+                      ? 'Interactive game'
+                      : a.reused
+                        ? 'Shared adventure game'
+                        : a.instructionMode === 'adult-read'
+                          ? 'Picture play · Adult reads'
+                          : 'Interactive game') +
+                  '</em></span><span aria-hidden="true">→</span></button>'
+                );
+              })
+              .join('') +
+            '</div></details>'
+          );
+        })
+        .join('')
+    );
+  },
+  polishCourse(c, esc) {
+    const hero = app.querySelector('.skill-course-hero');
+    if (hero) {
+      hero.classList.add('studio-course-hero');
+      const tag = hero.querySelector('.eyebrow');
+      if (tag) tag.textContent = 'GUIDED COURSE · AN ADULT JOINS IN';
+    }
+    const crumb = app.querySelector('.skill-crumb');
+    if (crumb) {
+      crumb.classList.add('studio-breadcrumb');
+      crumb.insertAdjacentHTML(
+        'afterbegin',
+        '<a href="#support" data-studio-go>Find support</a><span aria-hidden="true">/</span><a href="#courses" data-studio-go>Courses</a><span aria-hidden="true">/</span>'
+      );
+    }
+    if (hero) {
+      const choices = document.createElement('label');
+      choices.className = 'studio-course-pace';
+      choices.innerHTML =
+        '<input id="studioCourseAutomatic" type="checkbox" ' +
+        (CourseFlow.enabled ? 'checked' : '') +
+        '> Continue automatically after a successful task';
+      hero.querySelector('div').append(choices);
+      choices.querySelector('input').onchange = e => CourseFlow.setAutomatic(e.target.checked);
+    }
+    const list = app.querySelector('.skill-activity-list');
+    if (list) list.setAttribute('aria-label', 'Choose an activity');
+  }
 };

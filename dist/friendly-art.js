@@ -1,88 +1,203 @@
 'use strict';
 // Shared storybook illustrations. Learning features stay consistent across answer choices.
-const friendlyPalette={bear:{fur:'#dcb17c',shade:'#c08c60',shirt:'#7da99d'},rabbit:{fur:'#ede0c7',shade:'#d4bd9e',shirt:'#dc9b7e'},cat:{fur:'#e7b373',shade:'#c48a56',shirt:'#8cacc5'},dog:{fur:'#b79a80',shade:'#8f7058',shirt:'#d6bd72'}};
+const friendlyPalette = {
+  bear: { fur: '#dcb17c', shade: '#c08c60', shirt: '#7da99d' },
+  rabbit: { fur: '#ede0c7', shade: '#d4bd9e', shirt: '#dc9b7e' },
+  cat: { fur: '#e7b373', shade: '#c48a56', shirt: '#8cacc5' },
+  dog: { fur: '#b79a80', shade: '#8f7058', shirt: '#d6bd72' }
+};
 // Head-only artwork lets a pillow support the sleeper without rotating a standing body.
-function friendlyAnimalHead(id='bear',sleeping=false,happy=true){
- const c=friendlyPalette[id]||friendlyPalette.bear;
- const ears=id==='rabbit'?`<ellipse cx="38" cy="22" rx="10" ry="20" fill="${c.fur}"/><ellipse cx="76" cy="22" rx="10" ry="20" fill="${c.fur}"/><ellipse cx="38" cy="21" rx="4" ry="13" fill="#e5b9a3"/><ellipse cx="76" cy="21" rx="4" ry="13" fill="#e5b9a3"/>`:id==='cat'?`<path d="M22 43L20 8L48 30M68 30L97 8L93 47" fill="${c.fur}"/><path d="M27 22L29 36L38 29M81 29L90 21L88 37" fill="#e5b9a3"/>`:id==='dog'?`<ellipse cx="18" cy="53" rx="12" ry="25" fill="${c.shade}"/><ellipse cx="98" cy="53" rx="12" ry="25" fill="${c.shade}"/>`:`<circle cx="28" cy="28" r="14" fill="${c.fur}"/><circle cx="87" cy="28" r="14" fill="${c.fur}"/><circle cx="28" cy="28" r="7" fill="${c.shade}"/><circle cx="87" cy="28" r="7" fill="${c.shade}"/>`;
- return `<g stroke-linecap="round" stroke-linejoin="round">${ears}<ellipse cx="58" cy="58" rx="39" ry="34" fill="${c.fur}"/><ellipse cx="59" cy="72" rx="23" ry="15" fill="#f5e5c9"/><ellipse cx="32" cy="70" rx="7" ry="4" fill="#dc8f83" opacity=".3"/><ellipse cx="84" cy="70" rx="7" ry="4" fill="#dc8f83" opacity=".3"/>${sleeping?'<path d="M38 58Q44 64 50 58M68 58Q74 64 80 58" fill="none" stroke="#4c443c" stroke-width="2.6"/>':'<ellipse cx="44" cy="58" rx="3" ry="4" fill="#4c443c"/><ellipse cx="74" cy="58" rx="3" ry="4" fill="#4c443c"/>'}<path d="M53 69Q59 65 65 69L59 76Z" fill="#645041"/><path d="${happy?'M52 80Q59 86 66 80':'M52 84Q59 79 66 84'}" fill="none" stroke="#645041" stroke-width="2"/></g>`;
+function friendlyAnimalHead(id = 'bear', sleeping = false, happy = true) {
+  const c = friendlyPalette[id] || friendlyPalette.bear;
+  const ears =
+    id === 'rabbit'
+      ? `<ellipse cx="38" cy="22" rx="10" ry="20" fill="${c.fur}"/><ellipse cx="76" cy="22" rx="10" ry="20" fill="${c.fur}"/><ellipse cx="38" cy="21" rx="4" ry="13" fill="#e5b9a3"/><ellipse cx="76" cy="21" rx="4" ry="13" fill="#e5b9a3"/>`
+      : id === 'cat'
+        ? `<path d="M22 43L20 8L48 30M68 30L97 8L93 47" fill="${c.fur}"/><path d="M27 22L29 36L38 29M81 29L90 21L88 37" fill="#e5b9a3"/>`
+        : id === 'dog'
+          ? `<ellipse cx="18" cy="53" rx="12" ry="25" fill="${c.shade}"/><ellipse cx="98" cy="53" rx="12" ry="25" fill="${c.shade}"/>`
+          : `<circle cx="28" cy="28" r="14" fill="${c.fur}"/><circle cx="87" cy="28" r="14" fill="${c.fur}"/><circle cx="28" cy="28" r="7" fill="${c.shade}"/><circle cx="87" cy="28" r="7" fill="${c.shade}"/>`;
+  return `<g stroke-linecap="round" stroke-linejoin="round">${ears}<ellipse cx="58" cy="58" rx="39" ry="34" fill="${c.fur}"/><ellipse cx="59" cy="72" rx="23" ry="15" fill="#f5e5c9"/><ellipse cx="32" cy="70" rx="7" ry="4" fill="#dc8f83" opacity=".3"/><ellipse cx="84" cy="70" rx="7" ry="4" fill="#dc8f83" opacity=".3"/>${sleeping ? '<path d="M38 58Q44 64 50 58M68 58Q74 64 80 58" fill="none" stroke="#4c443c" stroke-width="2.6"/>' : '<ellipse cx="44" cy="58" rx="3" ry="4" fill="#4c443c"/><ellipse cx="74" cy="58" rx="3" ry="4" fill="#4c443c"/>'}<path d="M53 69Q59 65 65 69L59 76Z" fill="#645041"/><path d="${happy ? 'M52 80Q59 86 66 80' : 'M52 84Q59 79 66 84'}" fill="none" stroke="#645041" stroke-width="2"/></g>`;
 }
-function friendlySleepingHead(id){return friendlyAnimalHead(id,true);}
-function friendlySeatedAnimal(id,happy=true){const c=friendlyPalette[id]||friendlyPalette.bear;
- return `<g stroke-linecap="round" stroke-linejoin="round"><path d="M44 125Q49 139 34 145L32 166M70 125Q73 139 85 145L88 166" fill="none" stroke="${c.fur}" stroke-width="14"/><ellipse cx="29" cy="170" rx="13" ry="7" fill="${c.fur}"/><ellipse cx="91" cy="170" rx="13" ry="7" fill="${c.fur}"/><path d="M31 91Q58 77 85 93L83 130Q58 145 32 130Z" fill="${c.shirt}"/><path d="M34 98Q28 118 41 128M81 98Q88 118 77 128" fill="none" stroke="${c.fur}" stroke-width="12"/><path d="M40 104H75M56 101V131" stroke="#fff8" stroke-width="2"/><g transform="translate(0 6)">${friendlyAnimalHead(id,false,happy)}</g></g>`;
+function friendlySleepingHead(id) {
+  return friendlyAnimalHead(id, true);
 }
-function friendlyBedScene(id,v=0){const c=friendlyPalette[id]||friendlyPalette.bear;
- return `<g data-scene-part="bed-scene"><ellipse cx="123" cy="161" rx="99" ry="6" fill="#536f4c" opacity=".12"/><path d="M30 59V157M216 96V157" stroke="#526e60" stroke-width="9" stroke-linecap="round"/><rect data-scene-part="mattress" x="34" y="105" width="178" height="28" rx="9" fill="#fff7e6" stroke="#768f7c" stroke-width="3"/><rect x="34" y="132" width="178" height="13" rx="4" fill="#77998a"/><rect data-scene-part="pillow" x="41" y="99" width="65" height="23" rx="10" fill="#fffdf5" stroke="#d2cab4" stroke-width="2"/><ellipse cx="135" cy="112" rx="50" ry="14" fill="${c.shirt}"/><g data-scene-part="sleeping-head" transform="translate(38 58) scale(.55)">${friendlySleepingHead(id)}</g><path data-scene-part="blanket" d="M96 99Q147 91 208 109V131H94Z" fill="#88aaa3" stroke="#587e73" stroke-width="2"/><path d="M105 106Q151 101 197 112M115 111L112 127M139 109L136 129M164 111L161 130M188 114L185 130" fill="none" stroke="#ffffff55" stroke-width="2"/><ellipse cx="105" cy="109" rx="10" ry="5" fill="${c.fur}"/></g>`;
+function friendlySeatedAnimal(id, happy = true) {
+  const c = friendlyPalette[id] || friendlyPalette.bear;
+  return `<g stroke-linecap="round" stroke-linejoin="round"><path d="M44 125Q49 139 34 145L32 166M70 125Q73 139 85 145L88 166" fill="none" stroke="${c.fur}" stroke-width="14"/><ellipse cx="29" cy="170" rx="13" ry="7" fill="${c.fur}"/><ellipse cx="91" cy="170" rx="13" ry="7" fill="${c.fur}"/><path d="M31 91Q58 77 85 93L83 130Q58 145 32 130Z" fill="${c.shirt}"/><path d="M34 98Q28 118 41 128M81 98Q88 118 77 128" fill="none" stroke="${c.fur}" stroke-width="12"/><path d="M40 104H75M56 101V131" stroke="#fff8" stroke-width="2"/><g transform="translate(0 6)">${friendlyAnimalHead(id, false, happy)}</g></g>`;
 }
-function friendlySittingScene(id){return `<g data-scene-part="sitting-scene"><rect x="87" y="75" width="70" height="44" rx="10" fill="#8aa89b" stroke="#526e60" stroke-width="3"/><path d="M86 124L84 156M151 124L154 156" stroke="#526e60" stroke-width="7" stroke-linecap="round"/><rect data-scene-part="seat" x="80" y="119" width="81" height="10" rx="4" fill="#6c9180"/><g data-scene-part="seated-character" transform="translate(80 28) scale(.68)">${friendlySeatedAnimal(id)}</g></g>`;}
-function friendlyAnimal(id='bear',pose='stand',happy=true){if(pose==='sit')return friendlySeatedAnimal(id,happy);if(pose==='sleep'){const c=friendlyPalette[id]||friendlyPalette.bear;return `<ellipse cx="69" cy="151" rx="42" ry="5" fill="#536f4c" opacity=".1"/><ellipse cx="70" cy="127" rx="39" ry="23" fill="${c.shirt}"/><g transform="translate(2 66) scale(.6)">${friendlySleepingHead(id)}</g><ellipse cx="43" cy="144" rx="15" ry="6" fill="${c.fur}"/>`;}const c=friendlyPalette[id]||friendlyPalette.bear;let ears=id==='rabbit'?`<ellipse cx="40" cy="19" rx="10" ry="30" fill="${c.fur}"/><ellipse cx="75" cy="19" rx="10" ry="30" fill="${c.fur}"/><ellipse cx="40" cy="19" rx="4" ry="21" fill="#e5b9a3"/><ellipse cx="75" cy="19" rx="4" ry="21" fill="#e5b9a3"/>`:id==='cat'?`<path d="M22 48L20 15L48 35M68 35L97 15L93 53" fill="${c.fur}"/><path d="M27 30L29 43L38 36M81 36L90 29L88 44" fill="#e5b9a3"/>`:id==='dog'?`<ellipse cx="20" cy="58" rx="13" ry="26" fill="${c.shade}"/><ellipse cx="94" cy="58" rx="13" ry="26" fill="${c.shade}"/>`:`<circle cx="27" cy="32" r="14" fill="${c.fur}"/><circle cx="88" cy="32" r="14" fill="${c.fur}"/><circle cx="27" cy="32" r="7" fill="${c.shade}"/><circle cx="88" cy="32" r="7" fill="${c.shade}"/>`;
- const sleeping=pose==='sleep';let body=`<ellipse cx="58" cy="158" rx="40" ry="6" fill="#536f4c" opacity=".10"/><path d="M37 119L32 150Q43 160 53 149L57 132L66 149Q80 158 87 148L79 118" fill="${c.fur}"/><path d="M31 91Q58 77 85 93L83 131Q58 145 32 131Z" fill="${c.shirt}"/><path d="M34 98Q19 107 18 124M81 98Q96 110 98 121" fill="none" stroke="${c.fur}" stroke-width="13" stroke-linecap="round"/>${ears}<ellipse cx="58" cy="64" rx="39" ry="36" fill="${c.fur}"/><ellipse cx="58" cy="78" rx="22" ry="16" fill="#f5e5c9"/><ellipse cx="32" cy="75" rx="7" ry="4" fill="#dc8f83" opacity=".35"/><ellipse cx="84" cy="75" rx="7" ry="4" fill="#dc8f83" opacity=".35"/>${sleeping?'<path d="M38 64Q44 70 49 64M68 64Q74 70 79 64" fill="none" stroke="#4c443c" stroke-width="2.6"/>':'<ellipse cx="44" cy="65" rx="3" ry="4" fill="#4c443c"/><ellipse cx="73" cy="65" rx="3" ry="4" fill="#4c443c"/><circle cx="45" cy="64" r=".8" fill="white"/><circle cx="74" cy="64" r=".8" fill="white"/>'}<path d="M53 75Q58 70 64 75L59 81Z" fill="#645041"/><path d="${happy?'M51 84Q59 92 67 84':'M52 89Q59 84 66 89'}" fill="none" stroke="#645041" stroke-width="2" stroke-linecap="round"/><path d="M40 104H75M56 101V131" stroke="#fff8" stroke-width="2" fill="none"/>`;
- if(pose==='handsfree')body=body.replace(/<path d="M34 98Q19 107 18 124M81 98Q96 110 98 121"[^>]*\/>/,'');
- if(pose==='jump'){body=body.replace(/<ellipse cx="58" cy="158"[^>]*\/>/,'').replace('M37 119L32 150Q43 160 53 149L57 132L66 149Q80 158 87 148L79 118','M37 119L23 134Q19 142 31 145L52 132L65 141Q81 147 86 135L79 118').replace('M34 98Q19 107 18 124M81 98Q96 110 98 121','M34 98Q15 89 12 74M81 98Q101 87 104 71');}
- if(pose==='hold')body=body.replace('M34 98Q19 107 18 124M81 98Q96 110 98 121','M34 98Q27 118 51 121M81 98Q92 119 67 121');
- return `<g stroke-linecap="round" stroke-linejoin="round">${body}</g>`;
+function friendlyBedScene(id, v = 0) {
+  const c = friendlyPalette[id] || friendlyPalette.bear;
+  return `<g data-scene-part="bed-scene"><ellipse cx="123" cy="161" rx="99" ry="6" fill="#536f4c" opacity=".12"/><path d="M30 59V157M216 96V157" stroke="#526e60" stroke-width="9" stroke-linecap="round"/><rect data-scene-part="mattress" x="34" y="105" width="178" height="28" rx="9" fill="#fff7e6" stroke="#768f7c" stroke-width="3"/><rect x="34" y="132" width="178" height="13" rx="4" fill="#77998a"/><rect data-scene-part="pillow" x="41" y="99" width="65" height="23" rx="10" fill="#fffdf5" stroke="#d2cab4" stroke-width="2"/><ellipse cx="135" cy="112" rx="50" ry="14" fill="${c.shirt}"/><g data-scene-part="sleeping-head" transform="translate(38 58) scale(.55)">${friendlySleepingHead(id)}</g><path data-scene-part="blanket" d="M96 99Q147 91 208 109V131H94Z" fill="#88aaa3" stroke="#587e73" stroke-width="2"/><path d="M105 106Q151 101 197 112M115 111L112 127M139 109L136 129M164 111L161 130M188 114L185 130" fill="none" stroke="#ffffff55" stroke-width="2"/><ellipse cx="105" cy="109" rx="10" ry="5" fill="${c.fur}"/></g>`;
 }
-
-function friendlyMovingAnimal(id,running=true){const c=friendlyPalette[id]||friendlyPalette.bear;const ears=id==='rabbit'?`<ellipse cx="62" cy="17" rx="8" ry="25" fill="${c.fur}"/><ellipse cx="80" cy="17" rx="8" ry="25" fill="${c.fur}"/>`:id==='cat'?`<path d="M49 43L48 12L70 33L84 11L91 45" fill="${c.fur}"/>`:id==='dog'?`<ellipse cx="53" cy="47" rx="12" ry="24" fill="${c.shade}"/>`:`<circle cx="54" cy="30" r="12" fill="${c.fur}"/>`;
-return `<g stroke-linecap="round" stroke-linejoin="round"><ellipse cx="57" cy="158" rx="43" ry="5" fill="#667d4c" opacity=".08"/><path d="M39 111L14 ${running?143:150}L27 151M62 115L84 145L101 147" stroke="${c.fur}" stroke-width="15" fill="none"/><path d="M31 88Q49 72 72 83L78 119L36 128Z" fill="${c.shirt}"/><path d="M35 104Q14 96 10 84M68 95Q91 112 105 102" stroke="${c.fur}" stroke-width="11" fill="none"/>${ears}<ellipse cx="72" cy="57" rx="30" ry="30" fill="${c.fur}"/><ellipse cx="94" cy="66" rx="22" ry="15" fill="#f4e3c8"/><ellipse cx="109" cy="62" rx="5" ry="4" fill="#645041"/><ellipse cx="83" cy="52" rx="3" ry="4" fill="#4d453d"/><path d="M91 75Q101 80 108 72" stroke="#645041" stroke-width="2" fill="none"/><ellipse cx="75" cy="70" rx="6" ry="4" fill="#df9b88" opacity=".35"/><path d="M44 98L67 92" stroke="#fff8" stroke-width="2"/></g>`;
+function friendlySittingScene(id) {
+  return `<g data-scene-part="sitting-scene"><rect x="87" y="75" width="70" height="44" rx="10" fill="#8aa89b" stroke="#526e60" stroke-width="3"/><path d="M86 124L84 156M151 124L154 156" stroke="#526e60" stroke-width="7" stroke-linecap="round"/><rect data-scene-part="seat" x="80" y="119" width="81" height="10" rx="4" fill="#6c9180"/><g data-scene-part="seated-character" transform="translate(80 28) scale(.68)">${friendlySeatedAnimal(id)}</g></g>`;
 }
-
-const unpolishedIcon=pictureIcon;
-pictureIcon=function(id,variant=0){
- if(['bear','rabbit','cat','dog'].includes(id)){return `<svg viewBox="0 -12 116 178" aria-hidden="true">${friendlyAnimal(id)}</svg>`;}
- let svg=unpolishedIcon(id,variant);if(variant===3||variant===4)return svg;
- // Soft grounding and lighter outlines make the existing object vocabulary easier to read.
- svg=svg.replace(/stroke-width="3"/g,'stroke-width="2.5"');
- return svg.replace(/(<svg[^>]*>)/,'$1<ellipse cx="60" cy="109" rx="35" ry="4" fill="#476444" opacity=".08"/>');
-};
-character=function(x=22,y=87,happy=true){return `<g transform="translate(${x-2} ${y-13}) scale(.56)">${friendlyAnimal('bear','stand',happy)}</g>`;};
-const oldSceneFrame=sceneFrame;
-sceneFrame=function(body){return `<svg viewBox="0 0 240 180" aria-hidden="true"><rect width="240" height="180" rx="19" fill="#f5f3e7"/><path d="M0 144Q58 132 121 145Q187 135 240 143V180H0Z" fill="#e5ebd6"/><ellipse cx="120" cy="155" rx="81" ry="8" fill="#73906b" opacity=".08"/>${body}</svg>`;};
-const oldAdultPicture=adultPicture;
-adultPicture=function(p,v=0){
- if(p?.type==='roles'){
-  const running=p.action==='chase';let a=`<g transform="translate(47 ${running?37:28}) scale(.66)">${friendlyAnimal(p.actor,['give','wash','brush'].includes(p.action)?'handsfree':'stand')}</g>`,b=`<g transform="translate(119 ${running?29:28}) scale(.66)">${friendlyAnimal(p.patient,['give','wash','brush'].includes(p.action)?'handsfree':'stand')}</g>`;
-  if(['chase','follow'].includes(p.action)){a=`<g transform="translate(7 27) scale(.68)">${friendlyMovingAnimal(p.actor,running)}</g>`;b=`<g transform="translate(144 23) scale(.68)">${friendlyMovingAnimal(p.patient,running)}</g>`;}
-  let detail='';
-  const af=(friendlyPalette[p.actor]||friendlyPalette.bear).fur,pf=(friendlyPalette[p.patient]||friendlyPalette.rabbit).fur;
-  if(['give','wash','brush'].includes(p.action))detail=`<path d="M69 93Q59 108 59 115" stroke="${af}" stroke-width="9" fill="none" stroke-linecap="round"/><path d="M172 93Q183 108 183 115M141 93Q131 108 131 115" stroke="${pf}" stroke-width="9" fill="none" stroke-linecap="round"/>`;
-  if(p.action==='give')detail+=`<path d="M101 93Q107 106 122 103" stroke="${af}" stroke-width="9" fill="none" stroke-linecap="round"/>${adultIcon(p.object||'ball',113,78,44,v)}<circle cx="122" cy="103" r="5" fill="${af}"/>`;
-  if(p.action==='wash')detail+=`<path d="M101 93Q115 107 132 106" stroke="${af}" stroke-width="9" fill="none" stroke-linecap="round"/>${adultIcon('cloth',126,88,30,v)}<circle cx="132" cy="106" r="4" fill="${af}"/>`;
-  if(p.action==='brush')detail+=`<path d="M101 93Q115 111 131 104" stroke="${af}" stroke-width="9" fill="none" stroke-linecap="round"/>${adultIcon('brush',126,83,30,v)}<circle cx="131" cy="104" r="4" fill="${af}"/>`;
-  if(['chase','follow'].includes(p.action))detail='<path d="M4 138H17M0 148H12M143 140H155" stroke="#b5c29d" stroke-width="3" stroke-linecap="round"/>';
-  let content=`<g transform="translate(0 19)">${a+b+detail}</g>`;if(p.reverse)content=`<g transform="translate(240 0) scale(-1 1)">${content}</g>`;return sceneFrame(content).replace('<svg ','<svg class="character-scene" ');
- }
- if(p?.type==='actor'){
-  const id=p.actor||'bear',action=p.action,fur=(friendlyPalette[id]||friendlyPalette.bear).fur;let b='';
-  if(action==='sleep')b=friendlyBedScene(id,v);
-  else if(action==='sit')b=friendlySittingScene(id);
-  else if(action==='jump')b=`<g transform="translate(77 20) rotate(-8 38 60) scale(.66)">${friendlyAnimal(id,'jump')}</g><path d="M70 151Q113 143 154 152" fill="none" stroke="#c1cdaa" stroke-width="3" stroke-dasharray="3 5"/>`;
-  else if(action==='hold'||action==='nothold')b=`<g transform="translate(59 29) scale(.77)">${friendlyAnimal(id,action==='hold'?'handsfree':'stand')}</g>`+(action==='hold'?`<path data-scene-part="action-arms" d="M85 105Q80 124 101 121M121 105Q144 113 132 121" stroke="${fur}" stroke-width="10" stroke-linecap="round" fill="none"/>${adultIcon(p.object||'cup',p.object==='umbrella'?65:86,p.object==='umbrella'?4:p.object==='flower'?61:84,p.object==='umbrella'?130:65,v)}<circle data-scene-part="grip" cx="101" cy="121" r="5" fill="${fur}"/><circle cx="132" cy="121" r="5" fill="${fur}"/>`:'');
-  else if(action==='push'){
-   const object=p.object||'ball',bottom={ball:100.25,car:101.25,box:106.25,train:112.25,basket:102.25,rocket:110.25,teddy:119.25,drum:109}[object]||108;
-   const contactY={drum:133,rocket:131,teddy:127,basket:125}[object]||121;
-   const prop=object==='blocks'?`<g data-scene-part="pushed-object" stroke="#46534b" stroke-width="2.2"><rect x="108" y="120" width="27" height="34" rx="4" fill="#d89565"/><rect x="135" y="128" width="27" height="26" rx="4" fill="#e2bf63"/><rect x="112" y="94" width="25" height="26" rx="4" fill="#72988a"/></g>`:adultIcon(object,101,155-bottom*83/120,83,v);
-   b=`<g transform="translate(35 43) scale(.67)">${friendlyAnimal(id,'handsfree')}</g>${prop}<path data-scene-part="pushing-arms" d="M58 109Q48 123 48 130M89 109Q101 110 112 ${contactY}" stroke="${fur}" stroke-width="10" fill="none" stroke-linecap="round"/>`;
+function friendlyAnimal(id = 'bear', pose = 'stand', happy = true) {
+  if (pose === 'sit') return friendlySeatedAnimal(id, happy);
+  if (pose === 'sleep') {
+    const c = friendlyPalette[id] || friendlyPalette.bear;
+    return `<ellipse cx="69" cy="151" rx="42" ry="5" fill="#536f4c" opacity=".1"/><ellipse cx="70" cy="127" rx="39" ry="23" fill="${c.shirt}"/><g transform="translate(2 66) scale(.6)">${friendlySleepingHead(id)}</g><ellipse cx="43" cy="144" rx="15" ry="6" fill="${c.fur}"/>`;
   }
-  else if(action==='pull')b=`${adultIcon(p.object||'ball',13,90,82,v)}<g transform="translate(142 42) scale(.70)">${friendlyAnimal(id,'handsfree')}</g><path d="M76 131L154 131" stroke="#ad8d65" stroke-width="3"/><path data-scene-part="action-arms" d="M166 111L154 131M199 111Q211 121 210 132" stroke="${fur}" stroke-width="10" fill="none" stroke-linecap="round"/>`;
-  else if(action==='carry')b=`<g transform="translate(53 32) scale(.76)">${friendlyAnimal(id,'handsfree')}</g><path d="M79 107Q64 119 67 130M115 107Q129 112 138 103" fill="none" stroke="${fur}" stroke-width="10" stroke-linecap="round"/>${adultIcon('basket',105,89,66,v)}<circle data-scene-part="grip" cx="138" cy="103" r="5" fill="${fur}"/>`;
-  else if(action==='pour')b=`<g transform="translate(18 41) scale(.7)">${friendlyAnimal(id,'handsfree')}</g><rect x="96" y="151" width="127" height="10" rx="4" fill="#ba966e"/><path d="M106 161V176M212 161V176" stroke="#8d7053" stroke-width="6"/>${adultIcon('cup',155,114,46,v)}<path data-scene-part="action-arms" d="M42 110Q33 126 34 134M75 110Q91 119 103 119" stroke="${fur}" stroke-width="10" fill="none" stroke-linecap="round"/><g transform="rotate(22 132 120)"><path d="M111 100H147L153 138H115Z" fill="#88aaa3" stroke="#48685a" stroke-width="2"/><path d="M147 100L161 96L157 112" fill="#88aaa3" stroke="#48685a" stroke-width="2"/><path d="M112 107Q91 101 99 122L114 126" fill="none" stroke="#48685a" stroke-width="5"/></g><circle cx="103" cy="119" r="5" fill="${fur}"/><path d="M167 111Q176 117 177 128" stroke="#7eaab7" stroke-width="3" fill="none" stroke-dasharray="3 3"/>`;
-  else if(action==='wash')b=`<g transform="translate(48 41) scale(.7)">${friendlyAnimal(id,'handsfree')}</g><path d="M88 144V174M187 144V174" stroke="#799b9a" stroke-width="7"/><path d="M85 130H193Q184 155 139 155Q95 155 85 130Z" fill="#bddad6" stroke="#789e9c" stroke-width="2"/><path d="M170 130V94Q170 84 158 84H133V94" fill="none" stroke="#879ba1" stroke-width="7"/><path d="M133 96V124" stroke="#8fbacb" stroke-width="4" stroke-dasharray="4 4"/><path data-scene-part="action-arms" d="M72 110Q81 132 112 129M105 110Q117 114 131 128" stroke="${fur}" stroke-width="10" fill="none" stroke-linecap="round"/><circle cx="121" cy="128" r="5" fill="#fff"/><circle cx="129" cy="125" r="4" fill="#fff"/>`;
-  else if(action==='brush')b=`<g transform="translate(30 43) scale(.68)">${friendlyAnimal(id,'handsfree')}</g><rect x="110" y="131" width="91" height="10" rx="4" fill="#ba966e"/><path d="M118 141V173M191 141V173" stroke="#8d7053" stroke-width="6"/>${adultIcon('boot',115,78,68,v)}<path data-scene-part="action-arms" d="M53 110Q43 122 43 134M85 110Q95 128 111 124" stroke="${fur}" stroke-width="10" fill="none" stroke-linecap="round"/>${adultIcon('brush',96,91,50,v)}<circle cx="111" cy="124" r="5" fill="${fur}"/>`;
-  else return oldAdultPicture(p,v).replace('<svg ','<svg class="character-scene" ');
-  return sceneFrame(b).replace('<svg ','<svg class="character-scene" ');
- }
- return oldAdultPicture(p,v);
-};
-function friendlyCover(key){
- let b='';
- if(key==='visual')b=`<g transform="translate(32 15) scale(.78)">${friendlyAnimal('rabbit')}</g><g transform="translate(148 23) scale(.72)">${friendlyAnimal('bear')}</g><rect x="80" y="116" width="78" height="37" rx="8" fill="#ead1a3"/>${iconGroup('flower',78,98,39)}${iconGroup('flower',116,98,39)}`;
- if(key==='events')b=`<g transform="translate(14 14) scale(.76)">${friendlyAnimal('rabbit')}</g>${iconGroup('wateringcan',103,63,72)}${iconGroup('sprout',166,91,67)}<path d="M159 107Q175 110 184 121" stroke="#8bb2bc" stroke-width="3" stroke-dasharray="3 4" fill="none"/>`;
- if(key==='stories')b=`<g transform="translate(13 21) scale(.78)">${friendlyAnimal('bear')}</g><g transform="translate(147 19) scale(.76)">${friendlyAnimal('rabbit')}</g>${iconGroup('book',78,99,82)}`;
- if(key==='meaning')b=`<g transform="translate(22 14) scale(.78)">${friendlyAnimal('cat')}</g>${iconGroup('basket',125,84,84)}${iconGroup('apple',131,57,47)}${iconGroup('carrot',166,62,42)}`;
- if(key==='words')b=`<g transform="translate(17 17) scale(.78)">${friendlyAnimal('bear')}</g><rect x="119" y="28" width="83" height="73" rx="17" fill="#fffdf6"/>${iconGroup('apple',132,36,56)}<path d="M128 97L115 113L146 101" fill="#fffdf6"/>${iconGroup('cup',119,111,48)}${iconGroup('ball',172,111,44)}`;
- if(key==='sentences')return adultPicture({type:'roles',actor:'bear',patient:'rabbit',action:'give',object:'ball'});
- if(key==='sounds')b=`<g transform="translate(27 13) scale(.78)">${friendlyAnimal('rabbit')}</g>${iconGroup('bee',135,22,67)}<circle cx="133" cy="137" r="10" fill="#c5d5b1"/><circle cx="163" cy="137" r="10" fill="#e1b18b"/><circle cx="193" cy="137" r="10" fill="#dfcb83"/>`;
- return sceneFrame(b);
+  const c = friendlyPalette[id] || friendlyPalette.bear;
+  let ears =
+    id === 'rabbit'
+      ? `<ellipse cx="40" cy="19" rx="10" ry="30" fill="${c.fur}"/><ellipse cx="75" cy="19" rx="10" ry="30" fill="${c.fur}"/><ellipse cx="40" cy="19" rx="4" ry="21" fill="#e5b9a3"/><ellipse cx="75" cy="19" rx="4" ry="21" fill="#e5b9a3"/>`
+      : id === 'cat'
+        ? `<path d="M22 48L20 15L48 35M68 35L97 15L93 53" fill="${c.fur}"/><path d="M27 30L29 43L38 36M81 36L90 29L88 44" fill="#e5b9a3"/>`
+        : id === 'dog'
+          ? `<ellipse cx="20" cy="58" rx="13" ry="26" fill="${c.shade}"/><ellipse cx="94" cy="58" rx="13" ry="26" fill="${c.shade}"/>`
+          : `<circle cx="27" cy="32" r="14" fill="${c.fur}"/><circle cx="88" cy="32" r="14" fill="${c.fur}"/><circle cx="27" cy="32" r="7" fill="${c.shade}"/><circle cx="88" cy="32" r="7" fill="${c.shade}"/>`;
+  const sleeping = pose === 'sleep';
+  let body = `<ellipse cx="58" cy="158" rx="40" ry="6" fill="#536f4c" opacity=".10"/><path d="M37 119L32 150Q43 160 53 149L57 132L66 149Q80 158 87 148L79 118" fill="${c.fur}"/><path d="M31 91Q58 77 85 93L83 131Q58 145 32 131Z" fill="${c.shirt}"/><path d="M34 98Q19 107 18 124M81 98Q96 110 98 121" fill="none" stroke="${c.fur}" stroke-width="13" stroke-linecap="round"/>${ears}<ellipse cx="58" cy="64" rx="39" ry="36" fill="${c.fur}"/><ellipse cx="58" cy="78" rx="22" ry="16" fill="#f5e5c9"/><ellipse cx="32" cy="75" rx="7" ry="4" fill="#dc8f83" opacity=".35"/><ellipse cx="84" cy="75" rx="7" ry="4" fill="#dc8f83" opacity=".35"/>${sleeping ? '<path d="M38 64Q44 70 49 64M68 64Q74 70 79 64" fill="none" stroke="#4c443c" stroke-width="2.6"/>' : '<ellipse cx="44" cy="65" rx="3" ry="4" fill="#4c443c"/><ellipse cx="73" cy="65" rx="3" ry="4" fill="#4c443c"/><circle cx="45" cy="64" r=".8" fill="white"/><circle cx="74" cy="64" r=".8" fill="white"/>'}<path d="M53 75Q58 70 64 75L59 81Z" fill="#645041"/><path d="${happy ? 'M51 84Q59 92 67 84' : 'M52 89Q59 84 66 89'}" fill="none" stroke="#645041" stroke-width="2" stroke-linecap="round"/><path d="M40 104H75M56 101V131" stroke="#fff8" stroke-width="2" fill="none"/>`;
+  if (pose === 'handsfree')
+    body = body.replace(/<path d="M34 98Q19 107 18 124M81 98Q96 110 98 121"[^>]*\/>/, '');
+  if (pose === 'jump') {
+    body = body
+      .replace(/<ellipse cx="58" cy="158"[^>]*\/>/, '')
+      .replace(
+        'M37 119L32 150Q43 160 53 149L57 132L66 149Q80 158 87 148L79 118',
+        'M37 119L23 134Q19 142 31 145L52 132L65 141Q81 147 86 135L79 118'
+      )
+      .replace('M34 98Q19 107 18 124M81 98Q96 110 98 121', 'M34 98Q15 89 12 74M81 98Q101 87 104 71');
+  }
+  if (pose === 'hold')
+    body = body.replace(
+      'M34 98Q19 107 18 124M81 98Q96 110 98 121',
+      'M34 98Q27 118 51 121M81 98Q92 119 67 121'
+    );
+  return `<g stroke-linecap="round" stroke-linejoin="round">${body}</g>`;
 }
-function friendlyMascot(){return `<svg viewBox="0 -12 116 178" aria-hidden="true">${friendlyAnimal('rabbit')}</svg>`;}
+
+function friendlyMovingAnimal(id, running = true) {
+  const c = friendlyPalette[id] || friendlyPalette.bear;
+  const ears =
+    id === 'rabbit'
+      ? `<ellipse cx="62" cy="17" rx="8" ry="25" fill="${c.fur}"/><ellipse cx="80" cy="17" rx="8" ry="25" fill="${c.fur}"/>`
+      : id === 'cat'
+        ? `<path d="M49 43L48 12L70 33L84 11L91 45" fill="${c.fur}"/>`
+        : id === 'dog'
+          ? `<ellipse cx="53" cy="47" rx="12" ry="24" fill="${c.shade}"/>`
+          : `<circle cx="54" cy="30" r="12" fill="${c.fur}"/>`;
+  return `<g stroke-linecap="round" stroke-linejoin="round"><ellipse cx="57" cy="158" rx="43" ry="5" fill="#667d4c" opacity=".08"/><path d="M39 111L14 ${running ? 143 : 150}L27 151M62 115L84 145L101 147" stroke="${c.fur}" stroke-width="15" fill="none"/><path d="M31 88Q49 72 72 83L78 119L36 128Z" fill="${c.shirt}"/><path d="M35 104Q14 96 10 84M68 95Q91 112 105 102" stroke="${c.fur}" stroke-width="11" fill="none"/>${ears}<ellipse cx="72" cy="57" rx="30" ry="30" fill="${c.fur}"/><ellipse cx="94" cy="66" rx="22" ry="15" fill="#f4e3c8"/><ellipse cx="109" cy="62" rx="5" ry="4" fill="#645041"/><ellipse cx="83" cy="52" rx="3" ry="4" fill="#4d453d"/><path d="M91 75Q101 80 108 72" stroke="#645041" stroke-width="2" fill="none"/><ellipse cx="75" cy="70" rx="6" ry="4" fill="#df9b88" opacity=".35"/><path d="M44 98L67 92" stroke="#fff8" stroke-width="2"/></g>`;
+}
+
+const unpolishedIcon = pictureIcon;
+pictureIcon = function (id, variant = 0) {
+  if (['bear', 'rabbit', 'cat', 'dog'].includes(id)) {
+    return `<svg viewBox="0 -12 116 178" aria-hidden="true">${friendlyAnimal(id)}</svg>`;
+  }
+  let svg = unpolishedIcon(id, variant);
+  if (variant === 3 || variant === 4) return svg;
+  // Soft grounding and lighter outlines make the existing object vocabulary easier to read.
+  svg = svg.replace(/stroke-width="3"/g, 'stroke-width="2.5"');
+  return svg.replace(
+    /(<svg[^>]*>)/,
+    '$1<ellipse cx="60" cy="109" rx="35" ry="4" fill="#476444" opacity=".08"/>'
+  );
+};
+character = function (x = 22, y = 87, happy = true) {
+  return `<g transform="translate(${x - 2} ${y - 13}) scale(.56)">${friendlyAnimal('bear', 'stand', happy)}</g>`;
+};
+const oldSceneFrame = sceneFrame;
+sceneFrame = function (body) {
+  return `<svg viewBox="0 0 240 180" aria-hidden="true"><rect width="240" height="180" rx="19" fill="#f5f3e7"/><path d="M0 144Q58 132 121 145Q187 135 240 143V180H0Z" fill="#e5ebd6"/><ellipse cx="120" cy="155" rx="81" ry="8" fill="#73906b" opacity=".08"/>${body}</svg>`;
+};
+const oldAdultPicture = adultPicture;
+adultPicture = function (p, v = 0) {
+  if (p?.type === 'roles') {
+    const running = p.action === 'chase';
+    let a = `<g transform="translate(47 ${running ? 37 : 28}) scale(.66)">${friendlyAnimal(p.actor, ['give', 'wash', 'brush'].includes(p.action) ? 'handsfree' : 'stand')}</g>`,
+      b = `<g transform="translate(119 ${running ? 29 : 28}) scale(.66)">${friendlyAnimal(p.patient, ['give', 'wash', 'brush'].includes(p.action) ? 'handsfree' : 'stand')}</g>`;
+    if (['chase', 'follow'].includes(p.action)) {
+      a = `<g transform="translate(7 27) scale(.68)">${friendlyMovingAnimal(p.actor, running)}</g>`;
+      b = `<g transform="translate(144 23) scale(.68)">${friendlyMovingAnimal(p.patient, running)}</g>`;
+    }
+    let detail = '';
+    const af = (friendlyPalette[p.actor] || friendlyPalette.bear).fur,
+      pf = (friendlyPalette[p.patient] || friendlyPalette.rabbit).fur;
+    if (['give', 'wash', 'brush'].includes(p.action))
+      detail = `<path d="M69 93Q59 108 59 115" stroke="${af}" stroke-width="9" fill="none" stroke-linecap="round"/><path d="M172 93Q183 108 183 115M141 93Q131 108 131 115" stroke="${pf}" stroke-width="9" fill="none" stroke-linecap="round"/>`;
+    if (p.action === 'give')
+      detail += `<path d="M101 93Q107 106 122 103" stroke="${af}" stroke-width="9" fill="none" stroke-linecap="round"/>${adultIcon(p.object || 'ball', 113, 78, 44, v)}<circle cx="122" cy="103" r="5" fill="${af}"/>`;
+    if (p.action === 'wash')
+      detail += `<path d="M101 93Q115 107 132 106" stroke="${af}" stroke-width="9" fill="none" stroke-linecap="round"/>${adultIcon('cloth', 126, 88, 30, v)}<circle cx="132" cy="106" r="4" fill="${af}"/>`;
+    if (p.action === 'brush')
+      detail += `<path d="M101 93Q115 111 131 104" stroke="${af}" stroke-width="9" fill="none" stroke-linecap="round"/>${adultIcon('brush', 126, 83, 30, v)}<circle cx="131" cy="104" r="4" fill="${af}"/>`;
+    if (['chase', 'follow'].includes(p.action))
+      detail =
+        '<path d="M4 138H17M0 148H12M143 140H155" stroke="#b5c29d" stroke-width="3" stroke-linecap="round"/>';
+    let content = `<g transform="translate(0 19)">${a + b + detail}</g>`;
+    if (p.reverse) content = `<g transform="translate(240 0) scale(-1 1)">${content}</g>`;
+    return sceneFrame(content).replace('<svg ', '<svg class="character-scene" ');
+  }
+  if (p?.type === 'actor') {
+    const id = p.actor || 'bear',
+      action = p.action,
+      fur = (friendlyPalette[id] || friendlyPalette.bear).fur;
+    let b = '';
+    if (action === 'sleep') b = friendlyBedScene(id, v);
+    else if (action === 'sit') b = friendlySittingScene(id);
+    else if (action === 'jump')
+      b = `<g transform="translate(77 20) rotate(-8 38 60) scale(.66)">${friendlyAnimal(id, 'jump')}</g><path d="M70 151Q113 143 154 152" fill="none" stroke="#c1cdaa" stroke-width="3" stroke-dasharray="3 5"/>`;
+    else if (action === 'hold' || action === 'nothold')
+      b =
+        `<g transform="translate(59 29) scale(.77)">${friendlyAnimal(id, action === 'hold' ? 'handsfree' : 'stand')}</g>` +
+        (action === 'hold'
+          ? `<path data-scene-part="action-arms" d="M85 105Q80 124 101 121M121 105Q144 113 132 121" stroke="${fur}" stroke-width="10" stroke-linecap="round" fill="none"/>${adultIcon(p.object || 'cup', p.object === 'umbrella' ? 65 : 86, p.object === 'umbrella' ? 4 : p.object === 'flower' ? 61 : 84, p.object === 'umbrella' ? 130 : 65, v)}<circle data-scene-part="grip" cx="101" cy="121" r="5" fill="${fur}"/><circle cx="132" cy="121" r="5" fill="${fur}"/>`
+          : '');
+    else if (action === 'push') {
+      const object = p.object || 'ball',
+        bottom =
+          {
+            ball: 100.25,
+            car: 101.25,
+            box: 106.25,
+            train: 112.25,
+            basket: 102.25,
+            rocket: 110.25,
+            teddy: 119.25,
+            drum: 109
+          }[object] || 108;
+      const contactY = { drum: 133, rocket: 131, teddy: 127, basket: 125 }[object] || 121;
+      const prop =
+        object === 'blocks'
+          ? `<g data-scene-part="pushed-object" stroke="#46534b" stroke-width="2.2"><rect x="108" y="120" width="27" height="34" rx="4" fill="#d89565"/><rect x="135" y="128" width="27" height="26" rx="4" fill="#e2bf63"/><rect x="112" y="94" width="25" height="26" rx="4" fill="#72988a"/></g>`
+          : adultIcon(object, 101, 155 - (bottom * 83) / 120, 83, v);
+      b = `<g transform="translate(35 43) scale(.67)">${friendlyAnimal(id, 'handsfree')}</g>${prop}<path data-scene-part="pushing-arms" d="M58 109Q48 123 48 130M89 109Q101 110 112 ${contactY}" stroke="${fur}" stroke-width="10" fill="none" stroke-linecap="round"/>`;
+    } else if (action === 'pull')
+      b = `${adultIcon(p.object || 'ball', 13, 90, 82, v)}<g transform="translate(142 42) scale(.70)">${friendlyAnimal(id, 'handsfree')}</g><path d="M76 131L154 131" stroke="#ad8d65" stroke-width="3"/><path data-scene-part="action-arms" d="M166 111L154 131M199 111Q211 121 210 132" stroke="${fur}" stroke-width="10" fill="none" stroke-linecap="round"/>`;
+    else if (action === 'carry')
+      b = `<g transform="translate(53 32) scale(.76)">${friendlyAnimal(id, 'handsfree')}</g><path d="M79 107Q64 119 67 130M115 107Q129 112 138 103" fill="none" stroke="${fur}" stroke-width="10" stroke-linecap="round"/>${adultIcon('basket', 105, 89, 66, v)}<circle data-scene-part="grip" cx="138" cy="103" r="5" fill="${fur}"/>`;
+    else if (action === 'pour')
+      b = `<g transform="translate(18 41) scale(.7)">${friendlyAnimal(id, 'handsfree')}</g><rect x="96" y="151" width="127" height="10" rx="4" fill="#ba966e"/><path d="M106 161V176M212 161V176" stroke="#8d7053" stroke-width="6"/>${adultIcon('cup', 155, 114, 46, v)}<path data-scene-part="action-arms" d="M42 110Q33 126 34 134M75 110Q91 119 103 119" stroke="${fur}" stroke-width="10" fill="none" stroke-linecap="round"/><g transform="rotate(22 132 120)"><path d="M111 100H147L153 138H115Z" fill="#88aaa3" stroke="#48685a" stroke-width="2"/><path d="M147 100L161 96L157 112" fill="#88aaa3" stroke="#48685a" stroke-width="2"/><path d="M112 107Q91 101 99 122L114 126" fill="none" stroke="#48685a" stroke-width="5"/></g><circle cx="103" cy="119" r="5" fill="${fur}"/><path d="M167 111Q176 117 177 128" stroke="#7eaab7" stroke-width="3" fill="none" stroke-dasharray="3 3"/>`;
+    else if (action === 'wash')
+      b = `<g transform="translate(48 41) scale(.7)">${friendlyAnimal(id, 'handsfree')}</g><path d="M88 144V174M187 144V174" stroke="#799b9a" stroke-width="7"/><path d="M85 130H193Q184 155 139 155Q95 155 85 130Z" fill="#bddad6" stroke="#789e9c" stroke-width="2"/><path d="M170 130V94Q170 84 158 84H133V94" fill="none" stroke="#879ba1" stroke-width="7"/><path d="M133 96V124" stroke="#8fbacb" stroke-width="4" stroke-dasharray="4 4"/><path data-scene-part="action-arms" d="M72 110Q81 132 112 129M105 110Q117 114 131 128" stroke="${fur}" stroke-width="10" fill="none" stroke-linecap="round"/><circle cx="121" cy="128" r="5" fill="#fff"/><circle cx="129" cy="125" r="4" fill="#fff"/>`;
+    else if (action === 'brush')
+      b = `<g transform="translate(30 43) scale(.68)">${friendlyAnimal(id, 'handsfree')}</g><rect x="110" y="131" width="91" height="10" rx="4" fill="#ba966e"/><path d="M118 141V173M191 141V173" stroke="#8d7053" stroke-width="6"/>${adultIcon('boot', 115, 78, 68, v)}<path data-scene-part="action-arms" d="M53 110Q43 122 43 134M85 110Q95 128 111 124" stroke="${fur}" stroke-width="10" fill="none" stroke-linecap="round"/>${adultIcon('brush', 96, 91, 50, v)}<circle cx="111" cy="124" r="5" fill="${fur}"/>`;
+    else return oldAdultPicture(p, v).replace('<svg ', '<svg class="character-scene" ');
+    return sceneFrame(b).replace('<svg ', '<svg class="character-scene" ');
+  }
+  return oldAdultPicture(p, v);
+};
+function friendlyCover(key) {
+  let b = '';
+  if (key === 'visual')
+    b = `<g transform="translate(32 15) scale(.78)">${friendlyAnimal('rabbit')}</g><g transform="translate(148 23) scale(.72)">${friendlyAnimal('bear')}</g><rect x="80" y="116" width="78" height="37" rx="8" fill="#ead1a3"/>${iconGroup('flower', 78, 98, 39)}${iconGroup('flower', 116, 98, 39)}`;
+  if (key === 'events')
+    b = `<g transform="translate(14 14) scale(.76)">${friendlyAnimal('rabbit')}</g>${iconGroup('wateringcan', 103, 63, 72)}${iconGroup('sprout', 166, 91, 67)}<path d="M159 107Q175 110 184 121" stroke="#8bb2bc" stroke-width="3" stroke-dasharray="3 4" fill="none"/>`;
+  if (key === 'stories')
+    b = `<g transform="translate(13 21) scale(.78)">${friendlyAnimal('bear')}</g><g transform="translate(147 19) scale(.76)">${friendlyAnimal('rabbit')}</g>${iconGroup('book', 78, 99, 82)}`;
+  if (key === 'meaning')
+    b = `<g transform="translate(22 14) scale(.78)">${friendlyAnimal('cat')}</g>${iconGroup('basket', 125, 84, 84)}${iconGroup('apple', 131, 57, 47)}${iconGroup('carrot', 166, 62, 42)}`;
+  if (key === 'words')
+    b = `<g transform="translate(17 17) scale(.78)">${friendlyAnimal('bear')}</g><rect x="119" y="28" width="83" height="73" rx="17" fill="#fffdf6"/>${iconGroup('apple', 132, 36, 56)}<path d="M128 97L115 113L146 101" fill="#fffdf6"/>${iconGroup('cup', 119, 111, 48)}${iconGroup('ball', 172, 111, 44)}`;
+  if (key === 'sentences')
+    return adultPicture({ type: 'roles', actor: 'bear', patient: 'rabbit', action: 'give', object: 'ball' });
+  if (key === 'sounds')
+    b = `<g transform="translate(27 13) scale(.78)">${friendlyAnimal('rabbit')}</g>${iconGroup('bee', 135, 22, 67)}<circle cx="133" cy="137" r="10" fill="#c5d5b1"/><circle cx="163" cy="137" r="10" fill="#e1b18b"/><circle cx="193" cy="137" r="10" fill="#dfcb83"/>`;
+  return sceneFrame(b);
+}
+function friendlyMascot() {
+  return `<svg viewBox="0 -12 116 178" aria-hidden="true">${friendlyAnimal('rabbit')}</svg>`;
+}

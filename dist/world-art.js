@@ -1,182 +1,987 @@
 'use strict';
 // Original reusable SVG artwork. 24 stories × 4 moments × 12 characters × 8 scenery arrangements.
 // These are 9,216 composed picture variants, not 9,216 individually hand-drawn illustrations.
-const worldCharacters=[
- {id:'maya',name:'Maya',skin:'#bd784e',hair:'#302822',shirt:'#e77965',style:'curls'},
- {id:'leo',name:'Leo',skin:'#f2c298',hair:'#8b502c',shirt:'#438fba',style:'short'},
- {id:'amina',name:'Amina',skin:'#764d39',hair:'#28252c',shirt:'#e3ae3d',style:'puffs'},
- {id:'sam',name:'Sam',skin:'#d99a6e',hair:'#372a26',shirt:'#5f9b7b',style:'short',chair:true},
- {id:'mei',name:'Mei',skin:'#eac19b',hair:'#292d37',shirt:'#ae79ad',style:'bobs'},
- {id:'noor',name:'Noor',skin:'#b77d54',hair:'#40302c',shirt:'#3ca5a2',style:'curls',glasses:true},
- {id:'eli',name:'Eli',skin:'#f3d1ae',hair:'#cf9758',shirt:'#df8050',style:'short',glasses:true},
- {id:'zara',name:'Zara',skin:'#8c5d43',hair:'#282c34',shirt:'#658ecc',style:'puffs',chair:true},
- {id:'rabbit',name:'Bunny',animal:'rabbit'}, {id:'bear',name:'Bear',animal:'bear'},
- {id:'cat',name:'Cat',animal:'cat'}, {id:'dog',name:'Dog',animal:'dog'}
+const worldCharacters = [
+  { id: 'maya', name: 'Maya', skin: '#bd784e', hair: '#302822', shirt: '#e77965', style: 'curls' },
+  { id: 'leo', name: 'Leo', skin: '#f2c298', hair: '#8b502c', shirt: '#438fba', style: 'short' },
+  { id: 'amina', name: 'Amina', skin: '#764d39', hair: '#28252c', shirt: '#e3ae3d', style: 'puffs' },
+  { id: 'sam', name: 'Sam', skin: '#d99a6e', hair: '#372a26', shirt: '#5f9b7b', style: 'short', chair: true },
+  { id: 'mei', name: 'Mei', skin: '#eac19b', hair: '#292d37', shirt: '#ae79ad', style: 'bobs' },
+  {
+    id: 'noor',
+    name: 'Noor',
+    skin: '#b77d54',
+    hair: '#40302c',
+    shirt: '#3ca5a2',
+    style: 'curls',
+    glasses: true
+  },
+  {
+    id: 'eli',
+    name: 'Eli',
+    skin: '#f3d1ae',
+    hair: '#cf9758',
+    shirt: '#df8050',
+    style: 'short',
+    glasses: true
+  },
+  {
+    id: 'zara',
+    name: 'Zara',
+    skin: '#8c5d43',
+    hair: '#282c34',
+    shirt: '#658ecc',
+    style: 'puffs',
+    chair: true
+  },
+  { id: 'rabbit', name: 'Bunny', animal: 'rabbit' },
+  { id: 'bear', name: 'Bear', animal: 'bear' },
+  { id: 'cat', name: 'Cat', animal: 'cat' },
+  { id: 'dog', name: 'Dog', animal: 'dog' }
 ];
-const worldStories=[
- {id:'seed',title:'A seed becomes a flower',place:'garden',steps:['A pot of soil is ready.','A seed goes into the soil.','The little plant gets water.','A bright flower has grown.'],objects:['seed','wateringcan','flower']},
- {id:'rain',title:'A rainy-day adventure',place:'village',steps:['Dark clouds arrive.','Raindrops begin to fall.','An umbrella keeps our friend dry.','The rain stops and a rainbow appears.'],objects:['umbrella','coat','shoe']},
- {id:'picnic',title:'A picnic for two',place:'meadow',steps:['A picnic blanket is spread out.','Fruit and cups go on the blanket.','A friend comes to share the picnic.','The picnic things are packed away.'],objects:['basket','apple','cup']},
- {id:'paint',title:'A picture for a friend',place:'studio',steps:['A blank sheet waits on the easel.','Our friend chooses a paintbrush.','A colourful flower is painted.','The finished picture is shared.'],objects:['paper','paintbrush','drawing']},
- {id:'bedtime',title:'A cosy bedtime',place:'bedroom',steps:['Our friend finds a favourite book.','The storybook is opened.','The book rests on the bedside table.','Our friend rests under a blanket.'],objects:['book','teddy','blanket']},
- {id:'tidy',title:'A home for every toy',place:'playroom',steps:['Toys are on the rug.','A toy goes into the open box.','The other toys go in too.','The toys are tidy and the rug is clear.'],objects:['ball','teddy','blocks']},
- {id:'fruitwash',title:'Wash an apple',place:'kitchen',steps:['An apple is ready to wash.','The apple is held under water.','A cloth dries the apple.','The clean apple rests on a plate.'],objects:['apple','cloth','plate']},
- {id:'kite',title:'Up goes the kite',place:'hill',steps:['The kite lies on the grass.','Our friend holds the kite string.','The wind lifts the kite.','The kite flies high in the sky.'],objects:['kite','hat','scarf']},
- {id:'post',title:'A letter for a friend',place:'village',steps:['A picture goes into an envelope.','The envelope is closed.','Our friend posts the envelope.','A friend finds the envelope in the mailbox.'],objects:['envelope','drawing','pencil']},
- {id:'bird',title:'A bird builds a nest',place:'woodland',steps:['A bird finds a little twig.','The twig goes onto a branch.','More twigs make a nest.','The bird settles into its finished nest.'],objects:['twig','leaf','feather']},
- {id:'blocks',title:'Build a little tower',place:'playroom',steps:['Three blocks wait on the mat.','One block makes the bottom.','Another block goes on top.','The last block finishes the tower.'],objects:['blocks','ball','puzzle']},
- {id:'beach',title:'A sandcastle by the sea',place:'beach',steps:['A bucket and spade wait in the sand.','The bucket is filled with sand.','The bucket turns over.','The bucket lifts to reveal a sandcastle.'],objects:['bucket','shovel','shell']},
- {id:'puzzle',title:'The last puzzle piece',place:'playroom',steps:['One piece is missing from the puzzle.','Our friend finds the missing piece.','The piece moves into the empty space.','The picture is complete.'],objects:['puzzle','piece','drawing']},
- {id:'books',title:'A visit to the book corner',place:'library',steps:['Our friend looks at the books.','One book is chosen from the shelf.','The book is enjoyed in a cosy chair.','The book goes back on the shelf.'],objects:['book','bookmark','teddy']},
- {id:'flowers',title:'Flowers for the table',place:'garden',steps:['A vase waits on the table.','One flower goes into the vase.','Two more flowers join it.','The flowers brighten the table.'],objects:['vase','flower','wateringcan']},
- {id:'bubbles',title:'Little floating bubbles',place:'meadow',steps:['A bubble wand is ready.','The wand dips into bubble mixture.','Bubbles float above the grass.','One big bubble drifts towards the tree.'],objects:['bubblewand','bottle','cloth']},
- {id:'music',title:'A little picture rhythm',place:'music',steps:['Two drums are ready.','Our friend taps the small drum.','Our friend taps the big drum.','A friend joins the little band.'],objects:['drum','shaker','tambourine']},
- {id:'puppet',title:'A tiny puppet show',place:'studio',steps:['The theatre curtains are closed.','The curtains open.','A puppet appears above the stage.','Two puppets greet each other.'],objects:['puppet','cloth','teddy']},
- {id:'leaves',title:'An autumn collection',place:'woodland',steps:['Leaves fall beside an empty basket.','One leaf goes into the basket.','More leaves fill the basket.','The leaves make a colourful circle on the ground.'],objects:['leaf','basket','tree']},
- {id:'carrot',title:'A carrot from the garden',place:'garden',steps:['Green leaves grow above the soil.','Our friend holds the carrot leaves.','The carrot comes out of the soil.','The carrot rests in a basket.'],objects:['carrot','basket','wateringcan']},
- {id:'coat',title:'Ready to go outside',place:'hallway',steps:['Our friend gets ready by the door.','A coat is taken from the hook.','Our friend puts on the coat.','Our friend is ready at the open door.'],objects:['coat','shoe','hat']},
- {id:'train',title:'A little train journey',place:'station',steps:['The little train waits at the station.','Our friend gets ready for the journey.','The train leaves the platform.','The train arrives at the next station.'],objects:['ticket','book','bottle']},
- {id:'pond',title:'A paper boat on the pond',place:'pond',steps:['A paper boat waits beside the pond.','Our friend puts the boat on the water.','The boat floats past a lily pad.','A duck swims beside the floating boat.'],objects:['boat','paper','leaf']},
- {id:'birthday',title:'A celebration for a friend',place:'kitchen',steps:['A plain cake waits on the table.','Fruit decorates the top.','A little flag finishes the cake.','Friends gather to share the celebration.'],objects:['cake','strawberry','plate']}
+const worldStories = [
+  {
+    id: 'seed',
+    title: 'A seed becomes a flower',
+    place: 'garden',
+    steps: [
+      'A pot of soil is ready.',
+      'A seed goes into the soil.',
+      'The little plant gets water.',
+      'A bright flower has grown.'
+    ],
+    objects: ['seed', 'wateringcan', 'flower']
+  },
+  {
+    id: 'rain',
+    title: 'A rainy-day adventure',
+    place: 'village',
+    steps: [
+      'Dark clouds arrive.',
+      'Raindrops begin to fall.',
+      'An umbrella keeps our friend dry.',
+      'The rain stops and a rainbow appears.'
+    ],
+    objects: ['umbrella', 'coat', 'shoe']
+  },
+  {
+    id: 'picnic',
+    title: 'A picnic for two',
+    place: 'meadow',
+    steps: [
+      'A picnic blanket is spread out.',
+      'Fruit and cups go on the blanket.',
+      'A friend comes to share the picnic.',
+      'The picnic things are packed away.'
+    ],
+    objects: ['basket', 'apple', 'cup']
+  },
+  {
+    id: 'paint',
+    title: 'A picture for a friend',
+    place: 'studio',
+    steps: [
+      'A blank sheet waits on the easel.',
+      'Our friend chooses a paintbrush.',
+      'A colourful flower is painted.',
+      'The finished picture is shared.'
+    ],
+    objects: ['paper', 'paintbrush', 'drawing']
+  },
+  {
+    id: 'bedtime',
+    title: 'A cosy bedtime',
+    place: 'bedroom',
+    steps: [
+      'Our friend finds a favourite book.',
+      'The storybook is opened.',
+      'The book rests on the bedside table.',
+      'Our friend rests under a blanket.'
+    ],
+    objects: ['book', 'teddy', 'blanket']
+  },
+  {
+    id: 'tidy',
+    title: 'A home for every toy',
+    place: 'playroom',
+    steps: [
+      'Toys are on the rug.',
+      'A toy goes into the open box.',
+      'The other toys go in too.',
+      'The toys are tidy and the rug is clear.'
+    ],
+    objects: ['ball', 'teddy', 'blocks']
+  },
+  {
+    id: 'fruitwash',
+    title: 'Wash an apple',
+    place: 'kitchen',
+    steps: [
+      'An apple is ready to wash.',
+      'The apple is held under water.',
+      'A cloth dries the apple.',
+      'The clean apple rests on a plate.'
+    ],
+    objects: ['apple', 'cloth', 'plate']
+  },
+  {
+    id: 'kite',
+    title: 'Up goes the kite',
+    place: 'hill',
+    steps: [
+      'The kite lies on the grass.',
+      'Our friend holds the kite string.',
+      'The wind lifts the kite.',
+      'The kite flies high in the sky.'
+    ],
+    objects: ['kite', 'hat', 'scarf']
+  },
+  {
+    id: 'post',
+    title: 'A letter for a friend',
+    place: 'village',
+    steps: [
+      'A picture goes into an envelope.',
+      'The envelope is closed.',
+      'Our friend posts the envelope.',
+      'A friend finds the envelope in the mailbox.'
+    ],
+    objects: ['envelope', 'drawing', 'pencil']
+  },
+  {
+    id: 'bird',
+    title: 'A bird builds a nest',
+    place: 'woodland',
+    steps: [
+      'A bird finds a little twig.',
+      'The twig goes onto a branch.',
+      'More twigs make a nest.',
+      'The bird settles into its finished nest.'
+    ],
+    objects: ['twig', 'leaf', 'feather']
+  },
+  {
+    id: 'blocks',
+    title: 'Build a little tower',
+    place: 'playroom',
+    steps: [
+      'Three blocks wait on the mat.',
+      'One block makes the bottom.',
+      'Another block goes on top.',
+      'The last block finishes the tower.'
+    ],
+    objects: ['blocks', 'ball', 'puzzle']
+  },
+  {
+    id: 'beach',
+    title: 'A sandcastle by the sea',
+    place: 'beach',
+    steps: [
+      'A bucket and spade wait in the sand.',
+      'The bucket is filled with sand.',
+      'The bucket turns over.',
+      'The bucket lifts to reveal a sandcastle.'
+    ],
+    objects: ['bucket', 'shovel', 'shell']
+  },
+  {
+    id: 'puzzle',
+    title: 'The last puzzle piece',
+    place: 'playroom',
+    steps: [
+      'One piece is missing from the puzzle.',
+      'Our friend finds the missing piece.',
+      'The piece moves into the empty space.',
+      'The picture is complete.'
+    ],
+    objects: ['puzzle', 'piece', 'drawing']
+  },
+  {
+    id: 'books',
+    title: 'A visit to the book corner',
+    place: 'library',
+    steps: [
+      'Our friend looks at the books.',
+      'One book is chosen from the shelf.',
+      'The book is enjoyed in a cosy chair.',
+      'The book goes back on the shelf.'
+    ],
+    objects: ['book', 'bookmark', 'teddy']
+  },
+  {
+    id: 'flowers',
+    title: 'Flowers for the table',
+    place: 'garden',
+    steps: [
+      'A vase waits on the table.',
+      'One flower goes into the vase.',
+      'Two more flowers join it.',
+      'The flowers brighten the table.'
+    ],
+    objects: ['vase', 'flower', 'wateringcan']
+  },
+  {
+    id: 'bubbles',
+    title: 'Little floating bubbles',
+    place: 'meadow',
+    steps: [
+      'A bubble wand is ready.',
+      'The wand dips into bubble mixture.',
+      'Bubbles float above the grass.',
+      'One big bubble drifts towards the tree.'
+    ],
+    objects: ['bubblewand', 'bottle', 'cloth']
+  },
+  {
+    id: 'music',
+    title: 'A little picture rhythm',
+    place: 'music',
+    steps: [
+      'Two drums are ready.',
+      'Our friend taps the small drum.',
+      'Our friend taps the big drum.',
+      'A friend joins the little band.'
+    ],
+    objects: ['drum', 'shaker', 'tambourine']
+  },
+  {
+    id: 'puppet',
+    title: 'A tiny puppet show',
+    place: 'studio',
+    steps: [
+      'The theatre curtains are closed.',
+      'The curtains open.',
+      'A puppet appears above the stage.',
+      'Two puppets greet each other.'
+    ],
+    objects: ['puppet', 'cloth', 'teddy']
+  },
+  {
+    id: 'leaves',
+    title: 'An autumn collection',
+    place: 'woodland',
+    steps: [
+      'Leaves fall beside an empty basket.',
+      'One leaf goes into the basket.',
+      'More leaves fill the basket.',
+      'The leaves make a colourful circle on the ground.'
+    ],
+    objects: ['leaf', 'basket', 'tree']
+  },
+  {
+    id: 'carrot',
+    title: 'A carrot from the garden',
+    place: 'garden',
+    steps: [
+      'Green leaves grow above the soil.',
+      'Our friend holds the carrot leaves.',
+      'The carrot comes out of the soil.',
+      'The carrot rests in a basket.'
+    ],
+    objects: ['carrot', 'basket', 'wateringcan']
+  },
+  {
+    id: 'coat',
+    title: 'Ready to go outside',
+    place: 'hallway',
+    steps: [
+      'Our friend gets ready by the door.',
+      'A coat is taken from the hook.',
+      'Our friend puts on the coat.',
+      'Our friend is ready at the open door.'
+    ],
+    objects: ['coat', 'shoe', 'hat']
+  },
+  {
+    id: 'train',
+    title: 'A little train journey',
+    place: 'station',
+    steps: [
+      'The little train waits at the station.',
+      'Our friend gets ready for the journey.',
+      'The train leaves the platform.',
+      'The train arrives at the next station.'
+    ],
+    objects: ['ticket', 'book', 'bottle']
+  },
+  {
+    id: 'pond',
+    title: 'A paper boat on the pond',
+    place: 'pond',
+    steps: [
+      'A paper boat waits beside the pond.',
+      'Our friend puts the boat on the water.',
+      'The boat floats past a lily pad.',
+      'A duck swims beside the floating boat.'
+    ],
+    objects: ['boat', 'paper', 'leaf']
+  },
+  {
+    id: 'birthday',
+    title: 'A celebration for a friend',
+    place: 'kitchen',
+    steps: [
+      'A plain cake waits on the table.',
+      'Fruit decorates the top.',
+      'A little flag finishes the cake.',
+      'Friends gather to share the celebration.'
+    ],
+    objects: ['cake', 'strawberry', 'plate']
+  }
 ];
-const worldSceneCount=worldStories.length*4*worldCharacters.length*8;
-const worldInk='#354853',worldPalette=['#ed8266','#e6b849','#65a4b8','#85b17d','#a486bd','#e7a5a6','#4e9291','#c68d58'];
-function worldEscape(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
-function worldHuman(c,pose='stand',contact=null){
- const s=c.skin,h=c.hair,t=pose==='coat'?'#72988a':c.shirt,sit=c.chair||pose==='sit'||pose==='sleep';
- let hair=c.style==='puffs'?`<circle cx="28" cy="35" r="19" fill="${h}"/><circle cx="92" cy="35" r="19" fill="${h}"/>`:c.style==='curls'?Array.from({length:8},(_,i)=>`<circle cx="${29+i*9}" cy="${28+(i%2)*4}" r="13" fill="${h}"/>`).join(''):c.style==='bobs'?`<path d="M19 36Q20 4 61 8Q105 11 103 78L88 89H31L18 75Z" fill="${h}"/>`:'';
- const chair=c.chair?'<g fill="none" stroke="#405b70" stroke-width="6"><circle cx="42" cy="158" r="31"/><circle cx="105" cy="179" r="10"/><path d="M31 97V148H85L101 178H111M22 114H84"/></g><circle cx="42" cy="158" r="18" fill="#c8dfdf" stroke="#405b70" stroke-width="3"/>':'';
- const legs=sit?`<path d="M47 129L86 140L86 174M70 129L105 139L107 166" stroke="#4c6988" stroke-width="15" fill="none"/><path d="M81 176h20M103 168h17" stroke="#e1b04d" stroke-width="11"/>`:`<path d="M46 129L40 171M74 129L83 171" stroke="#4c6988" stroke-width="18"/><path d="M29 176h20M78 176h21" stroke="#e1b04d" stroke-width="12"/>`;
- const arm=contact?`<path d="M34 94L19 124M88 91Q${(88+contact.x)/2} ${(91+contact.y)/2+7} ${contact.x} ${contact.y}" stroke="${s}" stroke-width="14" fill="none"/>`:pose==='reach'?`<path d="M88 91L116 83L136 58" stroke="${s}" stroke-width="14" fill="none"/><path d="M34 94L19 124" stroke="${s}" stroke-width="14"/>`:pose==='hold'?`<path d="M32 94Q27 130 62 124M86 95Q104 126 68 125" stroke="${s}" stroke-width="14" fill="none"/>`:`<path d="M33 94L22 127M87 94L99 125" stroke="${s}" stroke-width="14"/>`;
- return `<g stroke-linecap="round" stroke-linejoin="round"><ellipse cx="63" cy="189" rx="56" ry="8" fill="#344f4b" opacity=".12"/>${chair}${legs}<path d="M33 82Q60 71 87 83L87 131Q60 140 32 130Z" fill="${t}"/><path d="M45 88Q60 97 76 87" fill="none" stroke="white" stroke-width="3" opacity=".65"/>${arm}${pose==='coat'?'<path d="M46 83L60 99L74 83M60 99V131" fill="none" stroke="#355447" stroke-width="2.5"/><path d="M39 110h13M68 110h13" stroke="#355447" stroke-width="2"/>':''}${hair}<circle cx="60" cy="48" r="36" fill="${s}"/><path d="M26 37Q24 5 62 9Q93 12 97 39Q74 35 66 23Q50 40 26 37" fill="${h}"/><ellipse cx="25" cy="53" rx="6" ry="10" fill="${s}"/><ellipse cx="95" cy="53" rx="6" ry="10" fill="${s}"/>${pose==='sleep'?'<path d="M40 49q7 7 14 0M68 49q7 7 14 0" stroke="#40372f" stroke-width="2.5" fill="none"/>':'<circle cx="47" cy="49" r="3.1" fill="#352e2b"/><circle cx="75" cy="49" r="3.1" fill="#352e2b"/>'}${c.glasses?'<g fill="none" stroke="#465660" stroke-width="2.7"><circle cx="46" cy="49" r="10"/><circle cx="76" cy="49" r="10"/><path d="M56 49h10M36 47L26 44M86 47L96 44"/></g>':''}<path d="M53 65Q61 72 69 65" stroke="#743e35" stroke-width="2.7" fill="none"/><ellipse cx="35" cy="61" rx="7" ry="4" fill="#e28576" opacity=".45"/><ellipse cx="85" cy="61" rx="7" ry="4" fill="#e28576" opacity=".45"/></g>`;
+const worldSceneCount = worldStories.length * 4 * worldCharacters.length * 8;
+const worldInk = '#354853',
+  worldPalette = ['#ed8266', '#e6b849', '#65a4b8', '#85b17d', '#a486bd', '#e7a5a6', '#4e9291', '#c68d58'];
+function worldEscape(s) {
+  return String(s).replace(
+    /[&<>"']/g,
+    c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]
+  );
 }
-function worldPerson(index,x,y,width=155,pose='stand',flip=false){const c=worldCharacters[((index%12)+12)%12];let body=c.animal?friendlyAnimal(c.animal,pose==='coat'?'stand':pose):worldHuman(c,pose);if(c.animal&&pose==='coat')body=body.replaceAll(friendlyPalette[c.animal].shirt,'#72988a')+'<path d="M43 93L58 108L74 93M58 108V134" fill="none" stroke="#355447" stroke-width="2.5"/>';return `<g transform="translate(${x} ${y}) ${flip?`translate(${width} 0) scale(-1 1)`:''}"><svg width="${width}" height="${width*1.65}" viewBox="${c.animal?'0 -20 120 210':'-5 0 150 200'}" aria-hidden="true">${body}</svg></g>`;}
+function worldHuman(c, pose = 'stand', contact = null) {
+  const s = c.skin,
+    h = c.hair,
+    t = pose === 'coat' ? '#72988a' : c.shirt,
+    sit = c.chair || pose === 'sit' || pose === 'sleep';
+  let hair =
+    c.style === 'puffs'
+      ? `<circle cx="28" cy="35" r="19" fill="${h}"/><circle cx="92" cy="35" r="19" fill="${h}"/>`
+      : c.style === 'curls'
+        ? Array.from(
+            { length: 8 },
+            (_, i) => `<circle cx="${29 + i * 9}" cy="${28 + (i % 2) * 4}" r="13" fill="${h}"/>`
+          ).join('')
+        : c.style === 'bobs'
+          ? `<path d="M19 36Q20 4 61 8Q105 11 103 78L88 89H31L18 75Z" fill="${h}"/>`
+          : '';
+  const chair = c.chair
+    ? '<g fill="none" stroke="#405b70" stroke-width="6"><circle cx="42" cy="158" r="31"/><circle cx="105" cy="179" r="10"/><path d="M31 97V148H85L101 178H111M22 114H84"/></g><circle cx="42" cy="158" r="18" fill="#c8dfdf" stroke="#405b70" stroke-width="3"/>'
+    : '';
+  const legs = sit
+    ? `<path d="M47 129L86 140L86 174M70 129L105 139L107 166" stroke="#4c6988" stroke-width="15" fill="none"/><path d="M81 176h20M103 168h17" stroke="#e1b04d" stroke-width="11"/>`
+    : `<path d="M46 129L40 171M74 129L83 171" stroke="#4c6988" stroke-width="18"/><path d="M29 176h20M78 176h21" stroke="#e1b04d" stroke-width="12"/>`;
+  const arm = contact
+    ? `<path d="M34 94L19 124M88 91Q${(88 + contact.x) / 2} ${(91 + contact.y) / 2 + 7} ${contact.x} ${contact.y}" stroke="${s}" stroke-width="14" fill="none"/>`
+    : pose === 'reach'
+      ? `<path d="M88 91L116 83L136 58" stroke="${s}" stroke-width="14" fill="none"/><path d="M34 94L19 124" stroke="${s}" stroke-width="14"/>`
+      : pose === 'hold'
+        ? `<path d="M32 94Q27 130 62 124M86 95Q104 126 68 125" stroke="${s}" stroke-width="14" fill="none"/>`
+        : `<path d="M33 94L22 127M87 94L99 125" stroke="${s}" stroke-width="14"/>`;
+  return `<g stroke-linecap="round" stroke-linejoin="round"><ellipse cx="63" cy="189" rx="56" ry="8" fill="#344f4b" opacity=".12"/>${chair}${legs}<path d="M33 82Q60 71 87 83L87 131Q60 140 32 130Z" fill="${t}"/><path d="M45 88Q60 97 76 87" fill="none" stroke="white" stroke-width="3" opacity=".65"/>${arm}${pose === 'coat' ? '<path d="M46 83L60 99L74 83M60 99V131" fill="none" stroke="#355447" stroke-width="2.5"/><path d="M39 110h13M68 110h13" stroke="#355447" stroke-width="2"/>' : ''}${hair}<circle cx="60" cy="48" r="36" fill="${s}"/><path d="M26 37Q24 5 62 9Q93 12 97 39Q74 35 66 23Q50 40 26 37" fill="${h}"/><ellipse cx="25" cy="53" rx="6" ry="10" fill="${s}"/><ellipse cx="95" cy="53" rx="6" ry="10" fill="${s}"/>${pose === 'sleep' ? '<path d="M40 49q7 7 14 0M68 49q7 7 14 0" stroke="#40372f" stroke-width="2.5" fill="none"/>' : '<circle cx="47" cy="49" r="3.1" fill="#352e2b"/><circle cx="75" cy="49" r="3.1" fill="#352e2b"/>'}${c.glasses ? '<g fill="none" stroke="#465660" stroke-width="2.7"><circle cx="46" cy="49" r="10"/><circle cx="76" cy="49" r="10"/><path d="M56 49h10M36 47L26 44M86 47L96 44"/></g>' : ''}<path d="M53 65Q61 72 69 65" stroke="#743e35" stroke-width="2.7" fill="none"/><ellipse cx="35" cy="61" rx="7" ry="4" fill="#e28576" opacity=".45"/><ellipse cx="85" cy="61" rx="7" ry="4" fill="#e28576" opacity=".45"/></g>`;
+}
+function worldPerson(index, x, y, width = 155, pose = 'stand', flip = false) {
+  const c = worldCharacters[((index % 12) + 12) % 12];
+  let body = c.animal ? friendlyAnimal(c.animal, pose === 'coat' ? 'stand' : pose) : worldHuman(c, pose);
+  if (c.animal && pose === 'coat')
+    body =
+      body.replaceAll(friendlyPalette[c.animal].shirt, '#72988a') +
+      '<path d="M43 93L58 108L74 93M58 108V134" fill="none" stroke="#355447" stroke-width="2.5"/>';
+  return `<g transform="translate(${x} ${y}) ${flip ? `translate(${width} 0) scale(-1 1)` : ''}"><svg width="${width}" height="${width * 1.65}" viewBox="${c.animal ? '0 -20 120 210' : '-5 0 150 200'}" aria-hidden="true">${body}</svg></g>`;
+}
 
 // Contact poses place the wrist at a real object rather than suspending a prop beside it.
-function worldReachAt(index,x,y,width,tx,ty,flip=false){
- const c=worldCharacters[((index%12)+12)%12],height=width*1.65,scale=c.animal?height/210:width/150;
- const ox=c.animal?(width-120*scale)/2:5*scale,oy=c.animal?20*scale:(height-200*scale)/2;
- const target={x:((flip?width-(tx-x):tx-x)-ox)/scale,y:(ty-y-oy)/scale};let body;
- if(c.animal){const color=friendlyPalette[c.animal].fur;body=friendlyAnimal(c.animal,'stand');
- body=body.replace(/<path d="M34 98[^\"]*" fill="none" stroke="[^\"]*" stroke-width="13" stroke-linecap="round"\/>/,`<path d="M34 98Q19 107 18 124M81 98Q${(81+target.x)/2} ${(98+target.y)/2+7} ${target.x} ${target.y}" fill="none" stroke="${color}" stroke-width="13" stroke-linecap="round"/>`);
- }else body=worldHuman(c,'stand',target);
- return `<g transform="translate(${x} ${y}) ${flip?`translate(${width} 0) scale(-1 1)`:``}"><svg width="${width}" height="${height}" viewBox="${c.animal?'0 -20 120 210':'-5 0 150 200'}" overflow="visible" aria-hidden="true">${body}</svg></g>`;
+function worldReachAt(index, x, y, width, tx, ty, flip = false) {
+  const c = worldCharacters[((index % 12) + 12) % 12],
+    height = width * 1.65,
+    scale = c.animal ? height / 210 : width / 150;
+  const ox = c.animal ? (width - 120 * scale) / 2 : 5 * scale,
+    oy = c.animal ? 20 * scale : (height - 200 * scale) / 2;
+  const target = { x: ((flip ? width - (tx - x) : tx - x) - ox) / scale, y: (ty - y - oy) / scale };
+  let body;
+  if (c.animal) {
+    const color = friendlyPalette[c.animal].fur;
+    body = friendlyAnimal(c.animal, 'stand');
+    body = body.replace(
+      /<path d="M34 98[^\"]*" fill="none" stroke="[^\"]*" stroke-width="13" stroke-linecap="round"\/>/,
+      `<path d="M34 98Q19 107 18 124M81 98Q${(81 + target.x) / 2} ${(98 + target.y) / 2 + 7} ${target.x} ${target.y}" fill="none" stroke="${color}" stroke-width="13" stroke-linecap="round"/>`
+    );
+  } else body = worldHuman(c, 'stand', target);
+  return `<g transform="translate(${x} ${y}) ${flip ? `translate(${width} 0) scale(-1 1)` : ``}"><svg width="${width}" height="${height}" viewBox="${c.animal ? '0 -20 120 210' : '-5 0 150 200'}" overflow="visible" aria-hidden="true">${body}</svg></g>`;
 }
-function worldSeat(index,x,y,width=180){
- const c=worldCharacters[index%12];let furniture='',body='';
- if(c.animal){furniture='<path d="M22 72V148H103M29 148V190M96 148V190" fill="none" stroke="#a37c56" stroke-width="10"/><rect x="19" y="73" width="13" height="72" rx="5" fill="#719e97"/><rect x="27" y="136" width="75" height="13" rx="5" fill="#9bc4b4"/>';body=`<g transform="translate(5 12)">${friendlyAnimal(c.animal,'sit')}</g>`;}
- else{if(!c.chair)furniture='<path d="M29 78V151H112M35 150V201M105 150V201" fill="none" stroke="#a37c56" stroke-width="10"/><rect x="22" y="78" width="15" height="70" rx="6" fill="#719e97"/><rect x="32" y="140" width="83" height="12" rx="5" fill="#9bc4b4"/>';body=`<g transform="translate(4 12)">${worldHuman(c,'sit')}</g>`;}
- return `<svg x="${x}" y="${y}" width="${width}" height="${width*220/170}" viewBox="0 0 170 220" overflow="visible" aria-hidden="true"><ellipse cx="73" cy="207" rx="65" ry="7" fill="#3c5746" opacity=".11"/>${furniture}${body}</svg>`;
+function worldSeat(index, x, y, width = 180) {
+  const c = worldCharacters[index % 12];
+  let furniture = '',
+    body = '';
+  if (c.animal) {
+    furniture =
+      '<path d="M22 72V148H103M29 148V190M96 148V190" fill="none" stroke="#a37c56" stroke-width="10"/><rect x="19" y="73" width="13" height="72" rx="5" fill="#719e97"/><rect x="27" y="136" width="75" height="13" rx="5" fill="#9bc4b4"/>';
+    body = `<g transform="translate(5 12)">${friendlyAnimal(c.animal, 'sit')}</g>`;
+  } else {
+    if (!c.chair)
+      furniture =
+        '<path d="M29 78V151H112M35 150V201M105 150V201" fill="none" stroke="#a37c56" stroke-width="10"/><rect x="22" y="78" width="15" height="70" rx="6" fill="#719e97"/><rect x="32" y="140" width="83" height="12" rx="5" fill="#9bc4b4"/>';
+    body = `<g transform="translate(4 12)">${worldHuman(c, 'sit')}</g>`;
+  }
+  return `<svg x="${x}" y="${y}" width="${width}" height="${(width * 220) / 170}" viewBox="0 0 170 220" overflow="visible" aria-hidden="true"><ellipse cx="73" cy="207" rx="65" ry="7" fill="#3c5746" opacity=".11"/>${furniture}${body}</svg>`;
 }
-function worldSleepingFace(c){
- if(c.animal&&typeof friendlySleepingHead==='function')return friendlySleepingHead(c.animal);
- if(c.animal)return `<svg viewBox="0 0 116 100" overflow="hidden">${friendlyAnimal(c.animal,'sleep').replace(/<ellipse cx="58" cy="158"[^>]*\/>/,'')}</svg>`;
- const h=c.hair,skin=c.skin,extra=c.style==='puffs'?`<circle cx="28" cy="35" r="19" fill="${h}"/><circle cx="92" cy="35" r="19" fill="${h}"/>`:c.style==='curls'?Array.from({length:8},(_,i)=>`<circle cx="${29+i*9}" cy="${28+(i%2)*4}" r="13" fill="${h}"/>`).join(''):c.style==='bobs'?`<path d="M19 36Q20 4 61 8Q105 11 103 78L88 89H31L18 75Z" fill="${h}"/>`:'';
- return `<g>${extra}<circle cx="60" cy="48" r="36" fill="${skin}"/><ellipse cx="25" cy="53" rx="6" ry="10" fill="${skin}"/><ellipse cx="95" cy="53" rx="6" ry="10" fill="${skin}"/><path d="M26 37Q24 5 62 9Q93 12 97 39Q74 35 66 23Q50 40 26 37" fill="${h}"/><path d="M40 49q7 7 14 0M68 49q7 7 14 0M53 65Q61 72 69 65" stroke="#594138" stroke-width="2.5" fill="none" stroke-linecap="round"/><ellipse cx="35" cy="61" rx="7" ry="4" fill="#e28576" opacity=".4"/><ellipse cx="85" cy="61" rx="7" ry="4" fill="#e28576" opacity=".4"/></g>`;
+function worldSleepingFace(c) {
+  if (c.animal && typeof friendlySleepingHead === 'function') return friendlySleepingHead(c.animal);
+  if (c.animal)
+    return `<svg viewBox="0 0 116 100" overflow="hidden">${friendlyAnimal(c.animal, 'sleep').replace(/<ellipse cx="58" cy="158"[^>]*\/>/, '')}</svg>`;
+  const h = c.hair,
+    skin = c.skin,
+    extra =
+      c.style === 'puffs'
+        ? `<circle cx="28" cy="35" r="19" fill="${h}"/><circle cx="92" cy="35" r="19" fill="${h}"/>`
+        : c.style === 'curls'
+          ? Array.from(
+              { length: 8 },
+              (_, i) => `<circle cx="${29 + i * 9}" cy="${28 + (i % 2) * 4}" r="13" fill="${h}"/>`
+            ).join('')
+          : c.style === 'bobs'
+            ? `<path d="M19 36Q20 4 61 8Q105 11 103 78L88 89H31L18 75Z" fill="${h}"/>`
+            : '';
+  return `<g>${extra}<circle cx="60" cy="48" r="36" fill="${skin}"/><ellipse cx="25" cy="53" rx="6" ry="10" fill="${skin}"/><ellipse cx="95" cy="53" rx="6" ry="10" fill="${skin}"/><path d="M26 37Q24 5 62 9Q93 12 97 39Q74 35 66 23Q50 40 26 37" fill="${h}"/><path d="M40 49q7 7 14 0M68 49q7 7 14 0M53 65Q61 72 69 65" stroke="#594138" stroke-width="2.5" fill="none" stroke-linecap="round"/><ellipse cx="35" cy="61" rx="7" ry="4" fill="#e28576" opacity=".4"/><ellipse cx="85" cy="61" rx="7" ry="4" fill="#e28576" opacity=".4"/></g>`;
 }
-function worldRestingBed(index){
- const c=worldCharacters[index%12];let chair=c.chair?'<g transform="translate(285 326) scale(.8)" fill="none" stroke="#405b70" stroke-width="6"><circle cx="42" cy="72" r="33" fill="#c4d9d8"/><circle cx="107" cy="96" r="10"/><path d="M30 10V66H82L101 94H118M20 31H79"/><path d="M38 15H66" stroke="#8ab4ad" stroke-width="14"/></g>':'';
- const glasses=c.glasses?'<g transform="translate(435 326)" fill="none" stroke="#465660" stroke-width="2"><circle cx="0" cy="0" r="7"/><circle cx="19" cy="0" r="7"/><path d="M7 0h5M-7-1l-8-3M26-1l7-3"/></g>':'';
- return `<g aria-label="${worldEscape(c.name)} resting with head supported on a pillow" data-world-resting="${c.id}">${chair}<rect x="554" y="273" width="204" height="75" rx="13" fill="#e7ddc9"/><rect data-world-pillow="true" x="558" y="242" width="101" height="53" rx="23" fill="#fff6db" stroke="#dccdab" stroke-width="3"/><path d="M566 273Q607 286 649 270" fill="none" stroke="#ece0c2" stroke-width="3"/><g data-world-resting-head="true" transform="translate(569 218)"><g transform="rotate(-9 46 45)"><svg width="93" height="80" viewBox="0 0 116 100" overflow="visible">${worldSleepingFace(c)}</svg></g></g><path data-world-duvet="true" d="M635 272Q671 245 706 265Q746 269 755 307V349H627L625 294Q627 279 635 272Z" fill="#91aecb"/><path d="M639 287Q692 274 750 307M640 321Q697 308 755 328" stroke="#d4e1ea" stroke-width="6" fill="none"/><path d="M553 349H760V366H553Z" fill="#7e96b1"/><path d="M563 365v22M749 365v22" stroke="#8c7890" stroke-width="9"/>${glasses}</g>`;
+function worldRestingBed(index) {
+  const c = worldCharacters[index % 12];
+  let chair = c.chair
+    ? '<g transform="translate(285 326) scale(.8)" fill="none" stroke="#405b70" stroke-width="6"><circle cx="42" cy="72" r="33" fill="#c4d9d8"/><circle cx="107" cy="96" r="10"/><path d="M30 10V66H82L101 94H118M20 31H79"/><path d="M38 15H66" stroke="#8ab4ad" stroke-width="14"/></g>'
+    : '';
+  const glasses = c.glasses
+    ? '<g transform="translate(435 326)" fill="none" stroke="#465660" stroke-width="2"><circle cx="0" cy="0" r="7"/><circle cx="19" cy="0" r="7"/><path d="M7 0h5M-7-1l-8-3M26-1l7-3"/></g>'
+    : '';
+  return `<g aria-label="${worldEscape(c.name)} resting with head supported on a pillow" data-world-resting="${c.id}">${chair}<rect x="554" y="273" width="204" height="75" rx="13" fill="#e7ddc9"/><rect data-world-pillow="true" x="558" y="242" width="101" height="53" rx="23" fill="#fff6db" stroke="#dccdab" stroke-width="3"/><path d="M566 273Q607 286 649 270" fill="none" stroke="#ece0c2" stroke-width="3"/><g data-world-resting-head="true" transform="translate(569 218)"><g transform="rotate(-9 46 45)"><svg width="93" height="80" viewBox="0 0 116 100" overflow="visible">${worldSleepingFace(c)}</svg></g></g><path data-world-duvet="true" d="M635 272Q671 245 706 265Q746 269 755 307V349H627L625 294Q627 279 635 272Z" fill="#91aecb"/><path d="M639 287Q692 274 750 307M640 321Q697 308 755 328" stroke="#d4e1ea" stroke-width="6" fill="none"/><path d="M553 349H760V366H553Z" fill="#7e96b1"/><path d="M563 365v22M749 365v22" stroke="#8c7890" stroke-width="9"/>${glasses}</g>`;
 }
-function worldReadingShelf(){return '<rect x="595" y="209" width="169" height="143" rx="8" fill="#c99a6a"/><path d="M601 278H758M601 341H758" stroke="#a57a50" stroke-width="8"/><rect x="611" y="223" width="16" height="48" rx="3" fill="#91b5ac"/><rect x="635" y="219" width="18" height="52" rx="3" fill="#dab06b"/><rect x="663" y="227" width="14" height="44" rx="3" fill="#c29cba"/><rect x="694" y="219" width="19" height="52" rx="3" fill="#7eabbd"/>';}
+function worldReadingShelf() {
+  return '<rect x="595" y="209" width="169" height="143" rx="8" fill="#c99a6a"/><path d="M601 278H758M601 341H758" stroke="#a57a50" stroke-width="8"/><rect x="611" y="223" width="16" height="48" rx="3" fill="#91b5ac"/><rect x="635" y="219" width="18" height="52" rx="3" fill="#dab06b"/><rect x="663" y="227" width="14" height="44" rx="3" fill="#c29cba"/><rect x="694" y="219" width="19" height="52" rx="3" fill="#7eabbd"/>';
+}
 
-function worldCharacterArt(index=0){return `<svg viewBox="0 0 240 300" role="img" aria-label="${worldEscape(worldCharacters[index%12].name)}"><ellipse cx="120" cy="265" rx="79" ry="13" fill="#dce9e3"/>${worldPerson(index,43,20,153)}</svg>`;}
-function worldCloud(x,y,w=110){return `<g transform="translate(${x} ${y}) scale(${w/110})" fill="#fffdf4"><ellipse cx="55" cy="27" rx="54" ry="22"/><circle cx="39" cy="15" r="24"/><circle cx="72" cy="15" r="20"/></g>`;}
-function worldTree(x,y,h=260,kind=0){return `<g transform="translate(${x} ${y}) scale(${h/260})"><path d="M50 115L42 260H78L70 115" fill="#ad7952"/><path d="M58 160L25 119M62 175L104 129" stroke="#ad7952" stroke-width="12" fill="none"/>${kind%3===1?'<path d="M60 0L4 105H27L0 162H120L94 104H116Z" fill="#4c987e"/>':kind%3===2?'<ellipse cx="60" cy="89" rx="65" ry="80" fill="#e8b54f"/><ellipse cx="40" cy="66" rx="35" ry="49" fill="#efca72"/>':'<circle cx="26" cy="90" r="46" fill="#76ad83"/><circle cx="91" cy="91" r="48" fill="#67a17c"/><circle cx="57" cy="47" r="49" fill="#8abd88"/>'}${kind%3===0?'<circle cx="21" cy="88" r="7" fill="#e68b68"/><circle cx="75" cy="65" r="7" fill="#e68b68"/><circle cx="100" cy="111" r="7" fill="#e68b68"/>':''}</g>`;}
-function worldFlower(x,y,c='#e97b75',r=12){return `<g transform="translate(${x} ${y})"><path d="M0 0V38M0 22Q-21 11-23 23Q-17 34 0 29" stroke="#629e78" stroke-width="5" fill="#8ab787"/>${[0,72,144,216,288].map(a=>`<ellipse cy="-${r}" rx="${r*.58}" ry="${r}" fill="${c}" transform="rotate(${a})"/>`).join('')}<circle r="${r*.6}" fill="#f2cf62"/></g>`;}
-function worldObj(id,x,y,size=110,extra=''){
- let b='';
- const own={
- openbook:'<path d="M60 29Q35 11 5 24V99Q34 87 60 106Q87 88 115 99V24Q87 11 60 29Z" fill="#ffefd0" stroke="#80a39b" stroke-width="4"/><path d="M60 29V106M16 39q18-5 33 5M16 54q18-5 33 5M16 69q18-5 33 5M73 44q15-10 31-5M73 59q15-10 31-5M73 74q15-10 31-5" stroke="#b9bda5" stroke-width="3" fill="none"/>',
- cake:'<path d="M18 52H103V103H18Z" fill="#edd0a0" stroke="#a78664" stroke-width="2"/><path d="M18 51Q27 40 36 51Q45 40 54 51Q63 40 72 51Q81 40 90 51Q99 40 103 51V65H18Z" fill="#fff6d9" stroke="#a78664" stroke-width="2"/><path d="M19 81H102" stroke="#c68e7a" stroke-width="7"/>',
- blanket:'<path d="M10 28Q56 9 111 28V105H10Z" fill="#9bb9ce" stroke="#6e91ad" stroke-width="3"/><path d="M15 48H106M15 75H106M35 24V101M66 20V101M94 25V101" stroke="#d5e1e8" stroke-width="5"/><path d="M12 109v10M25 109v10M38 109v10M51 109v10M64 109v10M77 109v10M90 109v10M104 109v10" stroke="#6e91ad" stroke-width="3"/>',
- feather:'<path d="M23 107Q8 32 82 11Q113 8 97 39Q84 88 23 107Z" fill="#d6b879"/><path d="M14 119L90 23M32 93L27 58M47 75L47 34M62 55L63 23M34 94L67 84M51 75L86 62M65 55L99 43" stroke="#aa8a58" stroke-width="2.5" fill="none"/>',
- shell:'<path d="M18 92Q-3 51 23 29Q43 1 62 18Q88-1 106 30Q130 59 103 93L64 109Z" fill="#edb9a0" stroke="#c58c73" stroke-width="3"/><path d="M62 105L24 31M62 105L44 20M62 105L82 20M62 105L103 33" stroke="#f8d7bd" stroke-width="6" fill="none"/>',
- bookmark:'<path d="M34 9H88V111L61 89L34 111Z" fill="#dfa175" stroke="#ad7758" stroke-width="2"/><circle cx="61" cy="35" r="14" fill="#f8e6b6"/><path d="M61 16V0" stroke="#718c86" stroke-width="4"/>',
- puppet:'<path d="M31 116Q18 69 44 61V45H80V63Q101 79 92 116Z" fill="#77aaa5"/><circle cx="60" cy="41" r="28" fill="#e5b680"/><circle cx="39" cy="19" r="10" fill="#e5b680"/><circle cx="82" cy="19" r="10" fill="#e5b680"/><circle cx="49" cy="38" r="3" fill="#4b4239"/><circle cx="72" cy="38" r="3" fill="#4b4239"/><path d="M52 52Q61 59 70 52" stroke="#8f6650" stroke-width="2" fill="none"/><path d="M45 78h33M60 65V113" stroke="#bdd9ce" stroke-width="3"/>',
- seed:'<ellipse cx="60" cy="64" rx="20" ry="13" fill="#b87b40"/><path d="M50 57Q60 51 69 58" stroke="#e6b168" stroke-width="3" fill="none"/>',
- twig:'<path d="M14 92L105 25M49 66L45 38M76 47L102 47" stroke="#916847" stroke-width="9" fill="none"/>',
- envelope:'<rect x="9" y="29" width="102" height="67" rx="6" fill="#fff5d6" stroke="#b8a681" stroke-width="3"/><path d="M10 32L60 67L109 32M10 95L46 60M110 95L76 60" stroke="#b8a681" fill="none" stroke-width="3"/><rect x="87" y="38" width="13" height="17" rx="2" fill="#7ab4af"/>',
- mailbox:'<path d="M22 25Q60 0 98 25V76H22Z" fill="#5598b5"/><path d="M60 78V115" stroke="#a47952" stroke-width="10"/><rect x="36" y="33" width="49" height="10" rx="4" fill="#304e68"/><path d="M98 37h16V15H99" fill="#ed8d72"/>',
- kite:'<path d="M60 7L103 50L60 102L18 50Z" fill="#e7b84e" stroke="#8e7255" stroke-width="2"/><path d="M60 7L60 102L18 50H103" stroke="#fff6ce" stroke-width="2" fill="none"/><path d="M60 102q-15 15-4 23" stroke="#797b6d" stroke-width="2" fill="none"/><path d="M53 111l-13-4 2 11 12-3 10 8 5-10Z" fill="#d5818e"/>',
- boat:'<path d="M10 65L38 100H89L111 65L62 48Z" fill="#e9c86f"/><path d="M10 65L61 80L62 48M61 80L111 65" stroke="#bc9950" stroke-width="2" fill="none"/>',
- nest:'<ellipse cx="61" cy="69" rx="48" ry="22" fill="#9b7350"/><path d="M14 62q40 40 95 0M17 73l83 9M31 57l66 30M22 83l72-26M18 69l83 4" fill="none" stroke="#c79b66" stroke-width="4"/><ellipse cx="60" cy="61" rx="29" ry="11" fill="#76583f"/>',
- bird:'<ellipse cx="60" cy="64" rx="32" ry="24" fill="#68a7b8"/><circle cx="83" cy="42" r="20" fill="#68a7b8"/><path d="M101 39L119 47L102 51" fill="#e8b345"/><ellipse cx="51" cy="62" rx="19" ry="12" fill="#91c7ce"/><path d="M29 62L4 43L13 80" fill="#68a7b8"/><circle cx="88" cy="39" r="3" fill="#354853"/><path d="M49 85v14M72 84v14" stroke="#a57450" stroke-width="3"/>',
- lilypad:'<ellipse cx="60" cy="76" rx="53" ry="22" fill="#79ae76"/><path d="M60 76L82 57L99 65Z" fill="#a8d9d6"/>',
- vase:'<path d="M45 20H75L71 43Q109 80 91 108H29Q11 79 49 43Z" fill="#72acb6"/><path d="M33 82h53" stroke="#c4e3dc" stroke-width="7"/>',
- bubblejar:'<path d="M20 30H100V106Q60 122 20 106Z" fill="#d8e9e6" stroke="#89b1b5" stroke-width="3"/><path d="M27 65H93V101Q60 111 27 101Z" fill="#a5d0d5"/><ellipse cx="60" cy="30" rx="40" ry="12" fill="#a3c9ce" stroke="#89b1b5" stroke-width="3"/><circle cx="43" cy="82" r="8" fill="none" stroke="#ebf6ea" stroke-width="3"/><circle cx="75" cy="91" r="5" fill="none" stroke="#ebf6ea" stroke-width="2"/>',
- bubblewand:'<circle cx="60" cy="34" r="24" fill="none" stroke="#d78aa8" stroke-width="8"/><path d="M60 60V112" stroke="#d78aa8" stroke-width="8"/>',
- bubble:'<circle cx="60" cy="60" r="44" fill="#cce8ee" fill-opacity=".6" stroke="#96c6d0" stroke-width="3"/><path d="M32 41Q46 18 72 26M77 91l10-8" fill="none" stroke="white" stroke-width="6" stroke-linecap="round"/>',
- flag:'<path d="M33 112V8" stroke="#a07850" stroke-width="5"/><path d="M36 11H104L83 35L104 58H36Z" fill="#dd8b75"/><circle cx="63" cy="33" r="9" fill="#f6d66b"/>',
- sandcastle:'<path d="M19 58H100V104H19Z" fill="#e9c779"/><path d="M13 57V32H26V43H39V32H52V57M68 57V32H81V43H94V32H107V57" fill="#e9c779"/><path d="M50 104V79Q60 63 71 79V104" fill="#c8a05b"/>',
- shaker:'<ellipse cx="60" cy="33" rx="27" ry="30" fill="#e1a359"/><path d="M54 59H67V112H54Z" fill="#ac7a50"/><path d="M36 30h48M40 43h41" stroke="#f7dca3" stroke-width="5"/>',
- tambourine:'<ellipse cx="60" cy="65" rx="45" ry="34" fill="#e6b864" stroke="#ae7c55" stroke-width="7"/><ellipse cx="60" cy="58" rx="39" ry="27" fill="#fff2c9"/><path d="M21 70l14 5M49 90h18M87 74l13-7" stroke="#b2c3c5" stroke-width="9"/>',
- piece:'<path d="M28 24H57Q52 4 68 6Q82 7 78 24H101V52Q119 46 116 62Q116 78 101 73V99H74Q81 117 65 116Q50 116 55 99H28V73Q8 80 8 62Q9 47 28 52Z" fill="#e1ae4d" stroke="#bd8740" stroke-width="2"/>',
- ticket:'<path d="M12 30H109V48Q90 60 109 72V92H12V72Q31 60 12 48Z" fill="#eac267"/><path d="M79 32V89" stroke="#ae8449" stroke-width="3" stroke-dasharray="6 5"/><path d="M28 45h32M28 59h40M28 75h28" stroke="#f7e4b0" stroke-width="5"/>'
- };
- if(own[id])b=`<svg viewBox="0 0 120 120" aria-hidden="true">${own[id]}</svg>`;
- else b=pictureIcon(id);
- const view=b.match(/^<svg[^>]*viewBox="([^"]+)"/)?.[1]||'0 0 120 120';return `<svg x="${x}" y="${y}" width="${size}" height="${size}" viewBox="${view}" aria-hidden="true" ${extra}>${svgBody(b)}</svg>`;
+function worldCharacterArt(index = 0) {
+  return `<svg viewBox="0 0 240 300" role="img" aria-label="${worldEscape(worldCharacters[index % 12].name)}"><ellipse cx="120" cy="265" rx="79" ry="13" fill="#dce9e3"/>${worldPerson(index, 43, 20, 153)}</svg>`;
 }
-function worldBackdrop(place,v){
- const indoor=['kitchen','bedroom','playroom','studio','library','music','hallway'].includes(place),shift=v%4,sky=['#dceff1','#e8f0d9','#f9e8d5','#e9e5f0'][v%4];let b='';
- if(indoor){b=`<rect width="800" height="480" fill="${['#f7ead4','#eef0d9','#eee4ee','#e4eff0'][v%4]}"/><rect y="348" width="800" height="132" fill="#d7ad7b"/><path d="M0 350H800M0 411H800M130 350L110 480M400 350V480M670 350L690 480" stroke="#bf9469" stroke-width="3"/>`;
- const wx=v%2?480:70;b+=`<rect x="${wx}" y="36" width="174" height="147" rx="19" fill="#a8ccc8" stroke="#fdf8ed" stroke-width="14"/><circle cx="${wx+121}" cy="77" r="21" fill="#f0ca62"/><path d="M${wx} 150q60-47 174 0v32H${wx}Z" fill="#8abd91"/><path d="M${wx+87} 36v147M${wx} 112h174" stroke="#fdf8ed" stroke-width="8"/>`;
- if(v>=4)b+=`<path d="M10 50Q10 0 58 5L70 230Q29 200 10 230Z" fill="#d79086"/><path d="M786 5Q738 0 726 54L717 230Q760 207 785 229Z" fill="#d79086"/>`;
- if(place==='bedroom')b+='<path d="M560 170v150H750V170" fill="#c6c6de" stroke="#8c8bb1" stroke-width="12"/><path d="M549 281H760V364H549Z" fill="#a5b9ce"/><rect x="566" y="244" width="68" height="35" rx="14" fill="#fcf5dc"/>';
- if(['library','playroom','studio','music'].includes(place))b+=`<rect x="${v%2?38:599}" y="207" width="160" height="140" rx="9" fill="#c99a6a"/>${Array.from({length:6},(_,i)=>`<rect x="${(v%2?52:613)+i*21}" y="225" width="16" height="${45+i%3*9}" rx="3" fill="${worldPalette[i]}"/>`).join('')}<path d="M${v%2?38:599} 284h160" stroke="#b58258" stroke-width="7"/>`;
- if(place==='kitchen')b+='<rect x="533" y="224" width="224" height="127" rx="8" fill="#8eb8af"/><path d="M530 225H762" stroke="#fff5dd" stroke-width="13"/><rect x="552" y="254" width="74" height="81" rx="4" fill="#abcbbd"/><rect x="651" y="254" width="84" height="81" rx="4" fill="#abcbbd"/><circle cx="615" cy="290" r="4" fill="#6c8f83"/>';
- if(place==='hallway')b+='<path d="M541 345V96Q632 72 720 96V345Z" fill="#92b6ab" stroke="#fff4dd" stroke-width="10"/><circle cx="681" cy="227" r="7" fill="#d5ae55"/>';
- b+=`<ellipse cx="375" cy="401" rx="${195+shift*12}" ry="48" fill="${['#c6dbb3','#dbb3a4','#b1cad0','#d8c4db'][v%4]}"/>`;
- }else{b=`<rect width="800" height="480" fill="${sky}"/><circle cx="${v%2?669:112}" cy="${69+shift*12}" r="${35+shift*3}" fill="#f6d16b"/>${worldCloud(290-shift*35,60,110+shift*10)}${worldCloud(580-shift*50,120,100)}<path d="M0 286Q170 ${180+shift*12} 400 280Q600 205 800 266V480H0Z" fill="#a9c89a"/><path d="M0 343Q230 277 440 342Q640 290 800 323V480H0Z" fill="#c4d9a3"/>`;
- if(place==='beach')b+='<path d="M0 223Q200 210 800 230V480H0Z" fill="#9acdd3"/><path d="M0 286Q185 351 408 292Q575 266 800 324V480H0Z" fill="#f1d595"/><path d="M0 273Q150 323 333 287" stroke="#e6f4e7" stroke-width="8" fill="none"/>';
- else if(place==='pond')b+='<ellipse cx="496" cy="353" rx="265" ry="95" fill="#92c7cc"/><ellipse cx="512" cy="351" rx="224" ry="68" fill="#aadadd"/>';
- else if(place==='village'||place==='station')b+=`<path d="M${v%2?74:539} 168h169v158H${v%2?74:539}Z" fill="#efc38b"/><path d="M${v%2?60:525} 171L${v%2?157:622} 85L${v%2?258:723} 171Z" fill="#bf7d6c"/><rect x="${v%2?118:583}" y="243" width="47" height="83" rx="20" fill="#7ca7a3"/>${worldTree(v%2?644:16,130,210,v)}`;
- else b+=worldTree(v%2?609:18,112,225+shift*9,v)+((place==='woodland'||v>=4)?worldTree(v%2?18:635,174,173,(v+1)%3):'');
- if(v===1||v===5)b+='<path d="M275 338Q467 295 678 346L700 369Q480 325 267 364Z" fill="#e8d7a8"/>';
- if(v===2||v===6)b+='<path d="M3 282h196M18 260v73M67 260v73M116 260v73M165 260v73" stroke="#ede2bd" stroke-width="11" fill="none"/>';
- if(v===3||v===7)b+='<path d="M40 325Q105 306 164 326" stroke="#a88667" stroke-width="13" fill="none"/><path d="M56 330v46M149 330v46" stroke="#a88667" stroke-width="9"/>';
- b+=Array.from({length:5+shift},(_,i)=>place==='pond'&&40+i*(110-shift*4)>225?'':worldFlower(40+i*(110-shift*4),420+(i%2)*14,worldPalette[(i+v)%8],6+i%2*2)).join('');
- }
- return b;
+function worldCloud(x, y, w = 110) {
+  return `<g transform="translate(${x} ${y}) scale(${w / 110})" fill="#fffdf4"><ellipse cx="55" cy="27" rx="54" ry="22"/><circle cx="39" cy="15" r="24"/><circle cx="72" cy="15" r="20"/></g>`;
 }
-function worldTable(){return '<path d="M327 313v119M650 313v119" stroke="#a9784d" stroke-width="17" stroke-linecap="round"/><rect x="304" y="294" width="371" height="27" rx="12" fill="#c99a68"/><path d="M321 299h334" stroke="#edc590" stroke-width="4"/>';}
-function worldScene(storyIndex,step=0,character=0,variant=0){
- const n=((storyIndex%24)+24)%24,s=worldStories[n],k=Math.max(0,Math.min(3,step|0)),c=((character%12)+12)%12,v=((variant%8)+8)%8;let b=worldBackdrop(s.place,v),a='',front='',person=worldPerson(c,126,211,145,'stand');
- if(n===0){a='<path d="M382 300H568L548 401H403Z" fill="#cf8c65"/><ellipse cx="475" cy="300" rx="93" ry="22" fill="#886545"/>';if(k===0)a+=worldObj('seed',603,326,64);if(k===1){person='';front+=worldReachAt(c,280,211,145,411,300)+worldObj('seed',381,268,60);}if(k===2){person=worldReachAt(c,615,211,145,603,241,true);a+=worldObj('wateringcan',517,219,159)+worldObj('sprout',425,211,100)+'<path d="M531 276l-39 22M525 268l-44 23" stroke="#78b9d0" stroke-width="6" stroke-linecap="round"/>';}if(k===3)a+='<path d="M474 205V301M474 272Q440 248 430 263Q445 282 474 276M475 255Q500 237 514 245Q504 263 475 266" stroke="#639e72" stroke-width="7" fill="#8ab789"/>'+worldFlower(474,205,'#e67c92',40);}
- if(n===1){if(k<3)a+='<g fill="#9dabbc"><ellipse cx="440" cy="83" rx="175" ry="50"/><circle cx="373" cy="51" r="56"/><circle cx="485" cy="53" r="67"/></g>';if(k===1||k===2)a+=Array.from({length:15},(_,i)=>`<path d="M${310+(i%5)*70} ${153+Math.floor(i/5)*65}l-12 24" stroke="#80b4d0" stroke-width="5"/>`).join('');if(k===2){a+=worldObj('umbrella',130,143,260);person=worldReachAt(c,126,238,145,260,337);}if(k===3)a+='<path d="M311 229A177 177 0 0 1 665 229" fill="none" stroke="#e79283" stroke-width="18"/><path d="M330 229A158 158 0 0 1 646 229" fill="none" stroke="#ebc963" stroke-width="18"/><path d="M349 229A139 139 0 0 1 627 229" fill="none" stroke="#91bd98" stroke-width="18"/>';a+='<ellipse cx="498" cy="416" rx="137" ry="22" fill="#a8d3d3"/>';}
- if(n===2){a='<path d="M298 310L605 299L686 417L315 434Z" fill="#e6a091"/>';a+='<path d="M335 315l54 110M415 310l53 113M494 307l55 111M311 348l326-4M323 390l343-11" stroke="#fff0d5" stroke-width="12" opacity=".7"/>';if(k===0||k===3)a+=worldObj('basket',536,270,143);if(k===1||k===2)a+=worldObj('apple',387,318,91)+worldObj('pear',479,330,80)+worldObj('cup',335,279,88)+worldObj('cup',572,321,78);if(k===2)front+=worldSeat((c+3)%12,642,224,144);if(k===3)a+=worldObj('apple',562,264,70);}
- if(n===3){a='<path d="M400 170L367 418M581 170L614 418M420 333L393 398M567 333L594 398" stroke="#bd8b58" stroke-width="10"/><rect x="386" y="103" width="217" height="233" rx="4" fill="#fffcdf" stroke="#d6b98a" stroke-width="8"/>';if(k===0)a+=worldObj('paintbrush',626,301,110)+worldObj('cup',634,349,91);if(k===1){person=worldReachAt(c,235,211,145,381,289);a+=worldObj('paintbrush',327,206,127);}if(k>=2)a+='<path d="M492 207V312" stroke="#78a56d" stroke-width="8"/>'+worldFlower(492,207,'#e98c9e',41)+'<path d="M407 318q91-24 175 0" stroke="#a3bb82" stroke-width="8" fill="none"/>';if(k===3)front+=worldPerson((c+4)%12,634,245,119,'stand',true);}
- if(n===4){
-  if(k<2){person=worldSeat(c,223,205,164);a+=k===0?worldObj('book',415,248,98):worldObj('openbook',239,292,92);}
-  if(k===2)a+=worldObj('book',424,258,100);
-  a+='<rect x="399" y="337" width="111" height="19" rx="7" fill="#bb8c65"/><path d="M410 351v66M499 351v66" stroke="#bb8c65" stroke-width="9"/>';
-  if(k===3){person='';front+=worldRestingBed(c);}
- }
- if(n===5){a='<path d="M416 274H623V403H416Z" fill="#deb875"/><path d="M416 274L385 240H581L623 274" fill="#f0d398"/>';if(k===0)a+=worldObj('ball',302,345,95)+worldObj('teddy',624,333,102)+worldObj('blocks',260,278,88);if(k===1){person=worldReachAt(c,280,211,145,437,318);}if(k===1)a+=worldObj('ball',413,264,91)+worldObj('teddy',643,334,101)+worldObj('blocks',280,337,86);if(k===2)a+=worldObj('ball',442,280,87)+worldObj('teddy',518,288,95)+worldObj('blocks',463,337,79);if(k===1||k===2)a+='<path d="M416 337H623V403H416Z" fill="#deb875"/>';if(k===3)a+='<rect x="408" y="266" width="225" height="21" rx="7" fill="#e9c584"/>';}
- if(n===6){a='<path d="M327 393v39M650 393v39" stroke="#a9784d" stroke-width="17"/><rect x="304" y="374" width="371" height="27" rx="12" fill="#c99a68"/><ellipse cx="489" cy="363" rx="115" ry="22" fill="#b6d2ce"/><path d="M476 326v-79q0-34 36-34q34 0 34 30" stroke="#97aeb3" stroke-width="13" fill="none"/>';if(k===0)a+=worldObj('apple',590,295,94);if(k===1||k===2){person=worldReachAt(c,372,211,145,527,365);a+=worldObj('apple',478,309,92);if(k===1)a+='<path d="M545 250v89" stroke="#8bc7d8" stroke-width="9" stroke-dasharray="9 5"/>';if(k===2)a+=worldObj('cloth',508,340,58);}if(k===3)a+='<ellipse cx="494" cy="365" rx="69" ry="10" fill="#fcf6df" stroke="#aebbb3" stroke-width="3"/>'+worldObj('apple',452,278,100);}
- if(n===7){const xx=[465,417,480,578][k],yy=[331,230,146,56][k];a+=worldObj('kite',xx,yy,138);if(k>0){person=worldReachAt(c,126,211,145,263,331);a+=`<path d="M${xx+68} ${yy+114}Q340 266 263 331" stroke="#918575" stroke-width="2.5" fill="none"/>`;}if(k>=2)a+='<path d="M301 137q58-17 101 3M520 216q61-20 106 0" stroke="#fff9df" stroke-width="6" fill="none"/>';}
- if(n===8){a+=worldObj('mailbox',530,214,172);if(k===0)a+=worldObj('paper',345,306,122)+worldObj('envelope',444,340,118);if(k===1){person=worldPerson(c,126,211,145,'hold');a+=worldObj('envelope',150,330,100);}if(k===2){person=worldReachAt(c,420,211,145,572,278);a+=worldObj('envelope',564,216,100);}if(k===3)front+=worldReachAt((c+3)%12,632,242,130,631,343,true)+worldObj('envelope',586,295,90);}
- if(n===9){a+='<path d="M365 268Q512 246 720 257" stroke="#9e764f" stroke-width="20" fill="none"/>';if(k===0)a+=worldObj('twig',432,352,123)+worldObj('bird',551,290,118);if(k===1)a+=worldObj('twig',474,183,145,'transform="rotate(35 547 255)"')+worldObj('bird',544,142,130);if(k===2)a+=worldObj('nest',459,165,173)+worldObj('bird',620,144,127);if(k===3)a+=worldObj('bird',486,157,127)+worldObj('nest',459,165,173);}
- if(n===10){if(k===0)a+='<rect x="344" y="355" width="87" height="75" rx="9" fill="#dd9b69"/><rect x="463" y="355" width="87" height="75" rx="9" fill="#7eacae"/><rect x="589" y="355" width="87" height="75" rx="9" fill="#e3bd68"/>';else{a+='<rect x="450" y="352" width="104" height="80" rx="9" fill="#dd9b69"/>';if(k>=2)a+='<rect x="450" y="271" width="104" height="80" rx="9" fill="#7eacae"/>';if(k>=3)a+='<rect x="450" y="190" width="104" height="80" rx="9" fill="#e3bd68"/>';if(k===1)a+='<rect x="580" y="355" width="87" height="75" rx="9" fill="#7eacae"/><rect x="324" y="355" width="87" height="75" rx="9" fill="#e3bd68"/>';if(k===2)a+='<rect x="608" y="355" width="87" height="75" rx="9" fill="#e3bd68"/>';}}
- if(n===11){a+=worldObj('shovel',622,311,107);if(k<2)a+=worldObj('bucket',412,271,158);if(k===1)a+='<ellipse cx="483" cy="312" rx="53" ry="15" fill="#d4ae67"/>';if(k===2)a+='<path d="M445 294H544L558 407H432Z" fill="#df9a64"/><path d="M438 370Q491 316 552 370" fill="none" stroke="#9d6b48" stroke-width="7"/>';if(k===3)a+=worldObj('sandcastle',407,248,199);}
- if(n===12){a+='<rect x="358" y="264" width="281" height="152" rx="17" fill="#8abbb3"/>'+worldObj('fish',394,278,180)+'<path d="M366 333H630M493 271v138" stroke="#f7efce" stroke-width="5"/>';if(k<3)a+='<path d="M495 272H626V332H495Z" fill="#f6e7bd"/>';if(k===0)a+=worldObj('piece',662,310,102);if(k===1){person=worldReachAt(c,180,211,145,311,332);a+=worldObj('piece',267,279,88);}if(k===2)a+=worldObj('piece',503,253,103);}
- if(n===13){a+=worldReadingShelf();if(k!==2)a+=worldObj('chair',360,242,217);if(k===0)a+=worldObj('book',690,209,73);if(k===1){person=worldPerson(c,126,211,145,'hold');a+=worldObj('book',150,worldCharacters[c].animal?340:307,100);}if(k===2){person='';front+=worldSeat(c,395,211,164)+worldObj('openbook',408,298,98);}if(k===3)a+=worldObj('book',615,273,73);}
- if(n===14){a=worldTable();if(k>=1)a+='<path d="M516 182L515 252" stroke="#629e78" stroke-width="5"/>';if(k>=2)a+='<path d="M467 194L512 252M550 202L517 252" stroke="#629e78" stroke-width="5"/>';a+=worldObj('vase',442,210,145);if(k===0)a+=worldObj('flower',606,257,96);if(k>=1)a+=worldFlower(516,182,'#e78c87',26);if(k>=2)a+=worldFlower(467,194,'#e2b845',23)+worldFlower(550,202,'#a58abe',25);if(k===3)front+=worldPerson((c+5)%12,663,253,120,'stand',true);}
- if(n===15){a+=worldObj('bubblejar',474,309,105);if(k===0)a+=worldObj('bubblewand',608,284,128);if(k===1){person=worldReachAt(c,398,211,145,534,273);a+=worldObj('bubblewand',477,265,114,'transform="rotate(180 534 322)"');}if(k>=2){person=worldReachAt(c,211,211,145,348,339);a+=worldObj('bubblewand',292,234,112);a+=worldObj('bubble',390,172,94)+worldObj('bubble',523,94,136)+worldObj('bubble',638,229,66);if(k===3)a+=worldObj('bubble',663,106,112);}}
- if(n===16){a+=worldObj('drum',341,278,125)+worldObj('drum',514,260,170);if(k===1){person=worldReachAt(c,265,211,145,400,309);a+='<path d="M400 309L380 319" stroke="#a97c50" stroke-width="10" stroke-linecap="round"/><path d="M351 260l-13-17M382 252v-21M409 265l15-15" stroke="#e1b24c" stroke-width="5"/>';}if(k>=2){person=worldReachAt(c,430,211,145,550,294);a+='<path d="M550 294L584 307" stroke="#a97c50" stroke-width="10" stroke-linecap="round"/><path d="M550 245l-13-17M584 237v-21M619 251l15-15" stroke="#e1b24c" stroke-width="5"/>';}if(k===3)front+=worldPerson((c+7)%12,659,239,116,'hold',true);}
- if(n===17){a='<rect x="348" y="121" width="343" height="283" rx="16" fill="#b88676"/><rect x="371" y="146" width="296" height="202" fill="#eacb94"/><path d="M338 359H700" stroke="#bd935b" stroke-width="21"/>';if(k===0)a+='<path d="M372 148H667V346H372Z" fill="#be7980"/><path d="M421 150v194M473 150v194M526 150v194M578 150v194M630 150v194" stroke="#a35f70" stroke-width="8"/>';else a+='<path d="M372 148H439L417 346H372ZM600 148H667V346H622Z" fill="#be7980"/>';if(k>=2)a+=worldObj('puppet',445,256,104);if(k===3)a+=worldObj('puppet',558,258,102);if(k>=2)a+='<rect x="348" y="359" width="343" height="45" rx="8" fill="#b88676"/><path d="M338 359H700" stroke="#bd935b" stroke-width="21"/>';}
- if(n===18){a+=worldObj('basket',476,303,158);if(k<3){a+=worldObj('leaf',358,348,87)+worldObj('leaf',645,323,80);if(k>=1)a+=worldObj('leaf',496,292,78);if(k===2)a+=worldObj('leaf',536,303,76)+worldObj('leaf',466,320,84);}else a+=Array.from({length:7},(_,i)=>`<g transform="translate(420 330) rotate(${i*360/7})">${worldObj('leaf',-26,-109,77)}</g>`).join('');}
- if(n===19){a='<ellipse cx="493" cy="386" rx="148" ry="37" fill="#a97d56"/>';if(k===0||k===1)a+='<path d="M482 368Q444 313 452 296Q480 313 489 351Q496 296 518 286Q528 319 501 365Q539 329 559 341Q549 365 506 374" fill="#76a36a"/>';if(k===1){person='';front+=worldReachAt(c,350,211,145,481,346);}if(k===2){person='';front+=worldReachAt(c,350,211,145,508,270)+worldObj('carrot',421,215,143);}if(k===3)a+=worldObj('basket',444,294,158)+worldObj('carrot',474,266,111);}
- if(n===20){if(k===0)a+='<path d="M440 160v-13q0-12 10-12q10 0 10 11" fill="none" stroke="#a47952" stroke-width="5"/>'+worldObj('coat',365,154,157);if(k===1){person=worldPerson(c,126,211,145,'hold');a+=worldObj('coat',145,worldCharacters[c].animal?342:325,100);}if(k===2)person=worldPerson(c,126,211,145,'coat');if(k===3){person='';a+='<path d="M546 105L649 82V342L546 342Z" fill="#b4d1b9"/>';front+=worldPerson(c,540,213,146,'coat');}}
- if(n===21){a+='<path d="M0 407H800M0 436H800" stroke="#8e8475" stroke-width="7"/><path d="M45 406l-12 33M139 406l-12 33M233 406l-12 33M327 406l-12 33M421 406l-12 33M515 406l-12 33M609 406l-12 33M703 406l-12 33" stroke="#a48f70" stroke-width="8"/>';a+=worldObj('train',k>=2?454:328,223,250);if(k===1)a+=worldObj('ticket',288,282,88);if(k>=2){person='';const who=worldCharacters[c],face=who.animal?friendlyAnimal(who.animal):worldHuman(who);front+=`<svg x="600" y="303" width="54" height="55" viewBox="${who.animal?'10 10 100 90':'15 7 100 85'}" aria-hidden="true">${face}</svg>`;}if(k===3)a+='<rect x="312" y="198" width="16" height="185" rx="5" fill="#9b7e5b"/><rect x="274" y="171" width="94" height="52" rx="7" fill="#eec770"/>';}
- if(n===22){a+=worldObj('lilypad',542,333,132);a+=worldObj('boat',[200,375,466,549][k],[336,284,284,274][k],128);if(k===3)a+=worldObj('duck',375,325,117);}
- if(n===23){a=worldTable()+worldObj('cake',427,136,184);if(k>=1)a+=worldObj('strawberry',448,149,61)+worldObj('strawberry',510,152,60);if(k>=2)a+=worldObj('flag',497,76,105);if(k===3){front+=worldPerson((c+2)%12,669,231,116,'stand',true);front+=worldPerson((c+6)%12,319,235,110,'stand');}}
- const desc=`${worldCharacters[c].name}. ${s.title}. ${s.steps[k]} Scene arrangement ${v+1}.`;
- return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 480" role="img" aria-label="${worldEscape(desc)}"><title>${worldEscape(desc)}</title><g stroke-linejoin="round" stroke-linecap="round">${b}${person}${a}${front}</g></svg>`;
+function worldTree(x, y, h = 260, kind = 0) {
+  return `<g transform="translate(${x} ${y}) scale(${h / 260})"><path d="M50 115L42 260H78L70 115" fill="#ad7952"/><path d="M58 160L25 119M62 175L104 129" stroke="#ad7952" stroke-width="12" fill="none"/>${kind % 3 === 1 ? '<path d="M60 0L4 105H27L0 162H120L94 104H116Z" fill="#4c987e"/>' : kind % 3 === 2 ? '<ellipse cx="60" cy="89" rx="65" ry="80" fill="#e8b54f"/><ellipse cx="40" cy="66" rx="35" ry="49" fill="#efca72"/>' : '<circle cx="26" cy="90" r="46" fill="#76ad83"/><circle cx="91" cy="91" r="48" fill="#67a17c"/><circle cx="57" cy="47" r="49" fill="#8abd88"/>'}${kind % 3 === 0 ? '<circle cx="21" cy="88" r="7" fill="#e68b68"/><circle cx="75" cy="65" r="7" fill="#e68b68"/><circle cx="100" cy="111" r="7" fill="#e68b68"/>' : ''}</g>`;
 }
-function worldCover(skillId){const map={seeing:[10,3],language:[6,2],stories:[3,3],sounds:[16,3],attention:[5,2],calm:[15,3],everyday:[2,2],access:[8,3]};const [s,k]=map[skillId]||[0,3];return worldScene(s,k,({seeing:0,language:2,stories:8,sounds:4,attention:3,calm:5,everyday:9,access:7})[skillId]||0,({seeing:0,language:1,stories:2,sounds:3,attention:4,calm:5,everyday:6,access:7})[skillId]||0);}
+function worldFlower(x, y, c = '#e97b75', r = 12) {
+  return `<g transform="translate(${x} ${y})"><path d="M0 0V38M0 22Q-21 11-23 23Q-17 34 0 29" stroke="#629e78" stroke-width="5" fill="#8ab787"/>${[0, 72, 144, 216, 288].map(a => `<ellipse cy="-${r}" rx="${r * 0.58}" ry="${r}" fill="${c}" transform="rotate(${a})"/>`).join('')}<circle r="${r * 0.6}" fill="#f2cf62"/></g>`;
+}
+function worldObj(id, x, y, size = 110, extra = '') {
+  let b = '';
+  const own = {
+    openbook:
+      '<path d="M60 29Q35 11 5 24V99Q34 87 60 106Q87 88 115 99V24Q87 11 60 29Z" fill="#ffefd0" stroke="#80a39b" stroke-width="4"/><path d="M60 29V106M16 39q18-5 33 5M16 54q18-5 33 5M16 69q18-5 33 5M73 44q15-10 31-5M73 59q15-10 31-5M73 74q15-10 31-5" stroke="#b9bda5" stroke-width="3" fill="none"/>',
+    cake: '<path d="M18 52H103V103H18Z" fill="#edd0a0" stroke="#a78664" stroke-width="2"/><path d="M18 51Q27 40 36 51Q45 40 54 51Q63 40 72 51Q81 40 90 51Q99 40 103 51V65H18Z" fill="#fff6d9" stroke="#a78664" stroke-width="2"/><path d="M19 81H102" stroke="#c68e7a" stroke-width="7"/>',
+    blanket:
+      '<path d="M10 28Q56 9 111 28V105H10Z" fill="#9bb9ce" stroke="#6e91ad" stroke-width="3"/><path d="M15 48H106M15 75H106M35 24V101M66 20V101M94 25V101" stroke="#d5e1e8" stroke-width="5"/><path d="M12 109v10M25 109v10M38 109v10M51 109v10M64 109v10M77 109v10M90 109v10M104 109v10" stroke="#6e91ad" stroke-width="3"/>',
+    feather:
+      '<path d="M23 107Q8 32 82 11Q113 8 97 39Q84 88 23 107Z" fill="#d6b879"/><path d="M14 119L90 23M32 93L27 58M47 75L47 34M62 55L63 23M34 94L67 84M51 75L86 62M65 55L99 43" stroke="#aa8a58" stroke-width="2.5" fill="none"/>',
+    shell:
+      '<path d="M18 92Q-3 51 23 29Q43 1 62 18Q88-1 106 30Q130 59 103 93L64 109Z" fill="#edb9a0" stroke="#c58c73" stroke-width="3"/><path d="M62 105L24 31M62 105L44 20M62 105L82 20M62 105L103 33" stroke="#f8d7bd" stroke-width="6" fill="none"/>',
+    bookmark:
+      '<path d="M34 9H88V111L61 89L34 111Z" fill="#dfa175" stroke="#ad7758" stroke-width="2"/><circle cx="61" cy="35" r="14" fill="#f8e6b6"/><path d="M61 16V0" stroke="#718c86" stroke-width="4"/>',
+    puppet:
+      '<path d="M31 116Q18 69 44 61V45H80V63Q101 79 92 116Z" fill="#77aaa5"/><circle cx="60" cy="41" r="28" fill="#e5b680"/><circle cx="39" cy="19" r="10" fill="#e5b680"/><circle cx="82" cy="19" r="10" fill="#e5b680"/><circle cx="49" cy="38" r="3" fill="#4b4239"/><circle cx="72" cy="38" r="3" fill="#4b4239"/><path d="M52 52Q61 59 70 52" stroke="#8f6650" stroke-width="2" fill="none"/><path d="M45 78h33M60 65V113" stroke="#bdd9ce" stroke-width="3"/>',
+    seed: '<ellipse cx="60" cy="64" rx="20" ry="13" fill="#b87b40"/><path d="M50 57Q60 51 69 58" stroke="#e6b168" stroke-width="3" fill="none"/>',
+    twig: '<path d="M14 92L105 25M49 66L45 38M76 47L102 47" stroke="#916847" stroke-width="9" fill="none"/>',
+    envelope:
+      '<rect x="9" y="29" width="102" height="67" rx="6" fill="#fff5d6" stroke="#b8a681" stroke-width="3"/><path d="M10 32L60 67L109 32M10 95L46 60M110 95L76 60" stroke="#b8a681" fill="none" stroke-width="3"/><rect x="87" y="38" width="13" height="17" rx="2" fill="#7ab4af"/>',
+    mailbox:
+      '<path d="M22 25Q60 0 98 25V76H22Z" fill="#5598b5"/><path d="M60 78V115" stroke="#a47952" stroke-width="10"/><rect x="36" y="33" width="49" height="10" rx="4" fill="#304e68"/><path d="M98 37h16V15H99" fill="#ed8d72"/>',
+    kite: '<path d="M60 7L103 50L60 102L18 50Z" fill="#e7b84e" stroke="#8e7255" stroke-width="2"/><path d="M60 7L60 102L18 50H103" stroke="#fff6ce" stroke-width="2" fill="none"/><path d="M60 102q-15 15-4 23" stroke="#797b6d" stroke-width="2" fill="none"/><path d="M53 111l-13-4 2 11 12-3 10 8 5-10Z" fill="#d5818e"/>',
+    boat: '<path d="M10 65L38 100H89L111 65L62 48Z" fill="#e9c86f"/><path d="M10 65L61 80L62 48M61 80L111 65" stroke="#bc9950" stroke-width="2" fill="none"/>',
+    nest: '<ellipse cx="61" cy="69" rx="48" ry="22" fill="#9b7350"/><path d="M14 62q40 40 95 0M17 73l83 9M31 57l66 30M22 83l72-26M18 69l83 4" fill="none" stroke="#c79b66" stroke-width="4"/><ellipse cx="60" cy="61" rx="29" ry="11" fill="#76583f"/>',
+    bird: '<ellipse cx="60" cy="64" rx="32" ry="24" fill="#68a7b8"/><circle cx="83" cy="42" r="20" fill="#68a7b8"/><path d="M101 39L119 47L102 51" fill="#e8b345"/><ellipse cx="51" cy="62" rx="19" ry="12" fill="#91c7ce"/><path d="M29 62L4 43L13 80" fill="#68a7b8"/><circle cx="88" cy="39" r="3" fill="#354853"/><path d="M49 85v14M72 84v14" stroke="#a57450" stroke-width="3"/>',
+    lilypad:
+      '<ellipse cx="60" cy="76" rx="53" ry="22" fill="#79ae76"/><path d="M60 76L82 57L99 65Z" fill="#a8d9d6"/>',
+    vase: '<path d="M45 20H75L71 43Q109 80 91 108H29Q11 79 49 43Z" fill="#72acb6"/><path d="M33 82h53" stroke="#c4e3dc" stroke-width="7"/>',
+    bubblejar:
+      '<path d="M20 30H100V106Q60 122 20 106Z" fill="#d8e9e6" stroke="#89b1b5" stroke-width="3"/><path d="M27 65H93V101Q60 111 27 101Z" fill="#a5d0d5"/><ellipse cx="60" cy="30" rx="40" ry="12" fill="#a3c9ce" stroke="#89b1b5" stroke-width="3"/><circle cx="43" cy="82" r="8" fill="none" stroke="#ebf6ea" stroke-width="3"/><circle cx="75" cy="91" r="5" fill="none" stroke="#ebf6ea" stroke-width="2"/>',
+    bubblewand:
+      '<circle cx="60" cy="34" r="24" fill="none" stroke="#d78aa8" stroke-width="8"/><path d="M60 60V112" stroke="#d78aa8" stroke-width="8"/>',
+    bubble:
+      '<circle cx="60" cy="60" r="44" fill="#cce8ee" fill-opacity=".6" stroke="#96c6d0" stroke-width="3"/><path d="M32 41Q46 18 72 26M77 91l10-8" fill="none" stroke="white" stroke-width="6" stroke-linecap="round"/>',
+    flag: '<path d="M33 112V8" stroke="#a07850" stroke-width="5"/><path d="M36 11H104L83 35L104 58H36Z" fill="#dd8b75"/><circle cx="63" cy="33" r="9" fill="#f6d66b"/>',
+    sandcastle:
+      '<path d="M19 58H100V104H19Z" fill="#e9c779"/><path d="M13 57V32H26V43H39V32H52V57M68 57V32H81V43H94V32H107V57" fill="#e9c779"/><path d="M50 104V79Q60 63 71 79V104" fill="#c8a05b"/>',
+    shaker:
+      '<ellipse cx="60" cy="33" rx="27" ry="30" fill="#e1a359"/><path d="M54 59H67V112H54Z" fill="#ac7a50"/><path d="M36 30h48M40 43h41" stroke="#f7dca3" stroke-width="5"/>',
+    tambourine:
+      '<ellipse cx="60" cy="65" rx="45" ry="34" fill="#e6b864" stroke="#ae7c55" stroke-width="7"/><ellipse cx="60" cy="58" rx="39" ry="27" fill="#fff2c9"/><path d="M21 70l14 5M49 90h18M87 74l13-7" stroke="#b2c3c5" stroke-width="9"/>',
+    piece:
+      '<path d="M28 24H57Q52 4 68 6Q82 7 78 24H101V52Q119 46 116 62Q116 78 101 73V99H74Q81 117 65 116Q50 116 55 99H28V73Q8 80 8 62Q9 47 28 52Z" fill="#e1ae4d" stroke="#bd8740" stroke-width="2"/>',
+    ticket:
+      '<path d="M12 30H109V48Q90 60 109 72V92H12V72Q31 60 12 48Z" fill="#eac267"/><path d="M79 32V89" stroke="#ae8449" stroke-width="3" stroke-dasharray="6 5"/><path d="M28 45h32M28 59h40M28 75h28" stroke="#f7e4b0" stroke-width="5"/>'
+  };
+  if (own[id]) b = `<svg viewBox="0 0 120 120" aria-hidden="true">${own[id]}</svg>`;
+  else b = pictureIcon(id);
+  const view = b.match(/^<svg[^>]*viewBox="([^"]+)"/)?.[1] || '0 0 120 120';
+  return `<svg x="${x}" y="${y}" width="${size}" height="${size}" viewBox="${view}" aria-hidden="true" ${extra}>${svgBody(b)}</svg>`;
+}
+function worldBackdrop(place, v) {
+  const indoor = ['kitchen', 'bedroom', 'playroom', 'studio', 'library', 'music', 'hallway'].includes(place),
+    shift = v % 4,
+    sky = ['#dceff1', '#e8f0d9', '#f9e8d5', '#e9e5f0'][v % 4];
+  let b = '';
+  if (indoor) {
+    b = `<rect width="800" height="480" fill="${['#f7ead4', '#eef0d9', '#eee4ee', '#e4eff0'][v % 4]}"/><rect y="348" width="800" height="132" fill="#d7ad7b"/><path d="M0 350H800M0 411H800M130 350L110 480M400 350V480M670 350L690 480" stroke="#bf9469" stroke-width="3"/>`;
+    const wx = v % 2 ? 480 : 70;
+    b += `<rect x="${wx}" y="36" width="174" height="147" rx="19" fill="#a8ccc8" stroke="#fdf8ed" stroke-width="14"/><circle cx="${wx + 121}" cy="77" r="21" fill="#f0ca62"/><path d="M${wx} 150q60-47 174 0v32H${wx}Z" fill="#8abd91"/><path d="M${wx + 87} 36v147M${wx} 112h174" stroke="#fdf8ed" stroke-width="8"/>`;
+    if (v >= 4)
+      b += `<path d="M10 50Q10 0 58 5L70 230Q29 200 10 230Z" fill="#d79086"/><path d="M786 5Q738 0 726 54L717 230Q760 207 785 229Z" fill="#d79086"/>`;
+    if (place === 'bedroom')
+      b +=
+        '<path d="M560 170v150H750V170" fill="#c6c6de" stroke="#8c8bb1" stroke-width="12"/><path d="M549 281H760V364H549Z" fill="#a5b9ce"/><rect x="566" y="244" width="68" height="35" rx="14" fill="#fcf5dc"/>';
+    if (['library', 'playroom', 'studio', 'music'].includes(place))
+      b += `<rect x="${v % 2 ? 38 : 599}" y="207" width="160" height="140" rx="9" fill="#c99a6a"/>${Array.from({ length: 6 }, (_, i) => `<rect x="${(v % 2 ? 52 : 613) + i * 21}" y="225" width="16" height="${45 + (i % 3) * 9}" rx="3" fill="${worldPalette[i]}"/>`).join('')}<path d="M${v % 2 ? 38 : 599} 284h160" stroke="#b58258" stroke-width="7"/>`;
+    if (place === 'kitchen')
+      b +=
+        '<rect x="533" y="224" width="224" height="127" rx="8" fill="#8eb8af"/><path d="M530 225H762" stroke="#fff5dd" stroke-width="13"/><rect x="552" y="254" width="74" height="81" rx="4" fill="#abcbbd"/><rect x="651" y="254" width="84" height="81" rx="4" fill="#abcbbd"/><circle cx="615" cy="290" r="4" fill="#6c8f83"/>';
+    if (place === 'hallway')
+      b +=
+        '<path d="M541 345V96Q632 72 720 96V345Z" fill="#92b6ab" stroke="#fff4dd" stroke-width="10"/><circle cx="681" cy="227" r="7" fill="#d5ae55"/>';
+    b += `<ellipse cx="375" cy="401" rx="${195 + shift * 12}" ry="48" fill="${['#c6dbb3', '#dbb3a4', '#b1cad0', '#d8c4db'][v % 4]}"/>`;
+  } else {
+    b = `<rect width="800" height="480" fill="${sky}"/><circle cx="${v % 2 ? 669 : 112}" cy="${69 + shift * 12}" r="${35 + shift * 3}" fill="#f6d16b"/>${worldCloud(290 - shift * 35, 60, 110 + shift * 10)}${worldCloud(580 - shift * 50, 120, 100)}<path d="M0 286Q170 ${180 + shift * 12} 400 280Q600 205 800 266V480H0Z" fill="#a9c89a"/><path d="M0 343Q230 277 440 342Q640 290 800 323V480H0Z" fill="#c4d9a3"/>`;
+    if (place === 'beach')
+      b +=
+        '<path d="M0 223Q200 210 800 230V480H0Z" fill="#9acdd3"/><path d="M0 286Q185 351 408 292Q575 266 800 324V480H0Z" fill="#f1d595"/><path d="M0 273Q150 323 333 287" stroke="#e6f4e7" stroke-width="8" fill="none"/>';
+    else if (place === 'pond')
+      b +=
+        '<ellipse cx="496" cy="353" rx="265" ry="95" fill="#92c7cc"/><ellipse cx="512" cy="351" rx="224" ry="68" fill="#aadadd"/>';
+    else if (place === 'village' || place === 'station')
+      b += `<path d="M${v % 2 ? 74 : 539} 168h169v158H${v % 2 ? 74 : 539}Z" fill="#efc38b"/><path d="M${v % 2 ? 60 : 525} 171L${v % 2 ? 157 : 622} 85L${v % 2 ? 258 : 723} 171Z" fill="#bf7d6c"/><rect x="${v % 2 ? 118 : 583}" y="243" width="47" height="83" rx="20" fill="#7ca7a3"/>${worldTree(v % 2 ? 644 : 16, 130, 210, v)}`;
+    else
+      b +=
+        worldTree(v % 2 ? 609 : 18, 112, 225 + shift * 9, v) +
+        (place === 'woodland' || v >= 4 ? worldTree(v % 2 ? 18 : 635, 174, 173, (v + 1) % 3) : '');
+    if (v === 1 || v === 5)
+      b += '<path d="M275 338Q467 295 678 346L700 369Q480 325 267 364Z" fill="#e8d7a8"/>';
+    if (v === 2 || v === 6)
+      b +=
+        '<path d="M3 282h196M18 260v73M67 260v73M116 260v73M165 260v73" stroke="#ede2bd" stroke-width="11" fill="none"/>';
+    if (v === 3 || v === 7)
+      b +=
+        '<path d="M40 325Q105 306 164 326" stroke="#a88667" stroke-width="13" fill="none"/><path d="M56 330v46M149 330v46" stroke="#a88667" stroke-width="9"/>';
+    b += Array.from({ length: 5 + shift }, (_, i) =>
+      place === 'pond' && 40 + i * (110 - shift * 4) > 225
+        ? ''
+        : worldFlower(
+            40 + i * (110 - shift * 4),
+            420 + (i % 2) * 14,
+            worldPalette[(i + v) % 8],
+            6 + (i % 2) * 2
+          )
+    ).join('');
+  }
+  return b;
+}
+function worldTable() {
+  return '<path d="M327 313v119M650 313v119" stroke="#a9784d" stroke-width="17" stroke-linecap="round"/><rect x="304" y="294" width="371" height="27" rx="12" fill="#c99a68"/><path d="M321 299h334" stroke="#edc590" stroke-width="4"/>';
+}
+function worldScene(storyIndex, step = 0, character = 0, variant = 0) {
+  const n = ((storyIndex % 24) + 24) % 24,
+    s = worldStories[n],
+    k = Math.max(0, Math.min(3, step | 0)),
+    c = ((character % 12) + 12) % 12,
+    v = ((variant % 8) + 8) % 8;
+  let b = worldBackdrop(s.place, v),
+    a = '',
+    front = '',
+    person = worldPerson(c, 126, 211, 145, 'stand');
+  if (n === 0) {
+    a =
+      '<path d="M382 300H568L548 401H403Z" fill="#cf8c65"/><ellipse cx="475" cy="300" rx="93" ry="22" fill="#886545"/>';
+    if (k === 0) a += worldObj('seed', 603, 326, 64);
+    if (k === 1) {
+      person = '';
+      front += worldReachAt(c, 280, 211, 145, 411, 300) + worldObj('seed', 381, 268, 60);
+    }
+    if (k === 2) {
+      person = worldReachAt(c, 615, 211, 145, 603, 241, true);
+      a +=
+        worldObj('wateringcan', 517, 219, 159) +
+        worldObj('sprout', 425, 211, 100) +
+        '<path d="M531 276l-39 22M525 268l-44 23" stroke="#78b9d0" stroke-width="6" stroke-linecap="round"/>';
+    }
+    if (k === 3)
+      a +=
+        '<path d="M474 205V301M474 272Q440 248 430 263Q445 282 474 276M475 255Q500 237 514 245Q504 263 475 266" stroke="#639e72" stroke-width="7" fill="#8ab789"/>' +
+        worldFlower(474, 205, '#e67c92', 40);
+  }
+  if (n === 1) {
+    if (k < 3)
+      a +=
+        '<g fill="#9dabbc"><ellipse cx="440" cy="83" rx="175" ry="50"/><circle cx="373" cy="51" r="56"/><circle cx="485" cy="53" r="67"/></g>';
+    if (k === 1 || k === 2)
+      a += Array.from(
+        { length: 15 },
+        (_, i) =>
+          `<path d="M${310 + (i % 5) * 70} ${153 + Math.floor(i / 5) * 65}l-12 24" stroke="#80b4d0" stroke-width="5"/>`
+      ).join('');
+    if (k === 2) {
+      a += worldObj('umbrella', 130, 143, 260);
+      person = worldReachAt(c, 126, 238, 145, 260, 337);
+    }
+    if (k === 3)
+      a +=
+        '<path d="M311 229A177 177 0 0 1 665 229" fill="none" stroke="#e79283" stroke-width="18"/><path d="M330 229A158 158 0 0 1 646 229" fill="none" stroke="#ebc963" stroke-width="18"/><path d="M349 229A139 139 0 0 1 627 229" fill="none" stroke="#91bd98" stroke-width="18"/>';
+    a += '<ellipse cx="498" cy="416" rx="137" ry="22" fill="#a8d3d3"/>';
+  }
+  if (n === 2) {
+    a = '<path d="M298 310L605 299L686 417L315 434Z" fill="#e6a091"/>';
+    a +=
+      '<path d="M335 315l54 110M415 310l53 113M494 307l55 111M311 348l326-4M323 390l343-11" stroke="#fff0d5" stroke-width="12" opacity=".7"/>';
+    if (k === 0 || k === 3) a += worldObj('basket', 536, 270, 143);
+    if (k === 1 || k === 2)
+      a +=
+        worldObj('apple', 387, 318, 91) +
+        worldObj('pear', 479, 330, 80) +
+        worldObj('cup', 335, 279, 88) +
+        worldObj('cup', 572, 321, 78);
+    if (k === 2) front += worldSeat((c + 3) % 12, 642, 224, 144);
+    if (k === 3) a += worldObj('apple', 562, 264, 70);
+  }
+  if (n === 3) {
+    a =
+      '<path d="M400 170L367 418M581 170L614 418M420 333L393 398M567 333L594 398" stroke="#bd8b58" stroke-width="10"/><rect x="386" y="103" width="217" height="233" rx="4" fill="#fffcdf" stroke="#d6b98a" stroke-width="8"/>';
+    if (k === 0) a += worldObj('paintbrush', 626, 301, 110) + worldObj('cup', 634, 349, 91);
+    if (k === 1) {
+      person = worldReachAt(c, 235, 211, 145, 381, 289);
+      a += worldObj('paintbrush', 327, 206, 127);
+    }
+    if (k >= 2)
+      a +=
+        '<path d="M492 207V312" stroke="#78a56d" stroke-width="8"/>' +
+        worldFlower(492, 207, '#e98c9e', 41) +
+        '<path d="M407 318q91-24 175 0" stroke="#a3bb82" stroke-width="8" fill="none"/>';
+    if (k === 3) front += worldPerson((c + 4) % 12, 634, 245, 119, 'stand', true);
+  }
+  if (n === 4) {
+    if (k < 2) {
+      person = worldSeat(c, 223, 205, 164);
+      a += k === 0 ? worldObj('book', 415, 248, 98) : worldObj('openbook', 239, 292, 92);
+    }
+    if (k === 2) a += worldObj('book', 424, 258, 100);
+    a +=
+      '<rect x="399" y="337" width="111" height="19" rx="7" fill="#bb8c65"/><path d="M410 351v66M499 351v66" stroke="#bb8c65" stroke-width="9"/>';
+    if (k === 3) {
+      person = '';
+      front += worldRestingBed(c);
+    }
+  }
+  if (n === 5) {
+    a =
+      '<path d="M416 274H623V403H416Z" fill="#deb875"/><path d="M416 274L385 240H581L623 274" fill="#f0d398"/>';
+    if (k === 0)
+      a +=
+        worldObj('ball', 302, 345, 95) + worldObj('teddy', 624, 333, 102) + worldObj('blocks', 260, 278, 88);
+    if (k === 1) {
+      person = worldReachAt(c, 280, 211, 145, 437, 318);
+    }
+    if (k === 1)
+      a +=
+        worldObj('ball', 413, 264, 91) + worldObj('teddy', 643, 334, 101) + worldObj('blocks', 280, 337, 86);
+    if (k === 2)
+      a +=
+        worldObj('ball', 442, 280, 87) + worldObj('teddy', 518, 288, 95) + worldObj('blocks', 463, 337, 79);
+    if (k === 1 || k === 2) a += '<path d="M416 337H623V403H416Z" fill="#deb875"/>';
+    if (k === 3) a += '<rect x="408" y="266" width="225" height="21" rx="7" fill="#e9c584"/>';
+  }
+  if (n === 6) {
+    a =
+      '<path d="M327 393v39M650 393v39" stroke="#a9784d" stroke-width="17"/><rect x="304" y="374" width="371" height="27" rx="12" fill="#c99a68"/><ellipse cx="489" cy="363" rx="115" ry="22" fill="#b6d2ce"/><path d="M476 326v-79q0-34 36-34q34 0 34 30" stroke="#97aeb3" stroke-width="13" fill="none"/>';
+    if (k === 0) a += worldObj('apple', 590, 295, 94);
+    if (k === 1 || k === 2) {
+      person = worldReachAt(c, 372, 211, 145, 527, 365);
+      a += worldObj('apple', 478, 309, 92);
+      if (k === 1) a += '<path d="M545 250v89" stroke="#8bc7d8" stroke-width="9" stroke-dasharray="9 5"/>';
+      if (k === 2) a += worldObj('cloth', 508, 340, 58);
+    }
+    if (k === 3)
+      a +=
+        '<ellipse cx="494" cy="365" rx="69" ry="10" fill="#fcf6df" stroke="#aebbb3" stroke-width="3"/>' +
+        worldObj('apple', 452, 278, 100);
+  }
+  if (n === 7) {
+    const xx = [465, 417, 480, 578][k],
+      yy = [331, 230, 146, 56][k];
+    a += worldObj('kite', xx, yy, 138);
+    if (k > 0) {
+      person = worldReachAt(c, 126, 211, 145, 263, 331);
+      a += `<path d="M${xx + 68} ${yy + 114}Q340 266 263 331" stroke="#918575" stroke-width="2.5" fill="none"/>`;
+    }
+    if (k >= 2)
+      a +=
+        '<path d="M301 137q58-17 101 3M520 216q61-20 106 0" stroke="#fff9df" stroke-width="6" fill="none"/>';
+  }
+  if (n === 8) {
+    a += worldObj('mailbox', 530, 214, 172);
+    if (k === 0) a += worldObj('paper', 345, 306, 122) + worldObj('envelope', 444, 340, 118);
+    if (k === 1) {
+      person = worldPerson(c, 126, 211, 145, 'hold');
+      a += worldObj('envelope', 150, 330, 100);
+    }
+    if (k === 2) {
+      person = worldReachAt(c, 420, 211, 145, 572, 278);
+      a += worldObj('envelope', 564, 216, 100);
+    }
+    if (k === 3)
+      front += worldReachAt((c + 3) % 12, 632, 242, 130, 631, 343, true) + worldObj('envelope', 586, 295, 90);
+  }
+  if (n === 9) {
+    a += '<path d="M365 268Q512 246 720 257" stroke="#9e764f" stroke-width="20" fill="none"/>';
+    if (k === 0) a += worldObj('twig', 432, 352, 123) + worldObj('bird', 551, 290, 118);
+    if (k === 1)
+      a +=
+        worldObj('twig', 474, 183, 145, 'transform="rotate(35 547 255)"') + worldObj('bird', 544, 142, 130);
+    if (k === 2) a += worldObj('nest', 459, 165, 173) + worldObj('bird', 620, 144, 127);
+    if (k === 3) a += worldObj('bird', 486, 157, 127) + worldObj('nest', 459, 165, 173);
+  }
+  if (n === 10) {
+    if (k === 0)
+      a +=
+        '<rect x="344" y="355" width="87" height="75" rx="9" fill="#dd9b69"/><rect x="463" y="355" width="87" height="75" rx="9" fill="#7eacae"/><rect x="589" y="355" width="87" height="75" rx="9" fill="#e3bd68"/>';
+    else {
+      a += '<rect x="450" y="352" width="104" height="80" rx="9" fill="#dd9b69"/>';
+      if (k >= 2) a += '<rect x="450" y="271" width="104" height="80" rx="9" fill="#7eacae"/>';
+      if (k >= 3) a += '<rect x="450" y="190" width="104" height="80" rx="9" fill="#e3bd68"/>';
+      if (k === 1)
+        a +=
+          '<rect x="580" y="355" width="87" height="75" rx="9" fill="#7eacae"/><rect x="324" y="355" width="87" height="75" rx="9" fill="#e3bd68"/>';
+      if (k === 2) a += '<rect x="608" y="355" width="87" height="75" rx="9" fill="#e3bd68"/>';
+    }
+  }
+  if (n === 11) {
+    a += worldObj('shovel', 622, 311, 107);
+    if (k < 2) a += worldObj('bucket', 412, 271, 158);
+    if (k === 1) a += '<ellipse cx="483" cy="312" rx="53" ry="15" fill="#d4ae67"/>';
+    if (k === 2)
+      a +=
+        '<path d="M445 294H544L558 407H432Z" fill="#df9a64"/><path d="M438 370Q491 316 552 370" fill="none" stroke="#9d6b48" stroke-width="7"/>';
+    if (k === 3) a += worldObj('sandcastle', 407, 248, 199);
+  }
+  if (n === 12) {
+    a +=
+      '<rect x="358" y="264" width="281" height="152" rx="17" fill="#8abbb3"/>' +
+      worldObj('fish', 394, 278, 180) +
+      '<path d="M366 333H630M493 271v138" stroke="#f7efce" stroke-width="5"/>';
+    if (k < 3) a += '<path d="M495 272H626V332H495Z" fill="#f6e7bd"/>';
+    if (k === 0) a += worldObj('piece', 662, 310, 102);
+    if (k === 1) {
+      person = worldReachAt(c, 180, 211, 145, 311, 332);
+      a += worldObj('piece', 267, 279, 88);
+    }
+    if (k === 2) a += worldObj('piece', 503, 253, 103);
+  }
+  if (n === 13) {
+    a += worldReadingShelf();
+    if (k !== 2) a += worldObj('chair', 360, 242, 217);
+    if (k === 0) a += worldObj('book', 690, 209, 73);
+    if (k === 1) {
+      person = worldPerson(c, 126, 211, 145, 'hold');
+      a += worldObj('book', 150, worldCharacters[c].animal ? 340 : 307, 100);
+    }
+    if (k === 2) {
+      person = '';
+      front += worldSeat(c, 395, 211, 164) + worldObj('openbook', 408, 298, 98);
+    }
+    if (k === 3) a += worldObj('book', 615, 273, 73);
+  }
+  if (n === 14) {
+    a = worldTable();
+    if (k >= 1) a += '<path d="M516 182L515 252" stroke="#629e78" stroke-width="5"/>';
+    if (k >= 2) a += '<path d="M467 194L512 252M550 202L517 252" stroke="#629e78" stroke-width="5"/>';
+    a += worldObj('vase', 442, 210, 145);
+    if (k === 0) a += worldObj('flower', 606, 257, 96);
+    if (k >= 1) a += worldFlower(516, 182, '#e78c87', 26);
+    if (k >= 2) a += worldFlower(467, 194, '#e2b845', 23) + worldFlower(550, 202, '#a58abe', 25);
+    if (k === 3) front += worldPerson((c + 5) % 12, 663, 253, 120, 'stand', true);
+  }
+  if (n === 15) {
+    a += worldObj('bubblejar', 474, 309, 105);
+    if (k === 0) a += worldObj('bubblewand', 608, 284, 128);
+    if (k === 1) {
+      person = worldReachAt(c, 398, 211, 145, 534, 273);
+      a += worldObj('bubblewand', 477, 265, 114, 'transform="rotate(180 534 322)"');
+    }
+    if (k >= 2) {
+      person = worldReachAt(c, 211, 211, 145, 348, 339);
+      a += worldObj('bubblewand', 292, 234, 112);
+      a +=
+        worldObj('bubble', 390, 172, 94) +
+        worldObj('bubble', 523, 94, 136) +
+        worldObj('bubble', 638, 229, 66);
+      if (k === 3) a += worldObj('bubble', 663, 106, 112);
+    }
+  }
+  if (n === 16) {
+    a += worldObj('drum', 341, 278, 125) + worldObj('drum', 514, 260, 170);
+    if (k === 1) {
+      person = worldReachAt(c, 265, 211, 145, 400, 309);
+      a +=
+        '<path d="M400 309L380 319" stroke="#a97c50" stroke-width="10" stroke-linecap="round"/><path d="M351 260l-13-17M382 252v-21M409 265l15-15" stroke="#e1b24c" stroke-width="5"/>';
+    }
+    if (k >= 2) {
+      person = worldReachAt(c, 430, 211, 145, 550, 294);
+      a +=
+        '<path d="M550 294L584 307" stroke="#a97c50" stroke-width="10" stroke-linecap="round"/><path d="M550 245l-13-17M584 237v-21M619 251l15-15" stroke="#e1b24c" stroke-width="5"/>';
+    }
+    if (k === 3) front += worldPerson((c + 7) % 12, 659, 239, 116, 'hold', true);
+  }
+  if (n === 17) {
+    a =
+      '<rect x="348" y="121" width="343" height="283" rx="16" fill="#b88676"/><rect x="371" y="146" width="296" height="202" fill="#eacb94"/><path d="M338 359H700" stroke="#bd935b" stroke-width="21"/>';
+    if (k === 0)
+      a +=
+        '<path d="M372 148H667V346H372Z" fill="#be7980"/><path d="M421 150v194M473 150v194M526 150v194M578 150v194M630 150v194" stroke="#a35f70" stroke-width="8"/>';
+    else a += '<path d="M372 148H439L417 346H372ZM600 148H667V346H622Z" fill="#be7980"/>';
+    if (k >= 2) a += worldObj('puppet', 445, 256, 104);
+    if (k === 3) a += worldObj('puppet', 558, 258, 102);
+    if (k >= 2)
+      a +=
+        '<rect x="348" y="359" width="343" height="45" rx="8" fill="#b88676"/><path d="M338 359H700" stroke="#bd935b" stroke-width="21"/>';
+  }
+  if (n === 18) {
+    a += worldObj('basket', 476, 303, 158);
+    if (k < 3) {
+      a += worldObj('leaf', 358, 348, 87) + worldObj('leaf', 645, 323, 80);
+      if (k >= 1) a += worldObj('leaf', 496, 292, 78);
+      if (k === 2) a += worldObj('leaf', 536, 303, 76) + worldObj('leaf', 466, 320, 84);
+    } else
+      a += Array.from(
+        { length: 7 },
+        (_, i) =>
+          `<g transform="translate(420 330) rotate(${(i * 360) / 7})">${worldObj('leaf', -26, -109, 77)}</g>`
+      ).join('');
+  }
+  if (n === 19) {
+    a = '<ellipse cx="493" cy="386" rx="148" ry="37" fill="#a97d56"/>';
+    if (k === 0 || k === 1)
+      a +=
+        '<path d="M482 368Q444 313 452 296Q480 313 489 351Q496 296 518 286Q528 319 501 365Q539 329 559 341Q549 365 506 374" fill="#76a36a"/>';
+    if (k === 1) {
+      person = '';
+      front += worldReachAt(c, 350, 211, 145, 481, 346);
+    }
+    if (k === 2) {
+      person = '';
+      front += worldReachAt(c, 350, 211, 145, 508, 270) + worldObj('carrot', 421, 215, 143);
+    }
+    if (k === 3) a += worldObj('basket', 444, 294, 158) + worldObj('carrot', 474, 266, 111);
+  }
+  if (n === 20) {
+    if (k === 0)
+      a +=
+        '<path d="M440 160v-13q0-12 10-12q10 0 10 11" fill="none" stroke="#a47952" stroke-width="5"/>' +
+        worldObj('coat', 365, 154, 157);
+    if (k === 1) {
+      person = worldPerson(c, 126, 211, 145, 'hold');
+      a += worldObj('coat', 145, worldCharacters[c].animal ? 342 : 325, 100);
+    }
+    if (k === 2) person = worldPerson(c, 126, 211, 145, 'coat');
+    if (k === 3) {
+      person = '';
+      a += '<path d="M546 105L649 82V342L546 342Z" fill="#b4d1b9"/>';
+      front += worldPerson(c, 540, 213, 146, 'coat');
+    }
+  }
+  if (n === 21) {
+    a +=
+      '<path d="M0 407H800M0 436H800" stroke="#8e8475" stroke-width="7"/><path d="M45 406l-12 33M139 406l-12 33M233 406l-12 33M327 406l-12 33M421 406l-12 33M515 406l-12 33M609 406l-12 33M703 406l-12 33" stroke="#a48f70" stroke-width="8"/>';
+    a += worldObj('train', k >= 2 ? 454 : 328, 223, 250);
+    if (k === 1) a += worldObj('ticket', 288, 282, 88);
+    if (k >= 2) {
+      person = '';
+      const who = worldCharacters[c],
+        face = who.animal ? friendlyAnimal(who.animal) : worldHuman(who);
+      front += `<svg x="600" y="303" width="54" height="55" viewBox="${who.animal ? '10 10 100 90' : '15 7 100 85'}" aria-hidden="true">${face}</svg>`;
+    }
+    if (k === 3)
+      a +=
+        '<rect x="312" y="198" width="16" height="185" rx="5" fill="#9b7e5b"/><rect x="274" y="171" width="94" height="52" rx="7" fill="#eec770"/>';
+  }
+  if (n === 22) {
+    a += worldObj('lilypad', 542, 333, 132);
+    a += worldObj('boat', [200, 375, 466, 549][k], [336, 284, 284, 274][k], 128);
+    if (k === 3) a += worldObj('duck', 375, 325, 117);
+  }
+  if (n === 23) {
+    a = worldTable() + worldObj('cake', 427, 136, 184);
+    if (k >= 1) a += worldObj('strawberry', 448, 149, 61) + worldObj('strawberry', 510, 152, 60);
+    if (k >= 2) a += worldObj('flag', 497, 76, 105);
+    if (k === 3) {
+      front += worldPerson((c + 2) % 12, 669, 231, 116, 'stand', true);
+      front += worldPerson((c + 6) % 12, 319, 235, 110, 'stand');
+    }
+  }
+  const desc = `${worldCharacters[c].name}. ${s.title}. ${s.steps[k]} Scene arrangement ${v + 1}.`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 480" role="img" aria-label="${worldEscape(desc)}"><title>${worldEscape(desc)}</title><g stroke-linejoin="round" stroke-linecap="round">${b}${person}${a}${front}</g></svg>`;
+}
+function worldCover(skillId) {
+  const map = {
+    seeing: [10, 3],
+    language: [6, 2],
+    stories: [3, 3],
+    sounds: [16, 3],
+    attention: [5, 2],
+    calm: [15, 3],
+    everyday: [2, 2],
+    access: [8, 3]
+  };
+  const [s, k] = map[skillId] || [0, 3];
+  return worldScene(
+    s,
+    k,
+    { seeing: 0, language: 2, stories: 8, sounds: 4, attention: 3, calm: 5, everyday: 9, access: 7 }[
+      skillId
+    ] || 0,
+    { seeing: 0, language: 1, stories: 2, sounds: 3, attention: 4, calm: 5, everyday: 6, access: 7 }[
+      skillId
+    ] || 0
+  );
+}
 
-const worldObjectNames={seed:'seed',wateringcan:'watering can',flower:'flower',umbrella:'umbrella',coat:'coat',shoe:'shoe',basket:'basket',apple:'apple',cup:'cup',paper:'paper',paintbrush:'paintbrush',drawing:'picture',book:'book',teddy:'teddy bear',blanket:'blanket',ball:'ball',blocks:'building blocks',cloth:'cloth',plate:'plate',kite:'kite',hat:'hat',scarf:'scarf',envelope:'envelope',pencil:'pencil',twig:'twig',leaf:'leaf',feather:'feather',bucket:'bucket',shovel:'spade',shell:'shell',puzzle:'puzzle',piece:'puzzle piece',bookmark:'bookmark',vase:'vase',bubblewand:'bubble wand',bottle:'bottle',drum:'drum',shaker:'shaker',tambourine:'tambourine',puppet:'puppet',carrot:'carrot',ticket:'ticket',boat:'paper boat',cake:'cake',strawberry:'strawberry'};
-function worldObjectArt(id){return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="${worldEscape(worldObjectNames[id]||id)}">${worldObj(id,0,0,120)}</svg>`;}
+const worldObjectNames = {
+  seed: 'seed',
+  wateringcan: 'watering can',
+  flower: 'flower',
+  umbrella: 'umbrella',
+  coat: 'coat',
+  shoe: 'shoe',
+  basket: 'basket',
+  apple: 'apple',
+  cup: 'cup',
+  paper: 'paper',
+  paintbrush: 'paintbrush',
+  drawing: 'picture',
+  book: 'book',
+  teddy: 'teddy bear',
+  blanket: 'blanket',
+  ball: 'ball',
+  blocks: 'building blocks',
+  cloth: 'cloth',
+  plate: 'plate',
+  kite: 'kite',
+  hat: 'hat',
+  scarf: 'scarf',
+  envelope: 'envelope',
+  pencil: 'pencil',
+  twig: 'twig',
+  leaf: 'leaf',
+  feather: 'feather',
+  bucket: 'bucket',
+  shovel: 'spade',
+  shell: 'shell',
+  puzzle: 'puzzle',
+  piece: 'puzzle piece',
+  bookmark: 'bookmark',
+  vase: 'vase',
+  bubblewand: 'bubble wand',
+  bottle: 'bottle',
+  drum: 'drum',
+  shaker: 'shaker',
+  tambourine: 'tambourine',
+  puppet: 'puppet',
+  carrot: 'carrot',
+  ticket: 'ticket',
+  boat: 'paper boat',
+  cake: 'cake',
+  strawberry: 'strawberry'
+};
+function worldObjectArt(id) {
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="${worldEscape(worldObjectNames[id] || id)}">${worldObj(id, 0, 0, 120)}</svg>`;
+}

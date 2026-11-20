@@ -1,75 +1,655 @@
 'use strict';
-const skillOriginalFreePlay=prHome;let skillFreePlay=prInitialView==='playroom';
-let skillContext=null;
-let skillNotes={};try{const p=JSON.parse(AppStorage.getItem('spotmatch-course-notes-v1')||'{}');if(p&&typeof p==='object'&&!Array.isArray(p))skillNotes=p;}catch{}
+const skillOriginalFreePlay = prHome;
+let skillFreePlay = prInitialView === 'playroom';
+let skillContext = null;
+let skillNotes = {};
+try {
+  const p = JSON.parse(AppStorage.getItem('spotmatch-course-notes-v1') || '{}');
+  if (p && typeof p === 'object' && !Array.isArray(p)) skillNotes = p;
+} catch {}
 Purposeful.migrate();
-function skillSave(){try{AppStorage.setItem('spotmatch-course-notes-v1',JSON.stringify(skillNotes));}catch{}}
-function skillGet(id){return learningSkills.find(s=>s.id===id);}
-function skillCourseGet(id){for(const skill of learningSkills){const course=skill.courses.find(c=>c.id===id);if(course)return{skill,course};}throw Error('Unknown course');}
-function skillTitle(a){if(a.engine==='reading')return readingGame(a.key).title;if(a.engine==='vocabulary')return vocabularyModeLabels[a.mode]+': '+vocabularyCategories.get(a.category).name;if(a.engine==='world')return worldStories[a.index].title;if(a.engine==='playroom')return playroomGames.find(d=>d.id===a.key).title;if(a.engine==='original')return a.key==='visual'?courses[a.index][0]:newCourseInfo[a.key].games[a.index].title;if(a.engine==='support')return supportPathways[a.key].games[a.index].title;return a.engine==='calm'?calmActivities[a.index].title:focusGames[a.index].title;}
-function skillArt(a){if(a.engine==='reading')return readingScene(readingGame(a.key).theme,{variant:0});if(a.engine==='vocabulary')return vocabularyPicture(vocabularyCategoryIds(a.category)[0]);if(a.engine==='world')return worldScene(a.index,2,a.index%12,0);if(a.engine==='playroom')return prCover(a.key);if(a.engine==='original'){if(a.key==='visual')return art(lessonData(a.index,0).target);if(a.key==='events')return routinePicture(a.index,1);if(a.key==='stories')return storyPicture(a.index,1);return pictureIcon(newCourseInfo[a.key].games[a.index].object||'book');}if(a.engine==='support')return senGameArt(a.key,a.index);if(a.engine==='calm')return calmArt(calmActivities[a.index]);const t=focusMakeTask(a.index,0,0);if(['checklist','collect','missing'].includes(t.mode))return prSvg(`<path d="M0 280H600V360H0Z" fill="#e0e8d2"/>${prObject('basket',26,129,170)}${t.reference.map((p,i)=>`<svg x="${224+i*117}" y="90" width="110" height="150" viewBox="0 0 120 120">${svgBody(focusPicture(p))}</svg>`).join('')}`);if(t.reference.length)return focusPicture(t.reference[0]);return t.options[0]?focusPicture(t.options[0].picture):prCover('map');}
-function skillExplored(a,courseId,index){if(a.engine==='reading')return !!skillNotes[courseId]?.activities?.[index];if(a.engine==='vocabulary')return !!skillNotes[courseId]?.activities?.[index];if(a.engine==='world')return !!worldProgress[a.index]?.explored;if(skillNotes[courseId]?.activities?.[index])return true;if(a.engine==='playroom')return !!prProgress[a.key]?.explored;if(a.engine==='original')return !!(a.key==='visual'?saved[a.index]?.complete:learningProgress[a.key]?.[a.index]?.complete);if(a.engine==='support')return !!senProgress[a.key]?.[a.index]?.complete;if(a.engine==='calm')return !!calmProgress[a.index]?.explored;return !!focusProgress[a.index]?.explored;}
-function skillNav(){let wordNav=document.getElementById('vocabularyNav');if(!wordNav){wordNav=document.createElement('button');wordNav.id='vocabularyNav';wordNav.textContent='Word pictures';document.querySelector('header nav').insertBefore(wordNav,document.getElementById('courseNav'));}wordNav.onclick=()=>{vocabularyLibrary();vocabularyWrite('#vocabulary');};document.body.classList.add('pr-simple-navigation');document.querySelector('#libraryNav').textContent='Skills & support';document.querySelector('#courseNav').textContent='Guidance';document.querySelector('#guideNav').hidden=true;document.querySelector('#libraryNav').onclick=skillHome;document.querySelector('#courseNav').onclick=()=>prParents('research');document.querySelector('#brand').onclick=e=>{e.preventDefault();skillHome();};}
-function parentResearchPreview(section){
- let evidence,sources;
- if(section.research==='attention'){evidence='Research supports individual educational and environmental support. Computer-game practice does not reliably transfer to improved ADHD symptoms or everyday attention. Our activities help you try supports, rather than test concentration.';sources=[focusSources.classroom,focusSources.training];}
- else if(section.research==='calm'){evidence='Research on movement and mindfulness is mixed and studies structured programmes. These short optional activities have not been evaluated as a programme.';sources=[focusSources.movement,{title:'NCCIH · Yoga effectiveness and safety',url:'https://www.nccih.nih.gov/health/yoga-effectiveness-and-safety',note:'Background on the evidence and adapting yoga safely.'}];}
- else {const pathway=supportPathways[section.research];evidence=pathway.evidence;sources=pathway.sources.slice(0,2);}
- return `<details class="parent-research"><summary>Research & ways to adapt</summary><div><h4>Try this support</h4><p>${senEscape(section.adapt)}</p><h4>What the literature supports</h4><p>${senEscape(evidence)}</p><ul class="sen-sources">${sources.map(s=>`<li><a href="${s.url}" target="_blank" rel="noopener noreferrer">${senEscape(s.title)} ↗</a><p>${senEscape(s.note)}</p></li>`).join('')}</ul><button class="back" data-home-research="${section.research}">Read the full parent & teacher guidance →</button></div></details>`;
+function skillSave() {
+  try {
+    AppStorage.setItem('spotmatch-course-notes-v1', JSON.stringify(skillNotes));
+  } catch {}
 }
-let parentHomeView='support';
-const parentShortLabels={language:['Language','Words & understanding'],attention:['Attention & ADHD','Focus & small plans'],autism:['Autism','Meaning & shared play'],dyslexia:['Early reading','Dyslexia risk & speech sounds'],development:['Learning in small steps','Developmental support'],speech:['Speech & communication','Every way to answer'],motor:['Motor access','Comfortable ways to play'],calm:['Calm & movement','Rest, stretch, or watch']};
-function parentSupportCard(section){const[label,line]=parentShortLabels[section.id];return `<a class="support-tile" href="#support/${section.id}" data-support="${section.id}"><span class="support-tile-art" aria-hidden="true">${worldScene(...section.scene)}</span><span class="support-tile-copy"><b>${label}</b><small>${line}</small></span><span class="support-tile-arrow" aria-hidden="true">↗</span></a>`;}
-function parentBindLinks(){
- app.querySelectorAll('[data-home-course]').forEach(a=>a.onclick=e=>{if(e.ctrlKey||e.metaKey||e.shiftKey||e.altKey)return;e.preventDefault();skillCourse(a.dataset.homeCourse);});
- app.querySelectorAll('[data-home-activity]').forEach(a=>a.onclick=e=>{if(e.ctrlKey||e.metaKey||e.shiftKey||e.altKey)return;e.preventDefault();const[id,index]=a.dataset.homeActivity.split(':');skillLaunch(id,+index);});
- app.querySelectorAll('[data-home-research]').forEach(b=>b.onclick=()=>parentOpenResearch(b.dataset.homeResearch));
+function skillGet(id) {
+  return learningSkills.find(s => s.id === id);
 }
-function parentSupportDetail(id){
- const section=parentSupportSections.find(s=>s.id===id);if(!section){skillHome();return;}
- skillFreePlay=false;prLibraryMode=false;prDirectLegacy=false;skillContext=null;activeLearningCourse=null;senActive=null;
- app.innerHTML=`<div class="skill-crumb"><button class="back" id="supportBack">← All support areas</button><span>PLAY TOGETHER</span></div><section class="support-detail-head"><div><span class="eyebrow">${parentShortLabels[id][0]}</span><h1>${section.title}</h1><p>${section.goal}</p></div><div aria-hidden="true">${worldScene(...section.scene)}</div></section><section aria-labelledby="supportGames"><div class="compact-section-title"><h2 id="supportGames">Try a game</h2><span>An adult joins in.</span></div><div class="support-game-grid">${section.activities.map(([courseId,index])=>{const a=skillCourseGet(courseId).course.activities[index];return `<a class="support-game" href="#activity/${courseId}/${index}" data-home-activity="${courseId}:${index}"><span class="support-game-art" aria-hidden="true">${skillArt(a)}</span><span><b>${senEscape(skillTitle(a))}</b><small>Play now →</small></span></a>`;}).join('')}</div></section><section class="support-course-section" aria-labelledby="supportCourses"><h2 id="supportCourses">Follow a course</h2><div class="parent-course-links">${section.courses.map(courseId=>{const{course}=skillCourseGet(courseId);return `<a href="#course/${courseId}" data-home-course="${courseId}"><span><b>${senEscape(course.title)}</b><small>${course.activities.length} activities · Clear goals & everyday ideas</small></span><span aria-hidden="true">→</span></a>`;}).join('')}</div></section>${readingRelated(section)}${parentResearchPreview(section)}`;
- skillNav();app.querySelector('#supportBack').onclick=()=>{parentHomeView='support';skillHome();};parentBindLinks();skillWriteRoute('support',id);window.scrollTo(0,0);
+function skillCourseGet(id) {
+  for (const skill of learningSkills) {
+    const course = skill.courses.find(c => c.id === id);
+    if (course) return { skill, course };
+  }
+  throw Error('Unknown course');
 }
-function parentOpenResearch(key){
- prParents('research');
- const label=key==='attention'?'ADHD / ADD and concentration':key==='calm'?'Relaxation and gentle movement':supportPathways[key]?.audience;
- const details=[...app.querySelectorAll('.pr-research-section')].find(d=>d.querySelector('summary')?.textContent===label);
- if(details){details.setAttribute('open','');const summary=details.querySelector('summary');summary.focus({preventScroll:true});details.scrollIntoView({block:'start'});}
- const back=app.querySelector('#prParentBack');if(back)back.onclick=()=>parentSupportDetail(key);
+function skillTitle(a) {
+  if (a.engine === 'reading') return readingGame(a.key).title;
+  if (a.engine === 'vocabulary')
+    return vocabularyModeLabels[a.mode] + ': ' + vocabularyCategories.get(a.category).name;
+  if (a.engine === 'world') return worldStories[a.index].title;
+  if (a.engine === 'playroom') return playroomGames.find(d => d.id === a.key).title;
+  if (a.engine === 'original')
+    return a.key === 'visual' ? courses[a.index][0] : newCourseInfo[a.key].games[a.index].title;
+  if (a.engine === 'support') return supportPathways[a.key].games[a.index].title;
+  return a.engine === 'calm' ? calmActivities[a.index].title : focusGames[a.index].title;
 }
-function skillHome(){skillFreePlay=false;prLibraryMode=false;prDirectLegacy=false;skillContext=null;if(location.search)history.replaceState(null,'',location.pathname);activeLearningCourse=null;senActive=null;
- let recent=null;try{const value=JSON.parse(AppStorage.getItem('spotmatch-last-course-v1')||'null');if(value&&learningSkills.some(s=>s.courses.some(c=>c.id===value.courseId)))recent=skillCourseGet(value.courseId).course;}catch{}
- if(recent&&recent.activities.every((a,i)=>skillExplored(a,recent.id,i)))recent=null;
- app.innerHTML=`<section class="compact-welcome"><span class="eyebrow">FOR PARENTS & TEACHERS</span><h1>What would help today?</h1><p>Playful support for children with special educational needs.</p></section>${recent?`<aside class="compact-resume"><div><small>Pick up where you left off</small><b>${senEscape(recent.title)}</b></div><button class="primary" id="homeStartCourse">Continue →</button></aside>`:''}<div class="home-view-switch" role="group" aria-label="Find activities"><button data-home-view="support" aria-pressed="${parentHomeView==='support'}">By support need</button><button data-home-view="skills" aria-pressed="${parentHomeView==='skills'}">By skill</button></div><section class="support-tiles" aria-label="${parentHomeView==='support'?'Support areas':'Skills to develop'}">${parentHomeView==='support'?parentSupportSections.map(parentSupportCard).join(''):learningSkills.map(s=>`<button class="support-tile" data-skill="${s.id}"><span class="support-tile-art" aria-hidden="true">${worldCover(s.id)}</span><span class="support-tile-copy"><b>${s.title}</b><small>${s.courses.length} guided courses</small></span><span class="support-tile-arrow" aria-hidden="true">↗</span></button>`).join('')}</section><nav class="compact-resources" aria-label="More ways to explore"><button id="skillVocabulary">Word pictures <span>${vocabularyData.objectCount.toLocaleString()} objects →</span></button><button id="skillPictures">Picture stories <span>Explore →</span></button><button id="skillHelp">Parent & teacher guide <span>Read →</span></button><button id="skillFreePlay">Free play <span>Play →</span></button></nav><p class="compact-home-note">Play together. Adapt, pause, or stop whenever useful. Supportive activities, not assessments or treatments.</p>`;
- skillNav();const resume=app.querySelector('#homeStartCourse');if(resume)resume.onclick=()=>{const first=Math.max(0,recent.activities.findIndex((a,i)=>!skillExplored(a,recent.id,i)));skillLaunch(recent.id,first);};
- app.querySelectorAll('[data-home-view]').forEach(b=>b.onclick=()=>{parentHomeView=b.dataset.homeView;skillHome();app.querySelector(`[data-home-view="${parentHomeView}"]`).focus({preventScroll:true});});
- app.querySelectorAll('[data-support]').forEach(a=>a.onclick=e=>{if(e.ctrlKey||e.metaKey||e.shiftKey||e.altKey)return;e.preventDefault();parentSupportDetail(a.dataset.support);});
- app.querySelectorAll('[data-skill]').forEach(b=>b.onclick=()=>skillDetail(b.dataset.skill));
- app.querySelector('#skillVocabulary').onclick=()=>{vocabularyLibrary();vocabularyWrite('#vocabulary');};app.querySelector('#skillPictures').onclick=()=>{worldGallery();history.pushState(null,'',location.pathname+'#pictures');};app.querySelector('#skillHelp').onclick=()=>prParents('help');app.querySelector('#skillFreePlay').onclick=()=>{skillFreePlay=true;skillContext=null;prHome();};window.scrollTo(0,0);}
+function skillArt(a) {
+  if (a.engine === 'reading') return readingScene(readingGame(a.key).theme, { variant: 0 });
+  if (a.engine === 'vocabulary') return vocabularyPicture(vocabularyCategoryIds(a.category)[0]);
+  if (a.engine === 'world') return worldScene(a.index, 2, a.index % 12, 0);
+  if (a.engine === 'playroom') return prCover(a.key);
+  if (a.engine === 'original') {
+    if (a.key === 'visual') return art(lessonData(a.index, 0).target);
+    if (a.key === 'events') return routinePicture(a.index, 1);
+    if (a.key === 'stories') return storyPicture(a.index, 1);
+    return pictureIcon(newCourseInfo[a.key].games[a.index].object || 'book');
+  }
+  if (a.engine === 'support') return senGameArt(a.key, a.index);
+  if (a.engine === 'calm') return calmArt(calmActivities[a.index]);
+  const t = focusMakeTask(a.index, 0, 0);
+  if (['checklist', 'collect', 'missing'].includes(t.mode))
+    return prSvg(
+      `<path d="M0 280H600V360H0Z" fill="#e0e8d2"/>${prObject('basket', 26, 129, 170)}${t.reference.map((p, i) => `<svg x="${224 + i * 117}" y="90" width="110" height="150" viewBox="0 0 120 120">${svgBody(focusPicture(p))}</svg>`).join('')}`
+    );
+  if (t.reference.length) return focusPicture(t.reference[0]);
+  return t.options[0] ? focusPicture(t.options[0].picture) : prCover('map');
+}
+function skillExplored(a, courseId, index) {
+  if (a.engine === 'reading') return !!skillNotes[courseId]?.activities?.[index];
+  if (a.engine === 'vocabulary') return !!skillNotes[courseId]?.activities?.[index];
+  if (a.engine === 'world') return !!worldProgress[a.index]?.explored;
+  if (skillNotes[courseId]?.activities?.[index]) return true;
+  if (a.engine === 'playroom') return !!prProgress[a.key]?.explored;
+  if (a.engine === 'original')
+    return !!(a.key === 'visual' ? saved[a.index]?.complete : learningProgress[a.key]?.[a.index]?.complete);
+  if (a.engine === 'support') return !!senProgress[a.key]?.[a.index]?.complete;
+  if (a.engine === 'calm') return !!calmProgress[a.index]?.explored;
+  return !!focusProgress[a.index]?.explored;
+}
+function skillNav() {
+  let wordNav = document.getElementById('vocabularyNav');
+  if (!wordNav) {
+    wordNav = document.createElement('button');
+    wordNav.id = 'vocabularyNav';
+    wordNav.textContent = 'Word pictures';
+    document.querySelector('header nav').insertBefore(wordNav, document.getElementById('courseNav'));
+  }
+  wordNav.onclick = () => {
+    vocabularyLibrary();
+    vocabularyWrite('#vocabulary');
+  };
+  document.body.classList.add('pr-simple-navigation');
+  document.querySelector('#libraryNav').textContent = 'Skills & support';
+  document.querySelector('#courseNav').textContent = 'Guidance';
+  document.querySelector('#guideNav').hidden = true;
+  document.querySelector('#libraryNav').onclick = skillHome;
+  document.querySelector('#courseNav').onclick = () => prParents('research');
+  document.querySelector('#brand').onclick = e => {
+    e.preventDefault();
+    skillHome();
+  };
+}
+function parentResearchPreview(section) {
+  let evidence, sources;
+  if (section.research === 'attention') {
+    evidence =
+      'Research supports individual educational and environmental support. Computer-game practice does not reliably transfer to improved ADHD symptoms or everyday attention. Our activities help you try supports, rather than test concentration.';
+    sources = [focusSources.classroom, focusSources.training];
+  } else if (section.research === 'calm') {
+    evidence =
+      'Research on movement and mindfulness is mixed and studies structured programmes. These short optional activities have not been evaluated as a programme.';
+    sources = [
+      focusSources.movement,
+      {
+        title: 'NCCIH · Yoga effectiveness and safety',
+        url: 'https://www.nccih.nih.gov/health/yoga-effectiveness-and-safety',
+        note: 'Background on the evidence and adapting yoga safely.'
+      }
+    ];
+  } else {
+    const pathway = supportPathways[section.research];
+    evidence = pathway.evidence;
+    sources = pathway.sources.slice(0, 2);
+  }
+  return `<details class="parent-research"><summary>Research & ways to adapt</summary><div><h4>Try this support</h4><p>${senEscape(section.adapt)}</p><h4>What the literature supports</h4><p>${senEscape(evidence)}</p><ul class="sen-sources">${sources.map(s => `<li><a href="${s.url}" target="_blank" rel="noopener noreferrer">${senEscape(s.title)} ↗</a><p>${senEscape(s.note)}</p></li>`).join('')}</ul><button class="back" data-home-research="${section.research}">Read the full parent & teacher guidance →</button></div></details>`;
+}
+let parentHomeView = 'support';
+const parentShortLabels = {
+  language: ['Language', 'Words & understanding'],
+  attention: ['Attention & ADHD', 'Focus & small plans'],
+  autism: ['Autism', 'Meaning & shared play'],
+  dyslexia: ['Early reading', 'Dyslexia risk & speech sounds'],
+  development: ['Learning in small steps', 'Developmental support'],
+  speech: ['Speech & communication', 'Every way to answer'],
+  motor: ['Motor access', 'Comfortable ways to play'],
+  calm: ['Calm & movement', 'Rest, stretch, or watch']
+};
+function parentSupportCard(section) {
+  const [label, line] = parentShortLabels[section.id];
+  return `<a class="support-tile" href="#support/${section.id}" data-support="${section.id}"><span class="support-tile-art" aria-hidden="true">${worldScene(...section.scene)}</span><span class="support-tile-copy"><b>${label}</b><small>${line}</small></span><span class="support-tile-arrow" aria-hidden="true">↗</span></a>`;
+}
+function parentBindLinks() {
+  app.querySelectorAll('[data-home-course]').forEach(
+    a =>
+      (a.onclick = e => {
+        if (e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) return;
+        e.preventDefault();
+        skillCourse(a.dataset.homeCourse);
+      })
+  );
+  app.querySelectorAll('[data-home-activity]').forEach(
+    a =>
+      (a.onclick = e => {
+        if (e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) return;
+        e.preventDefault();
+        const [id, index] = a.dataset.homeActivity.split(':');
+        skillLaunch(id, +index);
+      })
+  );
+  app
+    .querySelectorAll('[data-home-research]')
+    .forEach(b => (b.onclick = () => parentOpenResearch(b.dataset.homeResearch)));
+}
+function parentSupportDetail(id) {
+  const section = parentSupportSections.find(s => s.id === id);
+  if (!section) {
+    skillHome();
+    return;
+  }
+  skillFreePlay = false;
+  prLibraryMode = false;
+  prDirectLegacy = false;
+  skillContext = null;
+  activeLearningCourse = null;
+  senActive = null;
+  app.innerHTML = `<div class="skill-crumb"><button class="back" id="supportBack">← All support areas</button><span>PLAY TOGETHER</span></div><section class="support-detail-head"><div><span class="eyebrow">${parentShortLabels[id][0]}</span><h1>${section.title}</h1><p>${section.goal}</p></div><div aria-hidden="true">${worldScene(...section.scene)}</div></section><section aria-labelledby="supportGames"><div class="compact-section-title"><h2 id="supportGames">Try a game</h2><span>An adult joins in.</span></div><div class="support-game-grid">${section.activities
+    .map(([courseId, index]) => {
+      const a = skillCourseGet(courseId).course.activities[index];
+      return `<a class="support-game" href="#activity/${courseId}/${index}" data-home-activity="${courseId}:${index}"><span class="support-game-art" aria-hidden="true">${skillArt(a)}</span><span><b>${senEscape(skillTitle(a))}</b><small>Play now →</small></span></a>`;
+    })
+    .join(
+      ''
+    )}</div></section><section class="support-course-section" aria-labelledby="supportCourses"><h2 id="supportCourses">Follow a course</h2><div class="parent-course-links">${section.courses
+    .map(courseId => {
+      const { course } = skillCourseGet(courseId);
+      return `<a href="#course/${courseId}" data-home-course="${courseId}"><span><b>${senEscape(course.title)}</b><small>${course.activities.length} activities · Clear goals & everyday ideas</small></span><span aria-hidden="true">→</span></a>`;
+    })
+    .join('')}</div></section>${readingRelated(section)}${parentResearchPreview(section)}`;
+  skillNav();
+  app.querySelector('#supportBack').onclick = () => {
+    parentHomeView = 'support';
+    skillHome();
+  };
+  parentBindLinks();
+  skillWriteRoute('support', id);
+  window.scrollTo(0, 0);
+}
+function parentOpenResearch(key) {
+  prParents('research');
+  const label =
+    key === 'attention'
+      ? 'ADHD / ADD and concentration'
+      : key === 'calm'
+        ? 'Relaxation and gentle movement'
+        : supportPathways[key]?.audience;
+  const details = [...app.querySelectorAll('.pr-research-section')].find(
+    d => d.querySelector('summary')?.textContent === label
+  );
+  if (details) {
+    details.setAttribute('open', '');
+    const summary = details.querySelector('summary');
+    summary.focus({ preventScroll: true });
+    details.scrollIntoView({ block: 'start' });
+  }
+  const back = app.querySelector('#prParentBack');
+  if (back) back.onclick = () => parentSupportDetail(key);
+}
+function skillHome() {
+  skillFreePlay = false;
+  prLibraryMode = false;
+  prDirectLegacy = false;
+  skillContext = null;
+  if (location.search) history.replaceState(null, '', location.pathname);
+  activeLearningCourse = null;
+  senActive = null;
+  let recent = null;
+  try {
+    const value = JSON.parse(AppStorage.getItem('spotmatch-last-course-v1') || 'null');
+    if (value && learningSkills.some(s => s.courses.some(c => c.id === value.courseId)))
+      recent = skillCourseGet(value.courseId).course;
+  } catch {}
+  if (recent && recent.activities.every((a, i) => skillExplored(a, recent.id, i))) recent = null;
+  app.innerHTML = `<section class="compact-welcome"><span class="eyebrow">FOR PARENTS & TEACHERS</span><h1>What would help today?</h1><p>Playful support for children with special educational needs.</p></section>${recent ? `<aside class="compact-resume"><div><small>Pick up where you left off</small><b>${senEscape(recent.title)}</b></div><button class="primary" id="homeStartCourse">Continue →</button></aside>` : ''}<div class="home-view-switch" role="group" aria-label="Find activities"><button data-home-view="support" aria-pressed="${parentHomeView === 'support'}">By support need</button><button data-home-view="skills" aria-pressed="${parentHomeView === 'skills'}">By skill</button></div><section class="support-tiles" aria-label="${parentHomeView === 'support' ? 'Support areas' : 'Skills to develop'}">${parentHomeView === 'support' ? parentSupportSections.map(parentSupportCard).join('') : learningSkills.map(s => `<button class="support-tile" data-skill="${s.id}"><span class="support-tile-art" aria-hidden="true">${worldCover(s.id)}</span><span class="support-tile-copy"><b>${s.title}</b><small>${s.courses.length} guided courses</small></span><span class="support-tile-arrow" aria-hidden="true">↗</span></button>`).join('')}</section><nav class="compact-resources" aria-label="More ways to explore"><button id="skillVocabulary">Word pictures <span>${vocabularyData.objectCount.toLocaleString()} objects →</span></button><button id="skillPictures">Picture stories <span>Explore →</span></button><button id="skillHelp">Parent & teacher guide <span>Read →</span></button><button id="skillFreePlay">Free play <span>Play →</span></button></nav><p class="compact-home-note">Play together. Adapt, pause, or stop whenever useful. Supportive activities, not assessments or treatments.</p>`;
+  skillNav();
+  const resume = app.querySelector('#homeStartCourse');
+  if (resume)
+    resume.onclick = () => {
+      const first = Math.max(
+        0,
+        recent.activities.findIndex((a, i) => !skillExplored(a, recent.id, i))
+      );
+      skillLaunch(recent.id, first);
+    };
+  app.querySelectorAll('[data-home-view]').forEach(
+    b =>
+      (b.onclick = () => {
+        parentHomeView = b.dataset.homeView;
+        skillHome();
+        app.querySelector(`[data-home-view="${parentHomeView}"]`).focus({ preventScroll: true });
+      })
+  );
+  app.querySelectorAll('[data-support]').forEach(
+    a =>
+      (a.onclick = e => {
+        if (e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) return;
+        e.preventDefault();
+        parentSupportDetail(a.dataset.support);
+      })
+  );
+  app.querySelectorAll('[data-skill]').forEach(b => (b.onclick = () => skillDetail(b.dataset.skill)));
+  app.querySelector('#skillVocabulary').onclick = () => {
+    vocabularyLibrary();
+    vocabularyWrite('#vocabulary');
+  };
+  app.querySelector('#skillPictures').onclick = () => {
+    worldGallery();
+    history.pushState(null, '', location.pathname + '#pictures');
+  };
+  app.querySelector('#skillHelp').onclick = () => prParents('help');
+  app.querySelector('#skillFreePlay').onclick = () => {
+    skillFreePlay = true;
+    skillContext = null;
+    prHome();
+  };
+  window.scrollTo(0, 0);
+}
 
-function skillDetail(id){skillFreePlay=false;const s=skillGet(id);skillContext=null;prDirectLegacy=false;app.innerHTML=`<div class="skill-crumb"><button class="back" id="skillBack">← All skills</button><span>CHOOSE A COURSE</span></div><section class="skill-overview"><div><span class="eyebrow">THE SKILL WE CAN SUPPORT</span><h1>${s.title}</h1><p class="skill-lead">${s.goal}</p><p><b>A useful starting point if:</b> ${s.question}</p>${s.id==='attention'?'<p class="micro">Includes ADHD / ADD support. Choose by the child’s observed needs; these games are supplementary practice, not ADHD treatment.</p>':''}</div><div aria-hidden="true">${prCover(s.image)}</div></section><h2 class="skill-section-heading">Which goal fits your child?</h2><section class="skill-course-grid">${s.courses.map(c=>{const done=c.activities.filter((a,i)=>skillExplored(a,c.id,i)).length;return `<button class="skill-course-card" data-skill-course="${c.id}"><h2>${c.title}</h2><p><b>Our goal:</b> ${c.goal}</p><div class="skill-mini-art" aria-hidden="true">${c.activities.slice(0,1).map(a=>`<span>${skillArt(a)}</span>`).join('')}</div><span class="skill-course-foot">${c.activities.length} activities${done?` · ${done} explored`:''}<b>See the course →</b></span></button>`;}).join('')}</section><p class="skill-small-note">The order is a suggestion, not a developmental assessment. An adult joins in; speech, pointing, signing, and AAC are welcome.</p>`;skillNav();document.querySelector('#skillBack').onclick=skillHome;document.querySelectorAll('[data-skill-course]').forEach(b=>b.onclick=()=>skillCourse(b.dataset.skillCourse));window.scrollTo(0,0);}
-function skillEvidenceLinks(skill){let sources=[];if(skill.id==='attention')return focusLinks(['overview','classroom','environment','training']);if(skill.id==='language')sources=supportPathways.language.sources;if(skill.id==='stories')sources=[{title:'Narrative intervention review (2021)',url:newCourseInfo.stories.source,note:'Broader narrative teaching combines explicit instruction, visual supports, and language; our games alone have not been evaluated.'},...supportPathways.language.sources.slice(1)];if(skill.id==='sounds')sources=supportPathways.dyslexia.sources;if(skill.id==='access')sources=[...supportPathways.speech.sources.slice(2),supportPathways.motor.sources[0]];if(skill.id==='everyday')sources=[{title:'ASHA: AAC and meaningful communication access',url:newCourseInfo.meaning.source,note:'AAC has no prerequisites. Picture games do not establish real-world understanding or replace a communication assessment.'}];if(skill.id==='calm')sources=[{title:'NCCIH: Yoga effectiveness and safety',url:'https://www.nccih.nih.gov/health/yoga-effectiveness-and-safety',note:'Adapt movement to the individual. Our short activities are not equivalent to a studied programme.'}];if(skill.id==='seeing')sources=[{title:'Research on discrimination teaching (2021)',url:'https://pmc.ncbi.nlm.nih.gov/articles/PMC7900359/',note:'Supports carefully targeted teaching principles, not a claim that visual comparison games treat dyslexia or improve reading.'}];return '<ul class="sen-sources">'+sources.map(s=>`<li><a href="${s.url}" target="_blank" rel="noopener noreferrer">${s.title} ↗</a><p>${s.note}</p></li>`).join('')+'</ul>';}
-function skillCourse(id){skillFreePlay=false;const{skill:s,course:c}=skillCourseGet(id);skillContext={skillId:s.id,courseId:id,index:null};prDirectLegacy=false;const done=c.activities.filter((a,i)=>skillExplored(a,id,i)).length,n=skillNotes[id]||{};const first=Math.max(0,c.activities.findIndex((a,i)=>!skillExplored(a,id,i)));app.innerHTML=`<div class="skill-crumb"><button class="back" id="skillCourseBack">← ${s.title}</button><span>GUIDED COURSE</span></div><section class="skill-course-hero"><div><span class="eyebrow">${s.title.toUpperCase()}</span><h1>${c.title}</h1><p class="skill-lead">${c.goal}</p><button class="primary" id="skillBegin">${done===c.activities.length?'Explore the course again':done?'Continue the course':'Start the first activity'} →</button><span class="micro">${c.activities.length} activities · ${done} explored · Stop or repeat whenever useful</span></div><div class="skill-course-preview" aria-hidden="true">${skillArt(c.activities[0])}</div></section><section class="skill-course-activities"><div class="section-head"><div><span class="eyebrow">A FLEXIBLE PATH THROUGH THE COURSE</span><h2>The activities</h2></div><span class="micro">Choose any starting point.</span></div><div class="skill-activity-list">${c.activities.map((a,i)=>`<button data-course-activity="${i}" class="skill-activity-row"><span class="skill-activity-number">${String(i+1).padStart(2,'0')}</span><span class="skill-activity-picture" aria-hidden="true">${skillArt(a)}</span><span><b>${skillTitle(a)}</b><span>${skillExplored(a,id,i)?'Explore again':'Open and play'} →</span></span></button>`).join('')}</div></section><details class="skill-notes"><summary>How to support this course</summary><p><b>May be useful when:</b> ${c.need}</p><div class="skill-course-purpose"><div><h2>Try it together</h2><ol><li><b>Show one example.</b> Model the meaning before asking the child to respond.</li><li><b>Play with enough help.</b> Try a short activity. Keep reminders, help, and breaks available.</li><li><b>Use it in real life.</b> Try the everyday exercise below with different objects or pictures.</li></ol></div><div><h2>Have nearby</h2><p>${c.props}.</p><h3>What to notice</h3><ul>${c.notice.map(x=>`<li>${x}.</li>`).join('')}</ul><p class="micro">These are useful observations, not mastery criteria or diagnostic scores.</p></div></div></details><section class="skill-real-life"><span class="eyebrow">THE PART THAT MATTERS AWAY FROM THE SCREEN</span><h2>Try this in everyday life</h2><p>${c.home}</p><button class="secondary" id="skillDownloadPlan">Save a practice plan ↓</button><label><input type="checkbox" id="skillOffline" ${n.offline?'checked':''}> We tried an everyday example together.</label></section><details class="skill-notes"><summary>Optional notes for next time</summary><p>Which support was useful? Keep it available; it does not need to be removed to count as learning.</p><div>${['An adult model','A visible reminder','Fewer choices / smaller steps','Help with controls or communication','A break or different time'].map((label,i)=>`<label><input type="checkbox" data-skill-note="${i}" ${n.supports?.includes(i)?'checked':''}> ${label}</label>`).join('')}</div><p class="micro">Saved in this browser, separately from earlier course progress. No name or diagnosis is collected.</p></details><details class="skill-notes"><summary>Evidence, adaptations & wider support</summary><p>These courses organise research-informed teaching principles into a practical sequence. Our app and course sequences have not been evaluated as interventions. Game improvement does not establish improvement in reading, ADHD symptoms, or everyday functioning. Individual language, sensory, vision, and motor needs may require adaptation.</p><p>Keep the child’s usual AAC and input support available. Do not delay appropriate language, communication, or reading instruction until courses are complete. Movement and breathing are optional; follow existing movement restrictions.</p>${c.reading?readingEvidence(c):skillEvidenceLinks(s)}<button class="secondary" id="skillEvidence">Read the research and support guidance →</button></details>`;skillNav();document.querySelector('#skillCourseBack').onclick=()=>skillDetail(s.id);document.querySelector('#skillBegin').onclick=()=>skillLaunch(id,first);document.querySelectorAll('[data-course-activity]').forEach(b=>b.onclick=()=>skillLaunch(id,+b.dataset.courseActivity));document.querySelector('#skillDownloadPlan').onclick=()=>skillDownloadPlan(id);document.querySelector('#skillOffline').onchange=e=>{skillNotes[id]??={};skillNotes[id].offline=e.target.checked;skillSave();};document.querySelectorAll('[data-skill-note]').forEach(input=>input.onchange=()=>{skillNotes[id]??={};skillNotes[id].supports=[...document.querySelectorAll('[data-skill-note]:checked')].map(e=>+e.dataset.skillNote);skillSave();});document.querySelector('#skillEvidence').onclick=()=>c.reading?readingOpenGuide(c.id):prParents('research');window.scrollTo(0,0);}
-function skillDownloadPlan(id){const{skill,course:c}=skillCourseGet(id);const research=document.createElement('div');research.innerHTML=skillEvidenceLinks(skill);const lines=[c.title.toUpperCase(),'Skill: '+skill.title,'','WHEN THIS MAY BE USEFUL',c.need,'','OUR GOAL',c.goal,'','HAVE NEARBY',c.props,'','A GENTLE WAY TO BEGIN','1. Model one example in the child’s accessible language.','2. Try one small activity with enough help, reminders, breaks, and communication support.','3. Try the real-life exercise. Repeat, adapt, or stop according to the child.','','ACTIVITIES IN THIS COURSE',...c.activities.map((a,i)=>(i+1)+'. '+skillTitle(a)),'','TRY IT IN EVERYDAY LIFE',c.home,'','WHAT TO NOTICE',...c.notice.map(x=>'• '+x),'','These are practical observations, not diagnostic or mastery criteria. Game success does not establish everyday improvement.','','RESEARCH & GUIDANCE',...[...research.querySelectorAll('a')].map(a=>a.textContent+' — '+a.href),'','This is a research-informed educational plan, not an evaluated treatment or prescribed dose. Keep appropriate teaching, care, AAC, and established movement supports available. No child data is included in this card.'];const url=URL.createObjectURL(new Blob([lines.join('\n')+'\n'],{type:'text/plain;charset=utf-8'})),link=document.createElement('a');link.href=url;link.download='practice-plan-'+c.id+'.txt';document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);}
-function skillLaunch(courseId,index){const{skill,course}=skillCourseGet(courseId),a=course.activities[index];skillContext={skillId:skill.id,courseId,index};prDirectLegacy=true;prLibraryMode=false;if(a.engine==='reading'){readingStart(a.key);}else if(a.engine==='vocabulary'){vocabularyStart(a.category,a.mode);}else if(a.engine==='world'){worldStart(a.index);}else if(a.engine==='playroom'){prStart(a.key);prDirectLegacy=true;}else if(a.engine==='original'){activeLearningCourse=a.key;if(a.key==='visual'){intro(a.index);document.querySelector('#begin')?.click();}else{learningIntro(a.index);(document.querySelector('#adultBegin')||document.querySelector('#learningBegin'))?.click();}}else if(a.engine==='support'){senActive=a.key;senIntro(a.index);document.querySelector('#senBegin')?.click();}else if(a.engine==='calm')calmOpen(a.index);else{focusIntro(a.index);document.querySelector('#focusOne')?.click();}skillDecorate();}
-function skillDecorate(){if(prLibraryMode||!skillContext||skillContext.index===null)return;const{courseId,index}=skillContext,{course,skill}=skillCourseGet(courseId);skillNav();const back=document.querySelector('#readingBack,#vocabPlayBack,#worldBack,#prBack,#learningBack,#senBack,#focusBack,#calmBack,.play-top>.back');if(back){if(back.textContent!=='← Back to the course')back.textContent='← Back to the course';back.onclick=()=>skillCourse(courseId);}const completed=!!app.querySelector('#vocabAgain,#worldAgain,#prReplay,#learningAgain,#adultAgain,#senAgain,#focusAgain,#calmAgain,.completion-stat');if(completed){skillNotes[courseId]??={};skillNotes[courseId].activities??={};if(!skillNotes[courseId].activities[index]){skillNotes[courseId].activities[index]=true;skillSave();}const parent=app.querySelector('.calm-controls,.game-controls,.sen-controls')||app.querySelector('section');if(parent&&!document.querySelector('#skillNextActivity')&&index<course.activities.length-1){const next=document.createElement('button');next.id='skillNextActivity';next.className='primary';next.textContent='Next: '+skillTitle(course.activities[index+1])+' →';next.onclick=()=>skillLaunch(courseId,index+1);parent.append(next);}['vocabReturn','continue','worldReturn','prChoose','learningContinue','adultContinue','senAnother','focusReturn','calmReturn'].forEach(id=>{const b=document.getElementById(id);if(b){if(b.textContent!=='Back to the course')b.textContent='Back to the course';b.onclick=()=>skillCourse(courseId);}});}['vocabAgain','again','learningAgain','adultAgain','senAgain','focusAgain','calmAgain','prReplay'].forEach(id=>{const b=document.getElementById(id);if(b)b.onclick=()=>skillLaunch(courseId,index);});if(!app.querySelector('.skill-session-context')){const info=document.createElement('details');info.className='skill-session-context';info.innerHTML=`<summary>Course: ${course.title}</summary><p><b>Our goal:</b> ${course.goal}</p><p><b>Try it in daily life:</b> ${course.home}</p>`;app.append(info);}}
-const skillsPreviousLibrary=libraryHome;
-libraryHome=function(){if(prLibraryMode)skillsPreviousLibrary();else if(skillFreePlay)prHome();else skillHome();};
-prHome=function(){if(skillFreePlay){skillOriginalFreePlay();history.replaceState(null,'',location.pathname+'?library=playroom'+(prInitialFlow==='manual'?'&flow=manual':''));}else if(skillContext)skillCourse(skillContext.courseId);else skillHome();};
-prNav=function(){skillNav();};
-prTidyLegacy=function(){if(skillContext)skillDecorate();else{skillNav();const b=app.querySelector('.play-top>.back');if(b){b.textContent='← All skills';b.onclick=skillHome;}}};
+function skillDetail(id) {
+  skillFreePlay = false;
+  const s = skillGet(id);
+  skillContext = null;
+  prDirectLegacy = false;
+  app.innerHTML = `<div class="skill-crumb"><button class="back" id="skillBack">← All skills</button><span>CHOOSE A COURSE</span></div><section class="skill-overview"><div><span class="eyebrow">THE SKILL WE CAN SUPPORT</span><h1>${s.title}</h1><p class="skill-lead">${s.goal}</p><p><b>A useful starting point if:</b> ${s.question}</p>${s.id === 'attention' ? '<p class="micro">Includes ADHD / ADD support. Choose by the child’s observed needs; these games are supplementary practice, not ADHD treatment.</p>' : ''}</div><div aria-hidden="true">${prCover(s.image)}</div></section><h2 class="skill-section-heading">Which goal fits your child?</h2><section class="skill-course-grid">${s.courses
+    .map(c => {
+      const done = c.activities.filter((a, i) => skillExplored(a, c.id, i)).length;
+      return `<button class="skill-course-card" data-skill-course="${c.id}"><h2>${c.title}</h2><p><b>Our goal:</b> ${c.goal}</p><div class="skill-mini-art" aria-hidden="true">${c.activities
+        .slice(0, 1)
+        .map(a => `<span>${skillArt(a)}</span>`)
+        .join(
+          ''
+        )}</div><span class="skill-course-foot">${c.activities.length} activities${done ? ` · ${done} explored` : ''}<b>See the course →</b></span></button>`;
+    })
+    .join(
+      ''
+    )}</section><p class="skill-small-note">The order is a suggestion, not a developmental assessment. An adult joins in; speech, pointing, signing, and AAC are welcome.</p>`;
+  skillNav();
+  document.querySelector('#skillBack').onclick = skillHome;
+  document
+    .querySelectorAll('[data-skill-course]')
+    .forEach(b => (b.onclick = () => skillCourse(b.dataset.skillCourse)));
+  window.scrollTo(0, 0);
+}
+function skillEvidenceLinks(skill) {
+  let sources = [];
+  if (skill.id === 'attention') return focusLinks(['overview', 'classroom', 'environment', 'training']);
+  if (skill.id === 'language') sources = supportPathways.language.sources;
+  if (skill.id === 'stories')
+    sources = [
+      {
+        title: 'Narrative intervention review (2021)',
+        url: newCourseInfo.stories.source,
+        note: 'Broader narrative teaching combines explicit instruction, visual supports, and language; our games alone have not been evaluated.'
+      },
+      ...supportPathways.language.sources.slice(1)
+    ];
+  if (skill.id === 'sounds') sources = supportPathways.dyslexia.sources;
+  if (skill.id === 'access')
+    sources = [...supportPathways.speech.sources.slice(2), supportPathways.motor.sources[0]];
+  if (skill.id === 'everyday')
+    sources = [
+      {
+        title: 'ASHA: AAC and meaningful communication access',
+        url: newCourseInfo.meaning.source,
+        note: 'AAC has no prerequisites. Picture games do not establish real-world understanding or replace a communication assessment.'
+      }
+    ];
+  if (skill.id === 'calm')
+    sources = [
+      {
+        title: 'NCCIH: Yoga effectiveness and safety',
+        url: 'https://www.nccih.nih.gov/health/yoga-effectiveness-and-safety',
+        note: 'Adapt movement to the individual. Our short activities are not equivalent to a studied programme.'
+      }
+    ];
+  if (skill.id === 'seeing')
+    sources = [
+      {
+        title: 'Research on discrimination teaching (2021)',
+        url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC7900359/',
+        note: 'Supports carefully targeted teaching principles, not a claim that visual comparison games treat dyslexia or improve reading.'
+      }
+    ];
+  return (
+    '<ul class="sen-sources">' +
+    sources
+      .map(
+        s =>
+          `<li><a href="${s.url}" target="_blank" rel="noopener noreferrer">${s.title} ↗</a><p>${s.note}</p></li>`
+      )
+      .join('') +
+    '</ul>'
+  );
+}
+function skillCourse(id) {
+  skillFreePlay = false;
+  const { skill: s, course: c } = skillCourseGet(id);
+  skillContext = { skillId: s.id, courseId: id, index: null };
+  prDirectLegacy = false;
+  const done = c.activities.filter((a, i) => skillExplored(a, id, i)).length,
+    n = skillNotes[id] || {};
+  const first = Math.max(
+    0,
+    c.activities.findIndex((a, i) => !skillExplored(a, id, i))
+  );
+  app.innerHTML = `<div class="skill-crumb"><button class="back" id="skillCourseBack">← ${s.title}</button><span>GUIDED COURSE</span></div><section class="skill-course-hero"><div><span class="eyebrow">${s.title.toUpperCase()}</span><h1>${c.title}</h1><p class="skill-lead">${c.goal}</p><button class="primary" id="skillBegin">${done === c.activities.length ? 'Explore the course again' : done ? 'Continue the course' : 'Start the first activity'} →</button><span class="micro">${c.activities.length} activities · ${done} explored · Stop or repeat whenever useful</span></div><div class="skill-course-preview" aria-hidden="true">${skillArt(c.activities[0])}</div></section><section class="skill-course-activities"><div class="section-head"><div><span class="eyebrow">A FLEXIBLE PATH THROUGH THE COURSE</span><h2>The activities</h2></div><span class="micro">Choose any starting point.</span></div><div class="skill-activity-list">${c.activities.map((a, i) => `<button data-course-activity="${i}" class="skill-activity-row"><span class="skill-activity-number">${String(i + 1).padStart(2, '0')}</span><span class="skill-activity-picture" aria-hidden="true">${skillArt(a)}</span><span><b>${skillTitle(a)}</b><span>${skillExplored(a, id, i) ? 'Explore again' : 'Open and play'} →</span></span></button>`).join('')}</div></section><details class="skill-notes"><summary>How to support this course</summary><p><b>May be useful when:</b> ${c.need}</p><div class="skill-course-purpose"><div><h2>Try it together</h2><ol><li><b>Show one example.</b> Model the meaning before asking the child to respond.</li><li><b>Play with enough help.</b> Try a short activity. Keep reminders, help, and breaks available.</li><li><b>Use it in real life.</b> Try the everyday exercise below with different objects or pictures.</li></ol></div><div><h2>Have nearby</h2><p>${c.props}.</p><h3>What to notice</h3><ul>${c.notice.map(x => `<li>${x}.</li>`).join('')}</ul><p class="micro">These are useful observations, not mastery criteria or diagnostic scores.</p></div></div></details><section class="skill-real-life"><span class="eyebrow">THE PART THAT MATTERS AWAY FROM THE SCREEN</span><h2>Try this in everyday life</h2><p>${c.home}</p><button class="secondary" id="skillDownloadPlan">Save a practice plan ↓</button><label><input type="checkbox" id="skillOffline" ${n.offline ? 'checked' : ''}> We tried an everyday example together.</label></section><details class="skill-notes"><summary>Optional notes for next time</summary><p>Which support was useful? Keep it available; it does not need to be removed to count as learning.</p><div>${['An adult model', 'A visible reminder', 'Fewer choices / smaller steps', 'Help with controls or communication', 'A break or different time'].map((label, i) => `<label><input type="checkbox" data-skill-note="${i}" ${n.supports?.includes(i) ? 'checked' : ''}> ${label}</label>`).join('')}</div><p class="micro">Saved in this browser, separately from earlier course progress. No name or diagnosis is collected.</p></details><details class="skill-notes"><summary>Evidence, adaptations & wider support</summary><p>These courses organise research-informed teaching principles into a practical sequence. Our app and course sequences have not been evaluated as interventions. Game improvement does not establish improvement in reading, ADHD symptoms, or everyday functioning. Individual language, sensory, vision, and motor needs may require adaptation.</p><p>Keep the child’s usual AAC and input support available. Do not delay appropriate language, communication, or reading instruction until courses are complete. Movement and breathing are optional; follow existing movement restrictions.</p>${c.reading ? readingEvidence(c) : skillEvidenceLinks(s)}<button class="secondary" id="skillEvidence">Read the research and support guidance →</button></details>`;
+  skillNav();
+  document.querySelector('#skillCourseBack').onclick = () => skillDetail(s.id);
+  document.querySelector('#skillBegin').onclick = () => skillLaunch(id, first);
+  document
+    .querySelectorAll('[data-course-activity]')
+    .forEach(b => (b.onclick = () => skillLaunch(id, +b.dataset.courseActivity)));
+  document.querySelector('#skillDownloadPlan').onclick = () => skillDownloadPlan(id);
+  document.querySelector('#skillOffline').onchange = e => {
+    skillNotes[id] ??= {};
+    skillNotes[id].offline = e.target.checked;
+    skillSave();
+  };
+  document.querySelectorAll('[data-skill-note]').forEach(
+    input =>
+      (input.onchange = () => {
+        skillNotes[id] ??= {};
+        skillNotes[id].supports = [...document.querySelectorAll('[data-skill-note]:checked')].map(
+          e => +e.dataset.skillNote
+        );
+        skillSave();
+      })
+  );
+  document.querySelector('#skillEvidence').onclick = () =>
+    c.reading ? readingOpenGuide(c.id) : prParents('research');
+  window.scrollTo(0, 0);
+}
+function skillDownloadPlan(id) {
+  const { skill, course: c } = skillCourseGet(id);
+  const research = document.createElement('div');
+  research.innerHTML = skillEvidenceLinks(skill);
+  const lines = [
+    c.title.toUpperCase(),
+    'Skill: ' + skill.title,
+    '',
+    'WHEN THIS MAY BE USEFUL',
+    c.need,
+    '',
+    'OUR GOAL',
+    c.goal,
+    '',
+    'HAVE NEARBY',
+    c.props,
+    '',
+    'A GENTLE WAY TO BEGIN',
+    '1. Model one example in the child’s accessible language.',
+    '2. Try one small activity with enough help, reminders, breaks, and communication support.',
+    '3. Try the real-life exercise. Repeat, adapt, or stop according to the child.',
+    '',
+    'ACTIVITIES IN THIS COURSE',
+    ...c.activities.map((a, i) => i + 1 + '. ' + skillTitle(a)),
+    '',
+    'TRY IT IN EVERYDAY LIFE',
+    c.home,
+    '',
+    'WHAT TO NOTICE',
+    ...c.notice.map(x => '• ' + x),
+    '',
+    'These are practical observations, not diagnostic or mastery criteria. Game success does not establish everyday improvement.',
+    '',
+    'RESEARCH & GUIDANCE',
+    ...[...research.querySelectorAll('a')].map(a => a.textContent + ' — ' + a.href),
+    '',
+    'This is a research-informed educational plan, not an evaluated treatment or prescribed dose. Keep appropriate teaching, care, AAC, and established movement supports available. No child data is included in this card.'
+  ];
+  const url = URL.createObjectURL(new Blob([lines.join('\n') + '\n'], { type: 'text/plain;charset=utf-8' })),
+    link = document.createElement('a');
+  link.href = url;
+  link.download = 'practice-plan-' + c.id + '.txt';
+  document.body.append(link);
+  link.click();
+  link.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+function skillLaunch(courseId, index) {
+  const { skill, course } = skillCourseGet(courseId),
+    a = course.activities[index];
+  skillContext = { skillId: skill.id, courseId, index };
+  prDirectLegacy = true;
+  prLibraryMode = false;
+  if (a.engine === 'reading') {
+    readingStart(a.key);
+  } else if (a.engine === 'vocabulary') {
+    vocabularyStart(a.category, a.mode);
+  } else if (a.engine === 'world') {
+    worldStart(a.index);
+  } else if (a.engine === 'playroom') {
+    prStart(a.key);
+    prDirectLegacy = true;
+  } else if (a.engine === 'original') {
+    activeLearningCourse = a.key;
+    if (a.key === 'visual') {
+      intro(a.index);
+      document.querySelector('#begin')?.click();
+    } else {
+      learningIntro(a.index);
+      (document.querySelector('#adultBegin') || document.querySelector('#learningBegin'))?.click();
+    }
+  } else if (a.engine === 'support') {
+    senActive = a.key;
+    senIntro(a.index);
+    document.querySelector('#senBegin')?.click();
+  } else if (a.engine === 'calm') calmOpen(a.index);
+  else {
+    focusIntro(a.index);
+    document.querySelector('#focusOne')?.click();
+  }
+  skillDecorate();
+}
+function skillDecorate() {
+  if (prLibraryMode || !skillContext || skillContext.index === null) return;
+  const { courseId, index } = skillContext,
+    { course, skill } = skillCourseGet(courseId);
+  skillNav();
+  const back = document.querySelector(
+    '#readingBack,#vocabPlayBack,#worldBack,#prBack,#learningBack,#senBack,#focusBack,#calmBack,.play-top>.back'
+  );
+  if (back) {
+    if (back.textContent !== '← Back to the course') back.textContent = '← Back to the course';
+    back.onclick = () => skillCourse(courseId);
+  }
+  const completed = !!app.querySelector(
+    '#vocabAgain,#worldAgain,#prReplay,#learningAgain,#adultAgain,#senAgain,#focusAgain,#calmAgain,.completion-stat'
+  );
+  if (completed) {
+    skillNotes[courseId] ??= {};
+    skillNotes[courseId].activities ??= {};
+    if (!skillNotes[courseId].activities[index]) {
+      skillNotes[courseId].activities[index] = true;
+      skillSave();
+    }
+    const parent =
+      app.querySelector('.calm-controls,.game-controls,.sen-controls') || app.querySelector('section');
+    if (parent && !document.querySelector('#skillNextActivity') && index < course.activities.length - 1) {
+      const next = document.createElement('button');
+      next.id = 'skillNextActivity';
+      next.className = 'primary';
+      next.textContent = 'Next: ' + skillTitle(course.activities[index + 1]) + ' →';
+      next.onclick = () => skillLaunch(courseId, index + 1);
+      parent.append(next);
+    }
+    [
+      'vocabReturn',
+      'continue',
+      'worldReturn',
+      'prChoose',
+      'learningContinue',
+      'adultContinue',
+      'senAnother',
+      'focusReturn',
+      'calmReturn'
+    ].forEach(id => {
+      const b = document.getElementById(id);
+      if (b) {
+        if (b.textContent !== 'Back to the course') b.textContent = 'Back to the course';
+        b.onclick = () => skillCourse(courseId);
+      }
+    });
+  }
+  [
+    'vocabAgain',
+    'again',
+    'learningAgain',
+    'adultAgain',
+    'senAgain',
+    'focusAgain',
+    'calmAgain',
+    'prReplay'
+  ].forEach(id => {
+    const b = document.getElementById(id);
+    if (b) b.onclick = () => skillLaunch(courseId, index);
+  });
+  if (!app.querySelector('.skill-session-context')) {
+    const info = document.createElement('details');
+    info.className = 'skill-session-context';
+    info.innerHTML = `<summary>Course: ${course.title}</summary><p><b>Our goal:</b> ${course.goal}</p><p><b>Try it in daily life:</b> ${course.home}</p>`;
+    app.append(info);
+  }
+}
+const skillsPreviousLibrary = libraryHome;
+libraryHome = function () {
+  if (prLibraryMode) skillsPreviousLibrary();
+  else if (skillFreePlay) prHome();
+  else skillHome();
+};
+prHome = function () {
+  if (skillFreePlay) {
+    skillOriginalFreePlay();
+    history.replaceState(
+      null,
+      '',
+      location.pathname + '?library=playroom' + (prInitialFlow === 'manual' ? '&flow=manual' : '')
+    );
+  } else if (skillContext) skillCourse(skillContext.courseId);
+  else skillHome();
+};
+prNav = function () {
+  skillNav();
+};
+prTidyLegacy = function () {
+  if (skillContext) skillDecorate();
+  else {
+    skillNav();
+    const b = app.querySelector('.play-top>.back');
+    if (b) {
+      b.textContent = '← All skills';
+      b.onclick = skillHome;
+    }
+  }
+};
 // The observer also follows renders from the older course engines without replacing their logic.
-new MutationObserver(()=>{if(skillContext&&skillContext.index!==null)skillDecorate();}).observe(app,{childList:true,subtree:true});
+new MutationObserver(() => {
+  if (skillContext && skillContext.index !== null) skillDecorate();
+}).observe(app, { childList: true, subtree: true });
 
 // Bookmarkable course routes and browser Back keep the adult-led path understandable.
-let skillRestoringRoute=false;
-function skillWriteRoute(type,id,index){if(skillRestoringRoute||prLibraryMode||skillFreePlay)return;const hash=type==='skills'?'#skills':type==='support'?'#support/'+id:type==='skill'?'#skill/'+id:type==='course'?'#course/'+id:'#activity/'+id+'/'+index;if(location.hash===hash)return;const state={skillRoute:hash,parentSkillHash:location.hash||null};if(!location.hash)history.replaceState(state,'',location.pathname+hash);else history.pushState(state,'',location.pathname+hash);}
-const skillUnroutedHome=skillHome;skillHome=function(){skillUnroutedHome();skillWriteRoute('skills');};
-const skillUnroutedDetail=skillDetail;skillDetail=function(id){skillUnroutedDetail(id);skillWriteRoute('skill',id);};
-const skillUnroutedCourse=skillCourse;skillCourse=function(id){skillUnroutedCourse(id);skillWriteRoute('course',id);};
-const skillUnroutedLaunch=skillLaunch;skillLaunch=function(id,index){skillUnroutedLaunch(id,index);skillWriteRoute('activity',id,index);};
-function skillRestoreRoute(){if(prLibraryMode||skillFreePlay)return false;const parts=location.hash.slice(1).split('/');skillRestoringRoute=true;try{if(parts[0]==='vocabulary'){if(parts[1]==='object'&&vocabularyObjects.has(parts[2]))vocabularyDetail(parts[2]);else vocabularyLibrary({category:parts[1]==='category'&&vocabularyCategories.has(parts[2])?parts[2]:'',page:0});}else if(parts[0]==='pictures'){worldGallery();}else if(parts[0]==='support'&&parentSupportSections.some(s=>s.id===parts[1]))parentSupportDetail(parts[1]);else if(parts[0]==='skill'&&skillGet(parts[1]))skillDetail(parts[1]);else if(parts[0]==='course'&&learningSkills.some(s=>s.courses.some(c=>c.id===parts[1])))skillCourse(parts[1]);else if(parts[0]==='activity'&&learningSkills.some(s=>s.courses.some(c=>c.id===parts[1]))){const c=skillCourseGet(parts[1]).course,i=Number(parts[2]);if(Number.isInteger(i)&&i>=0&&i<c.activities.length)skillLaunch(c.id,i);else skillCourse(c.id);}else if(parts[0]==='skills')skillHome();else return false;return true;}finally{skillRestoringRoute=false;}}
-window.addEventListener('popstate',()=>{const view=new URLSearchParams(location.search).get('library');prLibraryMode=view==='full';skillFreePlay=view==='playroom';if(prLibraryMode||skillFreePlay)libraryHome();else if(!skillRestoreRoute())skillHome();});
+let skillRestoringRoute = false;
+function skillWriteRoute(type, id, index) {
+  if (skillRestoringRoute || prLibraryMode || skillFreePlay) return;
+  const hash =
+    type === 'skills'
+      ? '#skills'
+      : type === 'support'
+        ? '#support/' + id
+        : type === 'skill'
+          ? '#skill/' + id
+          : type === 'course'
+            ? '#course/' + id
+            : '#activity/' + id + '/' + index;
+  if (location.hash === hash) return;
+  const state = { skillRoute: hash, parentSkillHash: location.hash || null };
+  if (!location.hash) history.replaceState(state, '', location.pathname + hash);
+  else history.pushState(state, '', location.pathname + hash);
+}
+const skillUnroutedHome = skillHome;
+skillHome = function () {
+  skillUnroutedHome();
+  skillWriteRoute('skills');
+};
+const skillUnroutedDetail = skillDetail;
+skillDetail = function (id) {
+  skillUnroutedDetail(id);
+  skillWriteRoute('skill', id);
+};
+const skillUnroutedCourse = skillCourse;
+skillCourse = function (id) {
+  skillUnroutedCourse(id);
+  skillWriteRoute('course', id);
+};
+const skillUnroutedLaunch = skillLaunch;
+skillLaunch = function (id, index) {
+  skillUnroutedLaunch(id, index);
+  skillWriteRoute('activity', id, index);
+};
+function skillRestoreRoute() {
+  if (prLibraryMode || skillFreePlay) return false;
+  const parts = location.hash.slice(1).split('/');
+  skillRestoringRoute = true;
+  try {
+    if (parts[0] === 'vocabulary') {
+      if (parts[1] === 'object' && vocabularyObjects.has(parts[2])) vocabularyDetail(parts[2]);
+      else
+        vocabularyLibrary({
+          category: parts[1] === 'category' && vocabularyCategories.has(parts[2]) ? parts[2] : '',
+          page: 0
+        });
+    } else if (parts[0] === 'pictures') {
+      worldGallery();
+    } else if (parts[0] === 'support' && parentSupportSections.some(s => s.id === parts[1]))
+      parentSupportDetail(parts[1]);
+    else if (parts[0] === 'skill' && skillGet(parts[1])) skillDetail(parts[1]);
+    else if (parts[0] === 'course' && learningSkills.some(s => s.courses.some(c => c.id === parts[1])))
+      skillCourse(parts[1]);
+    else if (parts[0] === 'activity' && learningSkills.some(s => s.courses.some(c => c.id === parts[1]))) {
+      const c = skillCourseGet(parts[1]).course,
+        i = Number(parts[2]);
+      if (Number.isInteger(i) && i >= 0 && i < c.activities.length) skillLaunch(c.id, i);
+      else skillCourse(c.id);
+    } else if (parts[0] === 'skills') skillHome();
+    else return false;
+    return true;
+  } finally {
+    skillRestoringRoute = false;
+  }
+}
+window.addEventListener('popstate', () => {
+  const view = new URLSearchParams(location.search).get('library');
+  prLibraryMode = view === 'full';
+  skillFreePlay = view === 'playroom';
+  if (prLibraryMode || skillFreePlay) libraryHome();
+  else if (!skillRestoreRoute()) skillHome();
+});
 
-if(!/^#(?:course|activity)\/(?:everyday-words-v2|short-words-v2|messages-actions-v2)(?:\/|$)/.test(location.hash)&&!/^#(?:courses|practice|review|device)(?:[/?]|$)/.test(location.hash)){if(!skillRestoreRoute())libraryHome();}
+if (
+  !/^#(?:course|activity)\/(?:everyday-words-v2|short-words-v2|messages-actions-v2)(?:\/|$)/.test(
+    location.hash
+  ) &&
+  !/^#(?:courses|practice|review|device)(?:[/?]|$)/.test(location.hash)
+) {
+  if (!skillRestoreRoute()) libraryHome();
+}
