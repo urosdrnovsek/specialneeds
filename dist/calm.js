@@ -110,7 +110,9 @@ function calmHome() {
   calmNav();
   window.scrollTo(0, 0);
 }
+let calmSeeVisits = 0;
 function calmOpen(index) {
+  if (calmActivities[index]?.mode === 'ground') calmSeeShuffleRoom(calmSeeVisits++);
   calmState = {
     index,
     step: 0,
@@ -137,9 +139,17 @@ function calmModel(s) {
   const leaf = (value, color) => ({ calmLeaf: value, color });
   let target, options, prompt;
   if (mode === 'find') {
-    target = 'flower';
-    options = ['flower', 'tree', 'apple'];
-    prompt = 'Find the flower that matches our model.';
+    // Each new round uses a different familiar set, so the game is not the same picture every time.
+    const sets = [
+      ['flower', 'tree', 'apple', 'the flower'],
+      ['duck', 'fish', 'star', 'the duck'],
+      ['cup', 'spoon', 'book', 'the cup'],
+      ['ball', 'hat', 'leaf', 'the ball']
+    ];
+    const set = sets[s.step % sets.length];
+    target = set[0];
+    options = set.slice(0, 3);
+    prompt = 'Find ' + set[3] + ' that matches our model.';
   }
   if (mode === 'match') {
     target = leaf(shape, '#86a28a');
@@ -169,7 +179,23 @@ function calmPicture(p) {
 // "Here Around Me" (I-spy) and "A Slow Little Look" (close-up details) use the child's choice:
 // the chosen object must be found in a room picture, or matched from magnified details, until a clear finish.
 const calmSeeTopics = { notice: ['apple', 'butterfly', 'spoon'], ground: ['flower', 'book', 'cup'] };
-const calmSeeRoom = ['lamp', 'flower', 'teddy', 'cup', 'clock', 'book'];
+// The room's layout changes on every visit (the same six things, in a new order).
+const calmSeeRoomItems = ['lamp', 'flower', 'teddy', 'cup', 'clock', 'book'];
+let calmSeeRoom = [...calmSeeRoomItems];
+function calmSeeShuffleRoom(seed) {
+  const room = [...calmSeeRoomItems];
+  if (!seed) {
+    calmSeeRoom = room; // the first visit keeps the familiar layout
+    return;
+  }
+  let x = (seed % 2147483647) + 1;
+  for (let i = room.length - 1; i > 0; i--) {
+    x = (x * 16807) % 2147483647;
+    const j = x % (i + 1);
+    [room[i], room[j]] = [room[j], room[i]];
+  }
+  calmSeeRoom = room;
+}
 const calmSeeDetails = {
   apple: [
     [50, 0, 44, 44, 'stalk and leaf'],
@@ -269,11 +295,11 @@ function calmSeeGame(s, mode) {
       .map((id, i) => {
         const gone = s.spotted.includes(id);
         return gone
-          ? `<span class="calm-see-gap" aria-label="Empty place: the ${calmSeeName(id)} is in the basket"></span>`
+          ? `<span class="calm-see-gap" role="img" aria-label="Empty place: the ${calmSeeName(id)} is in the basket"></span>`
           : `<button class="calm-see-thing" data-calm-spot="${i}" aria-label="${senEscape(calmSeeName(id))}" ${want === null || s.complete ? 'disabled' : ''}>${pictureIcon(id)}</button>`;
       })
       .join('')}</div>`;
-    const basket = `<div class="calm-see-basket" aria-label="Noticing basket: ${s.spotted.length} of 3">${pictureIcon('basket')}<div class="calm-see-slots">${[0, 1, 2].map(i => (s.spotted[i] ? `<span class="filled">${pictureIcon(s.spotted[i])}</span>` : '<span></span>')).join('')}</div></div>`;
+    const basket = `<div class="calm-see-basket" role="group" aria-label="Noticing basket: ${s.spotted.length} of 3">${pictureIcon('basket')}<div class="calm-see-slots">${[0, 1, 2].map(i => (s.spotted[i] ? `<span class="filled">${pictureIcon(s.spotted[i])}</span>` : '<span></span>')).join('')}</div></div>`;
     const prompt = s.complete
       ? 'Our basket is full!'
       : want

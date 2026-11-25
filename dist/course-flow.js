@@ -170,7 +170,8 @@ const CourseFlow = (() => {
     if (!active) return;
     document.body.classList.toggle('course-streaming', enabled());
     let bar = q('#courseFlowBar');
-    const signature = c.courseId + ':' + c.index + ':' + paused + ':' + enabled();
+    const signature =
+      c.courseId + ':' + c.index + ':' + paused + ':' + enabled() + ':' + Prefs.get('language');
     if (!bar) {
       bar = document.createElement('div');
       bar.id = 'courseFlowBar';
@@ -179,7 +180,7 @@ const CourseFlow = (() => {
     }
     if (bar && bar.dataset.step !== signature) {
       bar.dataset.step = signature;
-      bar.innerHTML = `<div><span>${senEscape(c.course.title)}</span><b>Activity ${c.index + 1} of ${c.course.activities.length}</b><span class="course-flow-meter" aria-hidden="true"><i style="width:${Math.round(((c.index + 1) / c.course.activities.length) * 100)}%"></i></span></div><div class="course-flow-actions"><button class="secondary" id="coursePause">${paused ? 'Resume' : 'Pause'}</button><button class="back" id="courseStop">Finish for now</button><label class="course-pace"><input id="courseAutomatic" type="checkbox" ${enabled() ? 'checked' : ''}> Continue automatically</label></div>`;
+      bar.innerHTML = `<div><span>${senEscape(c.course.title)}</span><b>${senEscape(I18n.t('bar.activity', { n: c.index + 1, total: c.course.activities.length }))}</b><span class="course-flow-meter" aria-hidden="true"><i style="width:${Math.round(((c.index + 1) / c.course.activities.length) * 100)}%"></i></span></div><div class="course-flow-actions"><button class="secondary" id="coursePause">${I18n.t(paused ? 'bar.resume' : 'bar.pause')}</button><button class="back" id="courseStop">${I18n.t('bar.finish')}</button><label class="course-pace"><input id="courseAutomatic" type="checkbox" ${enabled() ? 'checked' : ''}> ${I18n.t('bar.auto')}</label></div>`;
       bar.querySelector('#coursePause').onclick = () => setPaused(!paused);
       bar.querySelector('#courseStop').onclick = stop;
       bar.querySelector('#courseAutomatic').onchange = e => setAutomatic(e.target.checked);
@@ -257,10 +258,19 @@ const CourseFlow = (() => {
     skillDecorate();
     queueMicrotask(() => {
       if (key() !== before) return;
+      if (typeof PlayPlus !== 'undefined') PlayPlus.noteDone(c);
       if (c.index + 1 >= c.course.activities.length) {
-        end(c);
+        if (typeof PlayPlus !== 'undefined') {
+          PlayPlus.courseEnd(c);
+          skillNav();
+          document.body.classList.remove('course-streaming');
+          window.scrollTo(0, 0);
+          document.getElementById('courseFinishedHome').onclick = skillHome;
+        } else end(c);
         return;
       }
+      // Optional visit goal (set by an adult): show "That's today's visit" instead of continuing.
+      if (typeof PlayPlus !== 'undefined' && PlayPlus.visitBreak(c)) return;
       transitioning = true;
       try {
         skillLaunch(c.courseId, c.index + 1);
@@ -284,6 +294,8 @@ const CourseFlow = (() => {
       paused = false;
       QuickPlay.resume();
     }
+    if (!transitioning && typeof PlayPlus !== 'undefined' && PlayPlus.visit.courseId !== id)
+      PlayPlus.resetVisit(id);
     const result = priorLaunch(id, index);
     try {
       AppStorage.setItem('spotmatch-last-course-v1', JSON.stringify({ courseId: id, index }));

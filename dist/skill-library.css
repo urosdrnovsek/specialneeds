@@ -110,7 +110,7 @@
 .skill-crumb > span {
   font-size: 10px;
   letter-spacing: 1px;
-  color: #7b8a72;
+  color: var(--ds-ink-soft);
 }
 .skill-overview,
 .skill-course-hero {
@@ -262,7 +262,7 @@
 }
 .skill-activity-number {
   font-size: 13px;
-  color: #92a083;
+  color: var(--ds-ink-soft);
 }
 .skill-activity-picture {
   height: 82px;
@@ -291,7 +291,7 @@
 }
 .skill-activity-row > span:last-child > span {
   font-size: 12px;
-  color: #72876a;
+  color: var(--ds-ink-soft);
 }
 .skill-real-life {
   border: 1px solid var(--ds-sage-strong);
@@ -303,7 +303,7 @@
 .skill-real-life p {
   font-size: 17px;
   line-height: 1.9;
-  color: #5e7455;
+  color: var(--ds-ink-soft);
 }
 .skill-real-life label,
 .skill-notes label {
@@ -313,7 +313,7 @@
   font-size: 14px;
   line-height: 1.8;
   margin: 13px 0;
-  color: #5c7752;
+  color: var(--ds-ink-soft);
 }
 .skill-real-life input,
 .skill-notes input {
@@ -747,7 +747,7 @@
 }
 .compact-section-title > span {
   font-size: 12px;
-  color: #728264;
+  color: var(--ds-ink-soft);
 }
 .support-game-grid {
   display: grid;
@@ -827,7 +827,7 @@
 .parent-course-links small {
   display: block;
   font-size: 11px;
-  color: #718267;
+  color: var(--ds-ink-soft);
   margin-top: 6px;
 }
 .parent-research {

@@ -11,7 +11,7 @@
 }
 .reading-counter {
   font-size: 12px;
-  color: #77836e;
+  color: var(--ds-ink-soft);
 }
 .reading-adult-needed {
   font-size: 12px;
@@ -184,7 +184,7 @@
 .reading-small {
   font-size: 12px;
   line-height: 1.8;
-  color: #728165;
+  color: var(--ds-ink-soft);
   margin: 17px auto 4px;
   max-width: 610px;
 }

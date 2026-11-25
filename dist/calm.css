@@ -455,3 +455,33 @@
     height: 76px;
   }
 }
+@media (max-width: 640px) {
+  /* Phone: choices and basket share one row so the room stays on screen. */
+  .calm-see-side {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .calm-see-label {
+    display: none;
+  }
+  .calm-see .calm-see-side .calm-see-choose {
+    margin: 0;
+  }
+  .calm-see .calm-see-side .calm-see-choose .learning-option {
+    width: 54px;
+    height: 54px;
+  }
+  .calm-see-basket {
+    width: 96px;
+    margin: 0;
+    flex: 0 0 auto;
+  }
+  .calm-see-room {
+    gap: 6px;
+    padding: 8px;
+  }
+  .calm-see-thing {
+    padding: 6px;
+  }
+}

@@ -54,29 +54,34 @@ const Studio = (() => {
       n.setAttribute('aria-label', 'Main navigation');
       document.querySelector('header').append(n);
     }
+    // Five places: support, courses, free play, my practice and "More" (research, word pictures,
+    // picture check, settings, setup and the professional pages).
     n.innerHTML = [
-      ['support', 'Find support'],
-      ['courses', 'Courses'],
-      ['research', 'Research'],
-      ['practice', 'My practice']
+      ['#support', 'nav.support'],
+      ['#courses', 'nav.courses'],
+      ['?library=playroom', 'nav.free'],
+      ['#practice', 'nav.practice'],
+      ['#more', 'nav.more']
     ]
-      .map(([id, label]) => '<a href="#' + id + '">' + label + '</a>')
+      .map(([href, key]) => '<a href="' + href + '">' + I18n.t(key) + '</a>')
       .join('');
+    const active = /^#(research|review|device|more|settings|setup|picture-check|vocabulary|pictures)/.test(
+      location.hash
+    )
+      ? '#more'
+      : location.hash.startsWith('#practice')
+        ? '#practice'
+        : /^#(?:course|activity)/.test(location.hash)
+          ? '#courses'
+          : '#support';
     n.querySelectorAll('a').forEach(a => {
-      const active = location.hash.startsWith('#research')
-        ? 'research'
-        : location.hash.startsWith('#practice') ||
-            location.hash.startsWith('#review') ||
-            location.hash.startsWith('#device')
-          ? 'practice'
-          : /^#(?:course|activity)/.test(location.hash)
-            ? 'courses'
-            : 'support';
-      if (a.getAttribute('href') === '#' + active) a.setAttribute('aria-current', 'page');
+      const href = a.getAttribute('href');
+      if (href === active) a.setAttribute('aria-current', 'page');
+      if (!href.startsWith('#')) return; // free play is a separate page load
       a.onclick = e => {
         if (e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) return;
         e.preventDefault();
-        go(a.getAttribute('href'));
+        go(href);
       };
     });
     document.body.classList.add('studio');
@@ -279,6 +284,7 @@ const Studio = (() => {
         app.querySelector('#studioImportStatus').textContent = error.message;
       }
     };
+    if (typeof SitePlus !== 'undefined') SitePlus.decoratePractice({ registry, go });
     bind();
   }
   function review() {
@@ -291,6 +297,7 @@ const Studio = (() => {
   }
   function support() {
     StudioDesign.home({ app, esc, registry, bind, go });
+    if (typeof SitePlus !== 'undefined') SitePlus.decorateHome({ registry, go });
   }
   const supportDetail = parentSupportDetail;
   parentSupportDetail = id => {
@@ -356,6 +363,7 @@ const Studio = (() => {
         .forEach(b => (b.onclick = () => skillLaunch(id, +b.dataset.pilotActivity)));
     }
     StudioDesign.polishCourse(c, esc);
+    if (typeof SitePlus !== 'undefined') SitePlus.decorateCourse(c);
     if (c.pilot) {
       const link = document.createElement('p');
       link.innerHTML =
@@ -574,7 +582,11 @@ const Studio = (() => {
     else if (hash.startsWith('#research')) research();
     else if (hash.startsWith('#review')) review();
     else if (hash.startsWith('#device')) device();
-    else {
+    else if (/^#(more|settings|setup|picture-check)(?:[/?]|$)/.test(hash)) {
+      skillContext = null;
+      SitePlus.page(hash.slice(1).split(/[/?]/)[0], { bind, go });
+      nav();
+    } else {
       if (!old.restore()) {
         skillContext = null;
         app.innerHTML =
@@ -590,7 +602,9 @@ const Studio = (() => {
   }
   skillRestoreRoute = () => {
     if (
-      /^#(courses|research|practice|review|device)([/?]|$)/.test(location.hash) ||
+      /^#(courses|research|practice|review|device|more|settings|setup|picture-check)([/?]|$)/.test(
+        location.hash
+      ) ||
       location.hash === '#support'
     ) {
       route();
@@ -614,6 +628,8 @@ const Studio = (() => {
     route();
   });
   nav();
-  AppRouter.start();
+  // AppRouter.start() runs at the end of site-plus.js, once every layer has loaded.
+  // Fallback for pages without site-plus.js: start once every parser-inserted script has run.
+  addEventListener('DOMContentLoaded', () => AppRouter.started || AppRouter.start());
   return { registry, route, go };
 })();

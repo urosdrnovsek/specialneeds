@@ -8,3 +8,4 @@ dist/index.html
 dist/studio-pilots.json
 dist/studio-pilots.js
 dist/studio-research.js
+dist/sw.js

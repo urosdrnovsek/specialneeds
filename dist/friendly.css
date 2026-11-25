@@ -1331,7 +1331,7 @@ summary:focus-visible {
 }
 /* Keep small text and controls readable against the gentle palette. */
 .eyebrow {
-  color: #657b58;
+  color: var(--ds-ink-soft);
 }
 .micro,
 .note,

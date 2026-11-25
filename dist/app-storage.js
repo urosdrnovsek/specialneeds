@@ -71,7 +71,13 @@
     },
     'spotmatch-device-backup-v1': { group: 'internal', check: object },
     'spotmatch-direct-objects-v1': { group: 'internal', raw: true, check: v => v === 'true' },
-    'spotmatch-editor-review-v1': { group: 'review', check: map }
+    'spotmatch-editor-review-v1': { group: 'review', check: map },
+    // Adult preferences: display, sound, access, child mode, language, visit goal and per-course level.
+    'spotmatch-preferences-v1': { group: 'settings', check: object },
+    // Answers from the optional "Where do I start?" setup.
+    'spotmatch-profile-v1': { group: 'settings', check: object },
+    // Picture check: picture ids an adult marked as "not recognised" (true) or "recognised" (false).
+    'spotmatch-picture-check-v1': { group: 'settings', check: object }
   };
   function valid(key, raw) {
     if (raw === null) return true;

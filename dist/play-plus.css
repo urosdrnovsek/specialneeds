@@ -1,0 +1,1477 @@
+/*
+ * Play and comfort layer (play-plus.js, prefs.js, site-plus.js).
+ * Display settings, phone-fit play screens, consistent drag affordances, visible feedback,
+ * "Show me how", visit screens, switch/dwell access and child mode.
+ */
+
+/* ---------- 16. Display settings ---------- */
+html[data-text='large'] body.studio {
+  zoom: 1.14;
+}
+html[data-text='larger'] body.studio {
+  zoom: 1.3;
+}
+html[data-motion='reduce'] *,
+html[data-motion='reduce'] *::before,
+html[data-motion='reduce'] *::after {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+  scroll-behavior: auto !important;
+}
+html[data-contrast='high'] {
+  --ds-ink: #000;
+  --ds-ink-2: #000;
+  --ds-ink-soft: #1a1a1a;
+  --ds-ink-faint: #2b2b2b;
+  --ds-line: #3a3a3a;
+  --ds-line-strong: #000;
+  --ds-accent: #0b3a80;
+  --ds-accent-hover: #062a5e;
+  --ds-success: #0d5132;
+  --ds-warm: #7a2e0e;
+  --ds-focus: #ff9f00;
+}
+html[data-contrast='high'] body.studio :is(p, small, span, li, label, summary) {
+  color: inherit;
+}
+html[data-contrast='high'] body.studio {
+  color: #000;
+}
+html[data-contrast='high'] body.studio :is(a, button, input, select, summary):focus-visible {
+  outline-width: 4px;
+  outline-color: #000;
+  box-shadow: 0 0 0 7px #ff9f00;
+}
+html[data-contrast='high']
+  body.studio
+  #app
+  :is(
+    .choice,
+    .learning-option,
+    .vocabulary-choice,
+    [data-sen-choice],
+    [data-focus-choice],
+    [data-adult-choice],
+    [data-learning-choice],
+    [data-calm-choice],
+    [data-calm-open]
+  ) {
+  border-width: 3px;
+  border-color: #000;
+}
+/* Dark theme: dark surroundings; picture cards stay light because the drawings are made for light paper. */
+html[data-theme='dark'] {
+  --ds-paper: #121c18;
+  --ds-surface: #1b2822;
+  --ds-cream: #23302a;
+  --ds-butter: #2a2f22;
+  --ds-sage: #1f2d26;
+  --ds-sage-strong: #2c3e35;
+  --ds-mist: #1d2733;
+  --ds-lilac: #25233a;
+  --ds-blush: #2f2521;
+  --ds-warm-soft: #33261f;
+  --ds-line: #33463d;
+  --ds-line-strong: #4a6156;
+  --ds-ink: #eef4ef;
+  --ds-ink-2: #e2ebe4;
+  --ds-ink-soft: #c3d0c7;
+  --ds-ink-faint: #a6b5ab;
+  --ds-accent: #8fb6f2;
+  --ds-accent-hover: #b4cef7;
+  --ds-accent-soft: #233552;
+  --ds-success: #7fc89f;
+  --ds-success-soft: #1f3a2c;
+  --ds-warm: #f0a77f;
+  color-scheme: dark;
+}
+html[data-theme='dark'] body.studio,
+html[data-theme='dark'] body.studio header,
+html[data-theme='dark'] body.studio footer {
+  background: var(--ds-paper);
+  color: var(--ds-ink);
+}
+html[data-theme='dark']
+  body.studio
+  :is(main, section, article, aside, details, div, form, label, fieldset):not(
+    .game-stage *,
+    .ds-light,
+    .ds-light *
+  ) {
+  border-color: var(--ds-line);
+}
+html[data-theme='dark']
+  body.studio
+  :is(h1, h2, h3, h4, p, li, label, summary, small, b, strong, dt, dd, legend) {
+  color: var(--ds-ink);
+}
+html[data-theme='dark'] body.studio :is(p, small, li) {
+  color: var(--ds-ink-soft);
+}
+html[data-theme='dark'] body.studio a {
+  color: var(--ds-accent);
+}
+html[data-theme='dark']
+  body.studio
+  :is(
+    .studio-card,
+    .studio-need,
+    .studio-hero,
+    .studio-welcome-art,
+    .skill-course-hero,
+    .support-detail-head,
+    .studio-stage,
+    .skill-notes,
+    .skill-real-life,
+    .course-purpose,
+    #coursePurpose,
+    #courseFlowBar,
+    .studio-notice,
+    .course-finished,
+    .ds-panel,
+    .studio-path,
+    .studio-resume,
+    .parent-course-links a,
+    .support-game,
+    .studio-stage-items > button,
+    .play-top,
+    .quiet-notes,
+    form,
+    details
+  ) {
+  background: var(--ds-surface) !important;
+  color: var(--ds-ink);
+}
+html[data-theme='dark'] body.studio :is(input, select, textarea) {
+  background: #0f1814;
+  color: var(--ds-ink);
+  border-color: var(--ds-line-strong);
+}
+/* Game areas keep light paper so pictures stay readable. */
+html[data-theme='dark']
+  body.studio
+  #app
+  :is(
+    .game-stage,
+    .pp-board,
+    .reading-stage,
+    .reading-illustration,
+    .world-stage,
+    .pr-board,
+    .studio-card-art,
+    .studio-need-art,
+    .skill-course-preview,
+    .calm-see-room
+  ) {
+  background-color: #f6f3ea;
+  color: #1f3a31;
+  border-radius: 18px;
+}
+html[data-theme='dark'] body.studio #app .game-stage :is(p, small, span, b, h2, h3, label, .feedback) {
+  color: #1f3a31;
+}
+html[data-theme='dark'] body.studio #app .game-stage {
+  padding: 12px;
+}
+html[data-theme='dark'] .studio-brand-mark {
+  filter: brightness(1.2);
+}
+
+/* ---------- 1. Fit the game on one phone screen ---------- */
+@media (max-width: 700px) {
+  body.ds-playing header {
+    min-height: 0;
+    padding-top: 6px;
+    padding-bottom: 6px;
+  }
+  body.ds-playing #brand .studio-brand-mark {
+    width: 26px;
+    height: 26px;
+  }
+  body.ds-playing #brand span:not(.studio-brand-mark) {
+    font-size: 16px;
+  }
+  /* One compact course bar row: name + meter, then Pause / Finish / a label-less automatic switch. */
+  body.studio #courseFlowBar.course-flow-bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 4px 8px;
+    padding: 6px 8px 6px 12px;
+    margin: 6px 0 4px;
+  }
+  body.studio #courseFlowBar > div:first-child {
+    grid-template-columns: auto minmax(40px, 1fr);
+  }
+  body.studio #courseFlowBar > div:first-child > span {
+    display: none;
+  }
+  body.studio #courseFlowBar > div:first-child > b {
+    font-size: 13px;
+  }
+  body.studio .course-flow-actions {
+    gap: 4px;
+  }
+  body.studio .course-flow-actions button {
+    min-height: 40px;
+    padding: 6px 10px;
+    font-size: 13px;
+  }
+  body.studio .course-flow-actions .course-pace {
+    font-size: 0;
+    gap: 0;
+    min-height: 40px;
+    margin: 0;
+  }
+  body.ds-playing #app .game-wrap > h1,
+  body.ds-playing #app .reading-play > h1,
+  body.ds-playing #app .pr-play h1 {
+    font-size: 21px;
+    margin: 2px 0 2px;
+  }
+  body.ds-playing #app .game-wrap > .eyebrow,
+  body.ds-playing #app .reading-adult-needed,
+  body.ds-playing #app .reading-counter {
+    display: none;
+  }
+  body.ds-playing #app .game-wrap > p:not(.feedback),
+  body.ds-playing #app .play-invitation {
+    font-size: 15px;
+    margin-bottom: 6px;
+  }
+  body.ds-playing #app .game-stage {
+    padding: 8px;
+    margin-top: 4px;
+  }
+  body.ds-playing #app :is(.target, .calm-model, .sen-reference, .focus-goal, .reference-strip) svg {
+    max-height: 15vh;
+  }
+  body.ds-playing #app :is(.target, .calm-model) {
+    padding: 6px;
+  }
+  body.ds-playing
+    #app
+    :is(.choices, .learning-options, .vocabulary-options, .adult-options, .sen-options, .focus-options) {
+    gap: 8px;
+  }
+  body.ds-playing
+    #app
+    :is(
+      .choice,
+      .learning-option,
+      .vocabulary-choice,
+      [data-sen-choice],
+      [data-focus-choice],
+      [data-adult-choice],
+      [data-learning-choice],
+      [data-calm-choice]
+    ):not(.calm-see-lens) {
+    min-width: 0;
+    min-height: 0;
+    max-height: 20vh;
+    padding: 6px;
+  }
+  body.ds-playing
+    #app
+    :is(
+      .choice,
+      .learning-option,
+      .vocabulary-choice,
+      [data-sen-choice],
+      [data-focus-choice],
+      [data-adult-choice],
+      [data-learning-choice]
+    )
+    svg {
+    max-height: 15vh;
+  }
+  body.ds-playing #app .reading-illustration {
+    max-height: 17vh;
+    overflow: hidden;
+  }
+  body.ds-playing #app .reading-illustration svg {
+    max-height: 17vh;
+  }
+  body.ds-playing #app .reading-stage {
+    padding: 8px;
+  }
+}
+
+/* ---------- 2. Visible feedback ---------- */
+body.studio #app .ds-tried {
+  opacity: 0.45;
+  filter: grayscale(0.6);
+  border-style: dashed !important;
+}
+body.studio #app .ds-tried::after {
+  content: '↻';
+  position: absolute;
+  top: 4px;
+  right: 8px;
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--ds-warm);
+}
+body.studio #app .ds-win {
+  animation: ds-pop 0.5s ease-out;
+  border-color: var(--ds-success) !important;
+  box-shadow: 0 0 0 5px var(--ds-success-soft) !important;
+}
+@keyframes ds-pop {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.12);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.ds-burst {
+  position: fixed;
+  z-index: 120;
+  pointer-events: none;
+  width: 0;
+  height: 0;
+}
+.ds-burst i {
+  position: absolute;
+  left: -9px;
+  top: -9px;
+  width: 18px;
+  height: 18px;
+  background: var(--c, #f2b84b);
+  clip-path: polygon(50% 0, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+  animation: ds-fly 0.8s ease-out forwards;
+}
+@keyframes ds-fly {
+  from {
+    transform: translate(0, 0) scale(0.6) rotate(0);
+    opacity: 1;
+  }
+  to {
+    transform: translate(var(--x), var(--y)) scale(1) rotate(160deg);
+    opacity: 0;
+  }
+}
+html[data-motion='reduce'] .ds-burst {
+  display: none;
+}
+body.studio #app :is(.feedback, .pr-message).ds-fb-good,
+body.studio #app :is(.feedback, .pr-message).ds-fb-retry {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 44px;
+  font-size: 17px;
+  font-weight: 700;
+}
+body.studio #app :is(.feedback, .pr-message).ds-fb-good::before,
+body.studio #app :is(.feedback, .pr-message).ds-fb-retry::before {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  font-size: 22px;
+  color: #fff;
+}
+body.studio #app :is(.feedback, .pr-message).ds-fb-good::before {
+  content: '✓';
+  background: var(--ds-success);
+}
+body.studio #app :is(.feedback, .pr-message).ds-fb-retry::before {
+  content: '↻';
+  background: var(--ds-warm-mid, #c97c55);
+}
+body.studio #app :is(.feedback, .pr-message).ds-fb-good {
+  color: var(--ds-success);
+}
+
+/* ---------- 3. Show me how ---------- */
+.ds-showme {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 2px solid var(--ds-accent);
+  background: var(--ds-surface);
+  color: var(--ds-accent);
+  font-weight: 700;
+  font-size: 15px;
+  cursor: pointer;
+}
+.ds-showme::before {
+  content: '👆';
+  font-size: 18px;
+}
+.ds-showme-row {
+  display: flex;
+  justify-content: center;
+  margin: 8px 0 2px;
+}
+.ds-hand {
+  position: fixed;
+  z-index: 130;
+  pointer-events: none;
+  font-size: 44px;
+  line-height: 1;
+  filter: drop-shadow(0 3px 4px rgba(0, 0, 0, 0.3));
+  transition:
+    left 0.9s ease-in-out,
+    top 0.9s ease-in-out;
+}
+.ds-hand.ds-press {
+  animation: ds-press 0.5s ease-in-out 2;
+}
+@keyframes ds-press {
+  50% {
+    transform: translateY(8px) scale(0.92);
+  }
+}
+.ds-spot {
+  outline: 5px solid var(--ds-focus) !important;
+  outline-offset: 4px;
+  animation: ds-glow 1.2s ease-in-out 3;
+}
+@keyframes ds-glow {
+  50% {
+    outline-color: transparent;
+  }
+}
+.ds-tip {
+  position: fixed;
+  z-index: 131;
+  left: 50%;
+  bottom: 18px;
+  transform: translateX(-50%);
+  max-width: min(520px, calc(100vw - 32px));
+  padding: 12px 18px;
+  border-radius: 16px;
+  background: var(--ds-ink);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  box-shadow: var(--ds-shadow);
+  text-align: center;
+}
+
+/* ---------- 4. Gentler level hides one extra picture ---------- */
+body.studio #app .ds-level-hidden {
+  display: none !important;
+}
+
+/* ---------- 5/6. Visit and course end screens ---------- */
+.ds-visit {
+  max-width: 760px;
+  margin: 24px auto;
+  padding: 28px 24px;
+  text-align: center;
+  background: var(--ds-surface);
+  border: 1px solid var(--ds-line);
+  border-radius: var(--ds-r-lg);
+}
+.ds-visit .ds-visit-badge {
+  display: grid;
+  place-items: center;
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 10px;
+  border-radius: 50%;
+  background: var(--ds-success-soft);
+  color: var(--ds-success);
+  font-size: 36px;
+}
+.ds-visit h1 {
+  font-family: var(--ds-font-ui);
+  font-size: clamp(24px, 4vw, 32px);
+  margin: 0 0 6px;
+}
+.ds-visit-strip {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin: 18px 0;
+  padding: 0;
+  list-style: none;
+}
+.ds-visit-strip li {
+  width: 120px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--ds-ink-soft);
+}
+.ds-visit-strip li > span {
+  display: block;
+  aspect-ratio: 5 / 3;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #f6f3ea;
+  border: 1px solid var(--ds-line);
+  margin-bottom: 4px;
+}
+.ds-visit-strip svg,
+.ds-visit-strip img {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.ds-visit-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+.ds-visit-actions button {
+  min-height: 48px;
+}
+.ds-visit-idea {
+  margin: 14px auto 0;
+  max-width: 560px;
+  padding: 12px 16px;
+  border-radius: 14px;
+  background: var(--ds-sage);
+  text-align: left;
+}
+
+/* ---------- 7. One drag-and-drop look ---------- */
+body.studio #app .tp-source:not(:disabled) {
+  cursor: grab;
+  touch-action: none;
+}
+body.studio .tp-ghost {
+  filter: drop-shadow(0 12px 18px rgba(31, 58, 49, 0.28));
+  transform: scale(1.06) rotate(-2deg);
+  opacity: 0.95;
+}
+body.studio #app .tp-lifted {
+  opacity: 0.35;
+  outline: 3px dashed var(--ds-line-strong);
+  outline-offset: 2px;
+}
+body.studio #app .tp-ready {
+  outline: 3px dashed var(--ds-accent) !important;
+  outline-offset: 3px;
+  background-color: color-mix(in srgb, var(--ds-accent-soft) 60%, transparent);
+}
+body.studio #app .tp-over {
+  outline: 4px solid var(--ds-success) !important;
+  outline-offset: 3px;
+  background-color: color-mix(in srgb, var(--ds-success-soft) 75%, transparent);
+  transform: scale(1.03);
+}
+body.studio #app .ds-snapped {
+  animation: ds-snap 0.35s ease-out;
+}
+@keyframes ds-snap {
+  0% {
+    transform: scale(1.12);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* ---------- 8. Switch scanning and dwell ---------- */
+.ds-scan-focus {
+  outline: 6px solid var(--ds-focus) !important;
+  outline-offset: 4px;
+  box-shadow: 0 0 0 12px rgba(242, 184, 75, 0.35) !important;
+  position: relative;
+  z-index: 5;
+}
+.ds-dwell-ring {
+  position: fixed;
+  z-index: 140;
+  pointer-events: none;
+  width: 54px;
+  height: 54px;
+  margin: -27px 0 0 -27px;
+  border-radius: 50%;
+  background: conic-gradient(var(--ds-accent) calc(var(--p, 0) * 1turn), rgba(36, 79, 145, 0.15) 0);
+  mask: radial-gradient(circle, transparent 17px, #000 18px);
+  -webkit-mask: radial-gradient(circle, transparent 17px, #000 18px);
+}
+.ds-access-hint {
+  margin: 6px auto 0;
+  text-align: center;
+  font-size: 14px;
+  color: var(--ds-ink-soft);
+}
+
+/* ---------- 9. Child mode ---------- */
+body.ds-child-mode #studioNav,
+body.ds-child-mode header > nav,
+body.ds-child-mode #dsMainApp,
+body.ds-child-mode .ds-skip,
+body.ds-child-mode #courseStop,
+body.ds-child-mode #coursePurpose,
+body.ds-child-mode .ds-settings-button,
+body.ds-child-mode footer {
+  display: none !important;
+}
+body.ds-child-mode #brand {
+  pointer-events: none;
+}
+.ds-child-exit {
+  position: fixed;
+  z-index: 150;
+  right: 12px;
+  bottom: calc(12px + env(safe-area-inset-bottom));
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: 2px solid var(--ds-line-strong);
+  background: var(--ds-surface);
+  color: var(--ds-ink-soft);
+  font-size: 22px;
+  cursor: pointer;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.ds-child-exit::after {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  background: conic-gradient(var(--ds-accent) calc(var(--p, 0) * 1turn), transparent 0);
+  mask: radial-gradient(circle, transparent 30px, #000 31px);
+  -webkit-mask: radial-gradient(circle, transparent 30px, #000 31px);
+}
+
+/* ---------- Site pages: settings, setup, more, picture check, practice ---------- */
+.ds-page-hero h1 {
+  margin-bottom: 6px;
+}
+.ds-panel {
+  background: var(--ds-surface);
+  border: 1px solid var(--ds-line);
+  border-radius: var(--ds-r);
+  padding: 18px 20px;
+  margin: 0 0 16px;
+}
+.ds-panel h2 {
+  font-family: var(--ds-font-ui);
+  font-size: 20px;
+  margin: 0 0 10px;
+}
+.ds-field {
+  border: 0;
+  padding: 0;
+  margin: 0 0 16px;
+}
+.ds-field legend,
+.ds-range {
+  font-weight: 700;
+  font-size: 16px;
+  margin-bottom: 6px;
+  color: var(--ds-ink);
+}
+.ds-help {
+  margin: 0 0 8px;
+  font-size: 14px;
+  color: var(--ds-ink-soft);
+}
+.ds-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.ds-option {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  cursor: pointer;
+}
+.ds-option input {
+  position: absolute;
+  opacity: 0;
+  inset: 0;
+  margin: 0;
+  cursor: pointer;
+}
+.ds-option span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 2px solid var(--ds-line-strong);
+  background: var(--ds-surface);
+  color: var(--ds-ink);
+  font-size: 15px;
+  font-weight: 600;
+}
+.ds-option input:checked + span {
+  border-color: var(--ds-accent);
+  background: var(--ds-accent);
+  color: #fff;
+}
+html[data-theme='dark'] .ds-option input:checked + span {
+  color: #0d1a14;
+}
+.ds-option input:focus-visible + span {
+  outline: 3px solid var(--ds-focus);
+  outline-offset: 2px;
+}
+.ds-range {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.ds-range input {
+  width: min(280px, 60vw);
+}
+.ds-setup-error {
+  color: var(--ds-warm);
+  font-weight: 700;
+  min-height: 1.4em;
+}
+.ds-suggest {
+  margin: 10px 0 0;
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: var(--ds-butter);
+  color: var(--ds-ink);
+  font-weight: 600;
+}
+.ds-mini-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 14px;
+  margin: 0 0 18px;
+}
+.ds-mini-course {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--ds-line);
+  border-radius: var(--ds-r);
+  overflow: hidden;
+  background: var(--ds-surface);
+  color: var(--ds-ink);
+  text-decoration: none;
+  transition:
+    transform 0.15s,
+    box-shadow 0.15s;
+}
+.ds-mini-course:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--ds-shadow);
+}
+.ds-mini-art {
+  display: block;
+  aspect-ratio: 5 / 3;
+  background: #f6f3ea;
+}
+.ds-mini-art svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.ds-mini-copy {
+  display: grid;
+  gap: 4px;
+  padding: 12px 14px 14px;
+}
+.ds-mini-copy b {
+  font-size: 16px;
+}
+.ds-mini-copy small {
+  font-size: 14px;
+  color: var(--ds-ink-soft);
+}
+.ds-more-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 12px;
+}
+.ds-more-item {
+  display: grid;
+  gap: 4px;
+  padding: 16px 18px;
+  min-height: 88px;
+  border: 1px solid var(--ds-line);
+  border-radius: var(--ds-r);
+  background: var(--ds-surface);
+  color: var(--ds-ink);
+  text-decoration: none;
+}
+.ds-more-item b {
+  font-size: 17px;
+}
+.ds-more-item small {
+  font-size: 14px;
+  color: var(--ds-ink-soft);
+}
+.ds-more-item:hover {
+  border-color: var(--ds-line-strong);
+  box-shadow: var(--ds-shadow);
+}
+.ds-start {
+  margin: 4px 0 28px;
+}
+.ds-start-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+}
+.ds-start-head h2 {
+  font-family: var(--ds-font-display);
+  font-weight: 500;
+  font-size: 26px;
+  margin: 0 0 12px;
+}
+.ds-start-cta {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 20px;
+  border-radius: var(--ds-r);
+  background: var(--ds-accent-soft);
+  border: 1px solid color-mix(in srgb, var(--ds-accent) 30%, transparent);
+  color: var(--ds-ink);
+  text-decoration: none;
+}
+.ds-start-cta > span:first-child {
+  font-size: 30px;
+}
+.ds-start-cta > span:nth-child(2) {
+  flex: 1;
+  display: grid;
+  gap: 2px;
+}
+.ds-start-cta b {
+  font-size: 17px;
+}
+.ds-start-cta small {
+  font-size: 14px;
+  color: var(--ds-ink-soft);
+}
+.ds-start-cta > span:last-child {
+  font-size: 22px;
+  color: var(--ds-accent);
+}
+.ds-practice {
+  margin: 0 0 24px;
+}
+.ds-practice-item {
+  display: grid;
+  grid-template-columns: minmax(120px, 200px) 1fr;
+  gap: 18px;
+  align-items: start;
+  padding: 16px;
+  margin-bottom: 14px;
+  border: 1px solid var(--ds-line);
+  border-radius: var(--ds-r);
+  background: var(--ds-surface);
+}
+.ds-practice-item .ds-mini-art {
+  border-radius: 12px;
+  overflow: hidden;
+}
+.ds-practice-item h3 {
+  margin: 0 0 4px;
+  font-size: 18px;
+}
+.ds-practice-count {
+  margin: 0 0 8px;
+  font-size: 14px;
+  color: var(--ds-ink-soft);
+}
+.ds-stage-dots {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 10px;
+  margin: 0 0 6px;
+}
+.ds-stage-dots small {
+  min-width: 170px;
+  font-size: 13px;
+  color: var(--ds-ink-soft);
+}
+.ds-stage-dots span {
+  display: inline-flex;
+  gap: 5px;
+}
+.ds-stage-dots i {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid var(--ds-line-strong);
+  background: var(--ds-surface);
+}
+.ds-stage-dots i.done {
+  background: var(--ds-success);
+  border-color: var(--ds-success);
+}
+.ds-stage-dots i.next {
+  border-color: var(--ds-accent);
+  box-shadow: 0 0 0 3px var(--ds-accent-soft);
+}
+.ds-practice-item .primary,
+.ds-practice-item .secondary {
+  margin-top: 8px;
+}
+.ds-check {
+  text-align: center;
+}
+.ds-check-picture {
+  width: min(260px, 70vw);
+  aspect-ratio: 1;
+  margin: 12px auto;
+  background: #f6f3ea;
+  border-radius: 20px;
+  padding: 16px;
+}
+.ds-check-picture svg,
+.ds-check-picture img {
+  width: 100%;
+  height: 100%;
+}
+.ds-check-name {
+  font-size: 16px;
+}
+.ds-check-count {
+  color: var(--ds-ink-soft);
+}
+.ds-check-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 0;
+  list-style: none;
+}
+.ds-check-list li {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 4px 4px 12px;
+  border-radius: 999px;
+  background: var(--ds-sage);
+}
+.ds-settings-button {
+  display: inline-grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  margin-left: 6px;
+  border-radius: 50%;
+  border: 1px solid var(--ds-line);
+  background: var(--ds-surface);
+  color: var(--ds-ink);
+  font-size: 22px;
+  text-decoration: none;
+}
+.ds-course-adult .ds-course-adult-body > * {
+  margin-top: 12px;
+}
+
+/* ---------- 18. Phone home ---------- */
+@media (max-width: 700px) {
+  body.studio main {
+    padding-bottom: calc(84px + env(safe-area-inset-bottom));
+  }
+  body.ds-in-course main {
+    padding-bottom: 24px;
+  }
+  body.studio .studio-welcome {
+    padding-top: 12px;
+  }
+  body.studio .studio-welcome h1 {
+    font-size: 34px;
+  }
+  body.studio .studio-welcome-art {
+    display: none;
+  }
+  .ds-practice-item {
+    grid-template-columns: 1fr;
+  }
+  .ds-stage-dots small {
+    min-width: 0;
+    width: 100%;
+  }
+}
+@media (max-width: 560px) {
+  body.studio .studio-needs-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px;
+  }
+  body.studio .studio-need {
+    display: grid;
+    grid-template-columns: 42% 1fr;
+    align-items: stretch;
+  }
+  body.studio .studio-need .studio-need-art {
+    aspect-ratio: auto;
+    height: 100%;
+    min-height: 112px;
+  }
+  body.studio .studio-need .studio-need-art svg {
+    height: 100%;
+  }
+  body.studio .studio-need-copy {
+    padding: 12px 14px;
+  }
+  body.studio .studio-need p {
+    min-height: 0;
+    font-size: 14px;
+  }
+  .ds-settings-button {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+/* Keep legacy form/label rules out of the settings and setup forms. */
+body.studio form.ds-settings,
+body.studio form.ds-setup {
+  display: block;
+  max-width: 860px;
+  padding: 0;
+  border: 0;
+  background: none;
+  box-shadow: none;
+}
+body.studio .ds-panel,
+body.studio .ds-field {
+  display: block;
+  width: auto;
+  min-width: 0;
+}
+body.studio .ds-options {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 8px;
+  width: auto;
+}
+body.studio label.ds-option {
+  display: inline-flex !important;
+  flex: 0 0 auto;
+  width: auto !important;
+  min-width: 0 !important;
+  margin: 0;
+  padding: 0;
+  gap: 0;
+  font-weight: 600;
+}
+/* The visit screen stands alone: no course bar or adult panel underneath. */
+#app:has(.ds-visit) > #courseFlowBar,
+#app:has(.ds-visit) > #coursePurpose,
+#app:has(.ds-visit) .skill-session-context {
+  display: none;
+}
+
+/* Phone fit for the remaining tall layouts (measured on a 390 x 664 visible area). */
+@media (max-width: 700px) {
+  body.ds-playing .ds-showme-row {
+    margin: 2px 0 4px;
+  }
+  body.ds-playing .ds-showme {
+    min-height: 40px;
+    padding: 6px 14px;
+    font-size: 14px;
+  }
+  body.ds-playing #app .together-note,
+  body.ds-playing #app .play-top > span {
+    display: none;
+  }
+  /* Adult-led picture choices were stacked one per row. */
+  body.ds-playing #app .adult-options {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+  }
+  body.ds-playing #app .adult-options > * {
+    width: auto !important;
+  }
+  /* Picture plan + packed basket. */
+  body.ds-playing #app .focus-goal {
+    padding: 6px 8px;
+  }
+  body.ds-playing #app .focus-goal .micro,
+  body.ds-playing #app .focus-packed small {
+    font-size: 12px;
+    margin: 0;
+  }
+  body.ds-playing #app .focus-strip .story-frame {
+    width: 56px;
+    height: 56px;
+    padding: 4px;
+  }
+  body.ds-playing #app .focus-strip .story-frame svg {
+    max-height: 46px;
+  }
+  body.ds-playing #app .focus-packed {
+    padding: 4px 8px;
+    min-height: 0;
+    gap: 8px;
+  }
+  body.ds-playing #app .focus-packed-basket svg {
+    width: 44px;
+    height: 44px;
+  }
+  body.ds-playing #app .focus-packed-empty {
+    font-size: 13px;
+  }
+  /* Story-scene games: a shorter scene keeps the choices on screen. */
+  body.ds-playing #app .pp-game > svg,
+  body.ds-playing #app .pp-scene > svg {
+    max-height: 24vh;
+    width: 100%;
+  }
+  body.ds-playing #app .pp-intro,
+  body.ds-playing #app .pp-story-strip {
+    font-size: 14px;
+    margin: 4px 0;
+    padding: 6px 10px;
+  }
+  body.ds-playing #app .pp-destinations button {
+    min-height: 0;
+    padding: 4px;
+  }
+  body.ds-playing #app .pp-destinations svg {
+    max-height: 12vh;
+  }
+}
+@media (max-width: 700px) {
+  body.ds-playing #app .play-invitation,
+  body.ds-playing #app .game-wrap > p:not(.feedback) {
+    font-size: 15px !important;
+    line-height: 1.4 !important;
+    margin: 0 auto 4px !important;
+  }
+  body.ds-playing #app .focus-goal {
+    display: flex !important;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px !important;
+    min-height: 0 !important;
+  }
+  body.ds-playing #app .focus-goal .micro {
+    flex: 0 0 64px;
+    text-align: left;
+  }
+  body.ds-playing #app .focus-goal .focus-strip {
+    gap: 6px !important;
+    justify-content: flex-start;
+  }
+  body.ds-playing #app .focus-goal .story-frame {
+    width: 52px !important;
+    height: 52px !important;
+    min-height: 0 !important;
+    padding: 4px !important;
+  }
+  body.ds-playing #app .focus-goal .story-frame svg {
+    width: 100% !important;
+    height: 100% !important;
+  }
+  body.ds-playing #app .focus-packed {
+    display: flex !important;
+    align-items: center;
+    min-height: 0 !important;
+    padding: 4px 10px !important;
+    margin: 6px 0 !important;
+  }
+  body.ds-playing #app .focus-packed > div:last-child {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px 8px;
+  }
+  body.ds-playing #app .focus-packed-items span svg {
+    width: 36px;
+    height: 36px;
+  }
+}
+@media (max-width: 700px) {
+  /* Picture options sit side by side (up to four per row) instead of one per row. */
+  body.ds-playing #app :is(.learning-options, .focus-options, .sen-options, .vocabulary-options) {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+    gap: 8px !important;
+  }
+  body.ds-playing #app :is(.learning-options, .focus-options, .sen-options, .vocabulary-options) > * {
+    width: auto !important;
+    max-width: none !important;
+  }
+  body.ds-playing
+    #app
+    :is(.learning-option, [data-focus-choice], [data-sen-choice])
+    :is(small, span:not(.calm-see-tick)) {
+    font-size: 12px !important;
+    line-height: 1.25;
+  }
+}
+@media (max-width: 700px) {
+  /* Playroom scenes (garden, bridge, picnic …): tools in one row under a shorter scene. */
+  body.ds-playing #app .pr-play > .play-top,
+  body.ds-playing #app .pr-play .pr-hint-line {
+    display: none;
+  }
+  body.ds-playing #app .pr-board {
+    max-height: 30vh;
+  }
+  body.ds-playing #app .pr-tools {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(76px, 1fr));
+    gap: 8px !important;
+    margin-top: 8px;
+  }
+  body.ds-playing #app .pr-tool {
+    min-height: 0 !important;
+    height: auto !important;
+    padding: 6px !important;
+  }
+  body.ds-playing #app .pr-tool-art {
+    height: 44px !important;
+  }
+  body.ds-playing #app .pr-tool-art svg {
+    max-height: 44px;
+  }
+  body.ds-playing #app .pr-tool :is(small, span:not(.pr-tool-art)) {
+    font-size: 12px;
+  }
+}
+@media (max-width: 700px) {
+  /* Inside a course the course bar already has Pause and Finish, so the engine's top row is dropped. */
+  body.ds-in-course #app > .play-top {
+    display: none !important;
+  }
+  body.ds-playing #app .pr-board {
+    max-height: 24vh;
+  }
+  body.ds-playing #app .pr-play :is(.pr-play-hint, .pr-instructions, p.micro) {
+    font-size: 13px;
+    margin: 4px 0;
+  }
+  body.ds-playing #app .pr-bead-tray,
+  body.ds-playing #app .pr-picnic-tray {
+    gap: 6px;
+  }
+}
+@media (max-width: 700px) {
+  body.ds-playing #app .pr-tools {
+    grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+  }
+  body.ds-playing #app .pr-tools:has(.pr-meal-goals) {
+    display: block !important;
+  }
+  body.ds-playing #app .pr-meal-goals {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 6px;
+  }
+  body.ds-playing #app .pr-meal-goals > * {
+    min-height: 36px;
+    padding: 4px 10px;
+    font-size: 13px;
+  }
+  body.ds-playing #app .pr-meal-tools {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+    gap: 6px;
+  }
+  body.ds-playing #app .pr-meal-tools > * {
+    min-height: 0 !important;
+    height: auto !important;
+    padding: 4px !important;
+  }
+  body.ds-playing #app .pr-meal-tools svg {
+    max-height: 40px;
+  }
+}
+@media (max-width: 700px) {
+  /* Story worlds ("Make a little story happen"). */
+  body.ds-playing #app .world-character-badge {
+    display: none;
+  }
+  body.ds-playing #app .world-play-heading {
+    min-height: 0;
+    padding: 0;
+  }
+  body.ds-playing #app .world-game-board {
+    gap: 6px !important;
+  }
+  body.ds-playing #app .world-game-board > :is(div):not(.world-object-palette) {
+    max-height: 24vh;
+    overflow: hidden;
+  }
+  body.ds-playing
+    #app
+    .world-game-board
+    :is(.world-packing-scene, .world-scene, .world-sequence, .world-puzzle)
+    svg {
+    max-height: 22vh;
+  }
+  body.ds-playing #app .world-bag {
+    min-height: 0;
+    padding: 4px 8px;
+  }
+  body.ds-playing #app .world-bag-icon svg {
+    width: 44px;
+    height: 44px;
+  }
+  body.ds-playing #app .world-object-palette {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(58px, 1fr));
+    gap: 6px !important;
+  }
+  body.ds-playing #app .world-object-palette > button {
+    min-height: 0 !important;
+    height: auto !important;
+    padding: 4px !important;
+  }
+  body.ds-playing #app .world-object-palette svg {
+    max-height: 46px;
+  }
+  /* Reading word boards. */
+  body.ds-playing
+    #app
+    :is(.wp-list, .wq-inventory, .wp-picture-options, .vocabulary-picture-list, .vocabulary-collection-board)
+    svg {
+    max-height: 9vh;
+  }
+  body.ds-playing #app :is(.wp-list, .wq-inventory, .vocabulary-picture-list, .vocabulary-collection-board) {
+    gap: 4px !important;
+    padding: 4px !important;
+    min-height: 0 !important;
+  }
+  body.ds-playing
+    #app
+    :is(.wp-list, .wq-inventory, .vocabulary-picture-list, .vocabulary-collection-board)
+    > * {
+    min-height: 0 !important;
+    padding: 2px !important;
+  }
+  body.ds-playing #app .reading-invitation {
+    font-size: 16px;
+    margin: 2px 0 6px;
+  }
+  body.ds-playing #app .vocabulary-options {
+    grid-template-columns: repeat(auto-fit, minmax(58px, 1fr)) !important;
+  }
+  body.ds-playing #app .vocabulary-choice svg,
+  body.ds-playing #app .vocabulary-choice img {
+    max-height: 11vh;
+  }
+  body.ds-playing #app .wp-picture-options button,
+  body.ds-playing #app .reading-tile {
+    min-height: 0;
+  }
+}
+html[data-theme='dark'] body.studio #studioNav a[aria-current='page'] {
+  background: var(--ds-ink);
+  color: var(--ds-paper);
+}
+html[data-theme='dark']
+  body.studio
+  #app
+  :is(
+    .choice,
+    .learning-option,
+    .vocabulary-choice,
+    .world-picture,
+    [data-sen-choice],
+    [data-focus-choice],
+    [data-adult-choice],
+    [data-learning-choice],
+    [data-calm-choice],
+    [data-calm-open],
+    .pr-tool,
+    .reading-tile,
+    .reading-slot,
+    .story-frame,
+    .target,
+    .calm-model
+  ) {
+  background-color: #fbf8f0;
+  color: #1f3a31;
+}
+html[data-theme='dark']
+  body.studio
+  #app
+  :is(
+    .choice,
+    .learning-option,
+    .vocabulary-choice,
+    [data-sen-choice],
+    [data-focus-choice],
+    [data-adult-choice],
+    [data-learning-choice]
+  )
+  :is(small, span) {
+  color: #1f3a31;
+}
+html[data-theme='dark'] body.studio .ds-showme {
+  background: var(--ds-surface);
+}
+/* Dark theme: legacy button and label styles keep light-theme colours; give them dark equivalents. */
+html[data-theme='dark']
+  body.studio
+  :is(button.secondary, button.back, .secondary, .back, #studioExport, #prHelpHome, #supportBack) {
+  background: var(--ds-surface) !important;
+  color: var(--ds-ink) !important;
+  border-color: var(--ds-line-strong) !important;
+}
+html[data-theme='dark'] body.studio :is(button.primary, .primary, #skillBegin, .studio-welcome form button) {
+  background: var(--ds-accent) !important;
+  color: #0d1a14 !important;
+  border-color: var(--ds-accent) !important;
+}
+html[data-theme='dark'] body.studio :is(.eyebrow, .ds-panel legend) {
+  color: var(--ds-warm) !important;
+}
+html[data-theme='dark'] body.studio footer :is(span, p, small) {
+  color: var(--ds-ink-soft) !important;
+}
+html[data-theme='dark'] body.studio .ds-course-chips a {
+  background: var(--ds-surface);
+  color: var(--ds-ink);
+}
+html[data-theme='dark'] body.studio .ds-course-chips a[aria-current='true'] {
+  background: var(--ds-ink);
+  color: var(--ds-paper);
+}
+html[data-theme='dark']
+  body.studio
+  :is(
+    .micro,
+    .together-note,
+    .play-invitation,
+    .pr-card-copy span,
+    .section-head .micro,
+    [data-pr-category]
+  ) {
+  color: var(--ds-ink-soft) !important;
+}
+html[data-theme='dark'] body.studio [data-pr-category] {
+  background: var(--ds-surface) !important;
+}
+html[data-theme='dark'] body.studio .studio-support-jump a {
+  background: var(--ds-surface) !important;
+  color: var(--ds-accent) !important;
+}
+html[data-theme='dark']
+  body.studio
+  #app
+  :is(.reading-stage, .pp-board, .world-stage, .pr-board, .calm-see-room)
+  :is(p, small, span, b, h2, h3, label) {
+  color: #1f3a31 !important;
+}
+html[data-theme='dark']
+  body.studio
+  :is(.studio-course-map > span, .studio-course-map p, .studio-stage small) {
+  color: var(--ds-ink-soft) !important;
+}

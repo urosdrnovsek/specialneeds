@@ -54,6 +54,10 @@ const AppRouter = (() => {
       const view = new URLSearchParams(location.search).get('library');
       return view === 'full' || view === 'playroom' ? view : null;
     },
+    /** The URL the visitor opened, before any legacy script rewrote it. */
+    get opened() {
+      return opened;
+    },
     get started() {
       return started;
     }
