@@ -266,7 +266,8 @@ const root = path.resolve(__dirname, '..');
   await page.keyboard.press('Enter');
   assert.equal(await page.evaluate(() => vocabularyState.selection), target);
   // The main navigation replaced the legacy header buttons.
-  await page.locator('#studioNav a[href="#support"]').tap();
+  // The phone tab bar is hidden during play; the brand link always leads home.
+  await page.locator('#brand').tap();
   await page.clock.runFor(2000);
   assert.equal(await page.locator('[data-support]').count(), 8);
   assert.deepEqual(broken, []);
