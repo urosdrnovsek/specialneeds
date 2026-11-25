@@ -715,37 +715,56 @@ const PlayPlus = (() => {
     CHOICE +
     ',[data-calm-open],[data-calm-spot],.reading-tile,.reading-slot,.tp-source,[data-pp-canal],[data-pp-trip],[data-world-piece],[data-world-slot],.pr-tool,[data-calm-home]';
   let fitFrame = 0;
+  // transform: scale keeps hit-testing and drag maths consistent (CSS zoom broke drops in some games).
+  function setScale(el, scale, height) {
+    if (scale === 1) {
+      el.style.transform = '';
+      el.style.transformOrigin = '';
+      el.style.marginBottom = '';
+      delete el.dataset.dsFit;
+      return;
+    }
+    el.style.transformOrigin = 'top center';
+    el.style.transform = 'scale(' + scale + ')';
+    el.style.marginBottom = -Math.round(height * (1 - scale)) + 'px';
+    el.dataset.dsFit = String(scale);
+  }
+  // Runs synchronously with each render, so the scale is settled before anyone can start a drag.
   function fitToScreen() {
     cancelAnimationFrame(fitFrame);
-    fitFrame = requestAnimationFrame(() => {
+    (() => {
       const wrap = q('.game-wrap, .pr-play, .reading-play');
-      for (const el of qa('[data-ds-fit]'))
-        if (el !== wrap) {
-          el.style.zoom = '';
-          delete el.dataset.dsFit;
-        }
-      if (!wrap || !playing() || innerWidth > 700 || q('.ds-visit, .course-finished')) {
-        if (wrap?.dataset.dsFit) {
-          wrap.style.zoom = '';
-          delete wrap.dataset.dsFit;
-        }
+      for (const el of qa('[data-ds-fit]')) if (el !== wrap) setScale(el, 1);
+      if (!wrap) return;
+      const prior = parseFloat(wrap.dataset.dsFit) || 1;
+      if (
+        !playing() ||
+        innerWidth > 700 ||
+        q('.ds-visit, .course-finished') ||
+        document.querySelector('.tp-ghost')
+      ) {
+        if (prior !== 1 && !document.querySelector('.tp-ghost')) setScale(wrap, 1);
         return;
       }
-      const prior = parseFloat(wrap.style.zoom) || 1;
       const targets = [...wrap.querySelectorAll(FIT_TARGETS)].filter(
         el => el.offsetParent !== null && !el.classList.contains('ds-level-hidden')
       );
       if (!targets.length) return;
-      const top = wrap.getBoundingClientRect().top + scrollY;
-      const bottom = Math.max(...targets.map(el => el.getBoundingClientRect().bottom)) + scrollY;
-      const needed = (bottom - top) / prior;
-      const available = innerHeight - Math.max(0, top - scrollY) - 8;
-      const zoom = needed > available ? Math.max(0.72, Math.floor((available / needed) * 100) / 100) : 1;
-      if (Math.abs(zoom - prior) < 0.02) return;
-      wrap.style.zoom = zoom === 1 ? '' : String(zoom);
-      if (zoom === 1) delete wrap.dataset.dsFit;
-      else wrap.dataset.dsFit = String(zoom);
-    });
+      const box = wrap.getBoundingClientRect();
+      const bottom = Math.max(...targets.map(el => el.getBoundingClientRect().bottom));
+      const needed = (bottom - box.top) / prior;
+      // The phone tab bar is fixed to the bottom (outside courses); never scale objects underneath it.
+      const nav = document.getElementById('studioNav');
+      const navRect =
+        nav && getComputedStyle(nav).position === 'fixed' && nav.getClientRects().length
+          ? nav.getBoundingClientRect()
+          : null;
+      const floor = navRect && navRect.top > innerHeight / 2 ? navRect.top : innerHeight;
+      const available = floor - Math.max(0, box.top) - 8;
+      const scale = needed > available ? Math.max(0.72, Math.floor((available / needed) * 100) / 100) : 1;
+      if (Math.abs(scale - prior) < 0.02) return;
+      setScale(wrap, scale, box.height / prior);
+    })();
   }
   addEventListener('resize', fitToScreen);
   // Late layout changes (images, scene art, inserted help rows) also trigger a re-fit.

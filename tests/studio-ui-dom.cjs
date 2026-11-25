@@ -430,7 +430,7 @@ run("Studio.go('#research')");
 assert(document.querySelector('.studio-filter-more'));
 assert(!document.querySelector('.studio-filter-more').hasAttribute('open'));
 assert.equal(document.querySelectorAll('#studioNav [aria-current="page"]').length, 1);
-assert.equal(document.querySelector('#studioNav [aria-current="page"]').textContent, 'Research');
+assert.equal(document.querySelector('#studioNav [aria-current="page"]').textContent, 'More'); // Research now lives under More
 console.log(
   'Home search, support hierarchy, course breadcrumbs, direct continue, resume and quiet research filters passed; DOM only'
 );

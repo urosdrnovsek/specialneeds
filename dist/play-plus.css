@@ -16,7 +16,7 @@ html[data-motion='reduce'] *::before,
 html[data-motion='reduce'] *::after {
   animation-duration: 0.001ms !important;
   animation-iteration-count: 1 !important;
-  transition-duration: 0.001ms !important;
+  transition-duration: 0s !important;
   scroll-behavior: auto !important;
 }
 html[data-contrast='high'] {
@@ -1219,8 +1219,10 @@ body.studio label.ds-option {
   body.ds-playing #app .pr-play .pr-hint-line {
     display: none;
   }
-  body.ds-playing #app .pr-board {
-    max-height: 30vh;
+  /* Only the scene picture is capped; boards with grids (routes, maps) keep their full height. */
+  body.ds-playing #app .pr-board > svg,
+  body.ds-playing #app .pr-board .pr-scene-overlay > svg {
+    max-height: 24vh;
   }
   body.ds-playing #app .pr-tools {
     display: grid !important;
@@ -1229,6 +1231,7 @@ body.studio label.ds-option {
     margin-top: 8px;
   }
   body.ds-playing #app .pr-tool {
+    min-width: 0 !important;
     min-height: 0 !important;
     height: auto !important;
     padding: 6px !important;
@@ -1248,7 +1251,9 @@ body.studio label.ds-option {
   body.ds-in-course #app > .play-top {
     display: none !important;
   }
-  body.ds-playing #app .pr-board {
+  /* Only the scene picture is capped; boards with grids (routes, maps) keep their full height. */
+  body.ds-playing #app .pr-board > svg,
+  body.ds-playing #app .pr-board .pr-scene-overlay > svg {
     max-height: 24vh;
   }
   body.ds-playing #app .pr-play :is(.pr-play-hint, .pr-instructions, p.micro) {
@@ -1303,10 +1308,6 @@ body.studio label.ds-option {
   }
   body.ds-playing #app .world-game-board {
     gap: 6px !important;
-  }
-  body.ds-playing #app .world-game-board > :is(div):not(.world-object-palette) {
-    max-height: 24vh;
-    overflow: hidden;
   }
   body.ds-playing
     #app
@@ -1474,4 +1475,14 @@ html[data-theme='dark']
   body.studio
   :is(.studio-course-map > span, .studio-course-map p, .studio-stage small) {
   color: var(--ds-ink-soft) !important;
+}
+@media (max-width: 700px) {
+  /* While a game is on screen the phone tab bar is hidden (it sat under the child's fingers and covered
+     the bottom row of some games). Courses use "Finish for now"; other games keep their back button. */
+  body.ds-playing #studioNav {
+    display: none !important;
+  }
+  body.ds-playing main {
+    padding-bottom: 24px;
+  }
 }
