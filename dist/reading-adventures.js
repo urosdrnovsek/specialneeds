@@ -48,22 +48,21 @@ const readingMysteries = [
     letter: 'p',
     object: 'kite',
     place: 'tree',
-    story:
-      'A kite vanished! Its owner left a torn letter tag. Find both pieces to open the lost-property nook.'
+    story: 'The kite is lost! Make the letter on its tag to find it.'
   },
   {
     name: 'The midnight picnic',
     letter: 'q',
     object: 'banana',
     place: 'tent',
-    story: 'Someone borrowed the picnic snack. Two pieces of a torn tag will open the picnic tent.'
+    story: 'The picnic snack is lost! Make the letter on its tag to find it.'
   },
   {
     name: 'The runaway sock',
     letter: 'p',
     object: 'sock',
     place: 'pond',
-    story: 'One sock has gone on holiday. Find the torn tag and discover its hiding place.'
+    story: 'One sock is lost! Make the letter on its tag to find it.'
   }
 ];
 const readingMysteryClues = [
@@ -141,7 +140,7 @@ function readingDeliveryView(result = false) {
   const s = readingState,
     m = readingDeliveryMissions[s.round],
     a = s.mission;
-  return `<div class="ra-quest-line"><span>${readingEscape(m.name)}</span><b aria-label="${a.delivered.length} of 3 deliveries">${a.delivered.length} / 3 delivered</b></div>${result ? '' : `<p class="ra-story">${m.intro}</p><p class="ra-instruction">${a.loaded === null ? 'Name a picture. Which letter starts its name?' : `${readingEscape(readingDeliveryWord(m.cargo[a.loaded][1]))} starts with ${readingPaint(m.cargo[a.loaded][0])}. Drive to that letter house.`}</p>`}<div class="ra-town ra-scene">${readingTownBackground()}${[
+  return `<div class="ra-quest-line"><span>${readingEscape(m.name)}</span><b aria-label="${a.delivered.length} of 3 deliveries">${a.delivered.length} / 3 delivered</b></div>${result ? '' : `${readingAdventureSteps('Take every picture to the house with <b>the same first letter</b>.', ['Tap a parcel.', `Tap the house with its first letter: ${readingPaint('b')} for balloon or ${readingPaint('d')} for dog.`], a.loaded === null ? 0 : 1)}<p class="ra-instruction">${a.loaded === null ? 'Name a picture. Which letter starts its name?' : `${readingEscape(readingDeliveryWord(m.cargo[a.loaded][1]))} starts with ${readingPaint(m.cargo[a.loaded][0])}. Drive to that letter house.`}</p>`}<div class="ra-town ra-scene">${readingTownBackground()}${[
     'b',
     'd'
   ]
@@ -162,6 +161,16 @@ function readingForestBackground() {
     'A woodland mystery: tree, tent, pond and a sleepy rock'
   );
 }
+// One goal line and numbered steps, with the current step highlighted, so a child (and adult) can see
+// what to do now and what comes next. Used by all three adventure games.
+function readingAdventureSteps(goal, steps, current) {
+  return `<div class="ra-goal" role="group" aria-label="What to do"><p class="ra-goal-line">${goal}</p><ol class="ra-steps">${steps
+    .map(
+      (text, i) =>
+        `<li class="${i < current ? 'done' : i === current ? 'now' : ''}" ${i === current ? 'aria-current="step"' : ''}><span class="ra-step-number" aria-hidden="true">${i < current ? '✓' : i + 1}</span><span>${text}</span></li>`
+    )
+    .join('')}</ol></div>`;
+}
 function readingMysteryView(result = false) {
   const s = readingState,
     m = readingMysteries[s.round],
@@ -174,7 +183,42 @@ function readingMysteryView(result = false) {
   ].map(([id, name]) => [id, name, readingMysteryClues[s.round][id] || null]);
   if (result)
     return `<div class="ra-reveal"><div class="ra-reveal-object">${readingPicture(m.object)}</div>${readingAdventureAnimal('duck', 'wave', true)}<p>Found in the ${m.place}! Duck was keeping it safe.</p></div>`;
-  return `<div class="ra-quest-line"><span>${m.name}</span><b>${a.found.length} / 2 clues</b></div><p class="ra-story">${m.story}</p><div class="ra-forest ra-scene">${readingForestBackground()}${hotspots.map(([id, name, piece], i) => `<button class="ra-hotspot ra-hotspot-${i} ${a.looked.includes(id) ? 'visited' : ''}" data-ra-search="${id}" aria-label="Explore ${name}"><span>${piece && a.found.includes(piece) ? '✓' : '?'}</span><small>${name}</small></button>`).join('')}${a.gag ? `<span class="ra-pond-duck">${readingAdventureAnimal('duck', 'bounce', true)}</span>` : ''}</div><div class="ra-notebook"><div class="ra-tag-model"><span>Owner’s tag</span><b>${readingPaint(m.letter)}</b></div><div class="ra-clue-work"><p>${a.found.length < 2 ? 'Explore the woods. The notebook keeps your clues.' : 'Both pieces found! Put the long stem beside the bowl to repair the tag.'}</p><div class="ra-clue-tray">${['stem', 'bowl'].map(part => (a.found.includes(part) ? `<button data-ra-clue="${part}" class="ra-clue ${a.selected === part ? 'selected' : ''}" aria-label="${part === 'stem' ? 'Long descending stem' : 'Rounded bowl'}; ${part === 'stem' ? 'move to a side of the bowl' : 'inspect clue'}" aria-pressed="${a.selected === part}">${readingAdventureSvg(part === 'stem' ? '<path d="M35 18V114" stroke="#345b47" stroke-width="10" stroke-linecap="round"/>' : '<ellipse cx="35" cy="45" rx="24" ry="28" fill="none" stroke="#345b47" stroke-width="10"/>', part, '0 0 70 130')}</button>` : `<span class="ra-clue-missing" aria-label="${part} not found yet">?</span>`)).join('')}</div></div></div>${a.found.length === 2 ? `<div class="ra-tag-repair"><button data-ra-stem="left" aria-label="Put the descending stem on the left of the bowl">Stem here</button><span class="ra-fixed-bowl">${readingAdventureSvg(`<ellipse cx="50" cy="42" rx="28" ry="29" fill="none" stroke="#345b47" stroke-width="10"/>${a.stem ? `<path d="M${a.stem === 'left' ? 22 : 78} 15V110" stroke="#345b47" stroke-width="10" stroke-linecap="round"/>` : ''}`, 'Rounded part stays here', '0 0 100 120')}</span><button data-ra-stem="right" aria-label="Put the descending stem on the right of the bowl">Stem here</button></div><p class="reading-small">Drag the long stem to a side, or tap a “Stem here” space. Compare with the owner’s tag.</p>` : '<p class="reading-small">Tap a place, or drag the magnifier over it.</p>'}<button id="raMagnifier" class="ra-magnifier" aria-label="Magnifier; drag over a woodland place">${readingAdventureSvg('<circle cx="33" cy="31" r="22" fill="#cce9ec" fill-opacity=".8" stroke="#795a91" stroke-width="7"/><path d="M49 48L73 73" stroke="#bd8c50" stroke-width="13" stroke-linecap="round"/>', 'Magnifier', '0 0 90 90')}</button>`;
+  const letter = readingPaint(m.letter);
+  const pieceSvg = part =>
+    readingAdventureSvg(
+      part === 'stem'
+        ? '<path d="M35 18V114" stroke="#345b47" stroke-width="10" stroke-linecap="round"/>'
+        : '<ellipse cx="35" cy="45" rx="24" ry="28" fill="none" stroke="#345b47" stroke-width="10"/>',
+      part === 'stem' ? 'stick' : 'circle',
+      '0 0 70 130'
+    );
+  const tray = `<div class="ra-clue-tray" aria-label="Pieces found: ${a.found.length} of 2">${['stem', 'bowl']
+    .map(part =>
+      a.found.includes(part)
+        ? `<button data-ra-clue="${part}" class="ra-clue ${a.selected === part ? 'selected' : ''}" aria-label="${part === 'stem' ? 'Stick: move it to a side of the circle' : 'Circle'}" aria-pressed="${a.selected === part}">${pieceSvg(part)}</button>`
+        : `<span class="ra-clue-missing" aria-label="${part === 'stem' ? 'stick' : 'circle'} not found yet">?</span>`
+    )
+    .join('')}</div>`;
+  const goal = readingAdventureSteps(
+    `${readingEscape(m.story)} <span class="ra-goal-letter" aria-label="the letter ${m.letter}">${letter}</span>`,
+    [
+      'Tap the <b>?</b> places to find <b>2 pieces</b>.',
+      `Put the stick on the correct side to make ${letter}.`
+    ],
+    a.found.length < 2 ? 0 : 1
+  );
+  if (a.found.length < 2)
+    return `${goal}<div class="ra-forest ra-scene">${readingForestBackground()}${hotspots
+      .map(
+        ([id, name, piece], i) =>
+          `<button class="ra-hotspot ra-hotspot-${i} ${a.looked.includes(id) ? 'visited' : ''}" data-ra-search="${id}" aria-label="Look in the ${name}"><span>${piece && a.found.includes(piece) ? '✓' : a.looked.includes(id) ? '–' : '?'}</span><small>${name}</small></button>`
+      )
+      .join(
+        ''
+      )}${a.gag ? `<span class="ra-pond-duck">${readingAdventureAnimal('duck', 'bounce', true)}</span>` : ''}</div><div class="ra-found-row"><span>Pieces found: <b>${a.found.length} of 2</b></span>${tray}<button id="raMagnifier" class="ra-magnifier" aria-label="Magnifier; drag over a woodland place">${readingAdventureSvg('<circle cx="33" cy="31" r="22" fill="#cce9ec" fill-opacity=".8" stroke="#795a91" stroke-width="7"/><path d="M49 48L73 73" stroke="#bd8c50" stroke-width="13" stroke-linecap="round"/>', 'Magnifier', '0 0 90 90')}</button></div>`;
+  // Step 2: only the letter to make and the build area.
+  const made = a.stem ? (a.stem === 'left' ? 'p' : 'q') : null;
+  return `${goal}<div class="ra-build"><div class="ra-build-target"><span>Make this</span><b>${letter}</b></div><div class="ra-build-work"><div class="ra-tag-repair"><button data-ra-stem="left" class="${a.stem === 'left' ? 'placed' : ''}" aria-label="Put the stick on the left of the circle">${a.stem === 'left' ? '' : 'Stick here'}</button><span class="ra-fixed-bowl">${readingAdventureSvg(`<ellipse cx="50" cy="42" rx="28" ry="29" fill="none" stroke="#345b47" stroke-width="10"/>${a.stem ? `<path d="M${a.stem === 'left' ? 22 : 78} 15V110" stroke="#345b47" stroke-width="10" stroke-linecap="round"/>` : ''}`, made ? 'The pieces now make ' + made : 'The circle', '0 0 100 120')}</span><button data-ra-stem="right" class="${a.stem === 'right' ? 'placed' : ''}" aria-label="Put the stick on the right of the circle">${a.stem === 'right' ? '' : 'Stick here'}</button></div>${tray}${made ? '' : '<p class="ra-build-hint">Tap a <b>Stick here</b> space, or drag the stick.</p>'}</div></div>`;
 }
 function readingPuppetStage(action, actor, mini = false) {
   const quiet = action === 'quiet';
@@ -186,15 +230,15 @@ function readingPuppetView(result = false) {
     target = readingPuppetScripts[s.round];
   if (result)
     return `<div class="ra-final-show">${target.map(action => readingPuppetStage(action, a.actor, true)).join('')}</div>`;
-  return `<div class="ra-quest-line"><span>You direct the puppet show</span><span class="ra-cast" role="group" aria-label="Choose your puppet">${['bear', 'duck'].map(actor => `<button data-ra-actor="${actor}" aria-label="Choose ${actor} puppet" aria-pressed="${a.actor === actor}">${readingAdventureAnimal(actor)}</button>`).join('')}</span></div>${readingPuppetStage(a.action, a.actor)}<div class="ra-script"><span>The audience asks:</span><div>${target.map((v, i) => `<span><b>${v}</b><small>${readingPuppetActions[v]}</small></span>`).join('<i aria-hidden="true">→</i>')}</div></div><p class="ra-instruction">Build their show. Each card makes your puppet do something!</p><div class="ra-show-slots" aria-label="Your show, in order">${a.slots.map((v, i) => `<button data-ra-show-slot="${i}" class="${v ? 'filled' : ''}" aria-label="Scene ${i + 1}${v ? ': ' + v + ', ' + readingPuppetActions[v] + '. Tap to return card.' : ': empty. Drop a command here.'}">${v ? `<b>${v}</b><small>${readingPuppetActions[v]}</small>` : `<span>${i + 1}</span>`}</button>`).join('')}</div><div class="ra-command-bank" aria-label="Puppet commands">${['b', 'd', 'p', 'q'].map(v => `<button data-ra-command="${v}" aria-label="Command ${v}: ${readingPuppetActions[v]}"><b>${v}</b><small>${readingPuppetActions[v]}</small></button>`).join('')}</div><p class="reading-small">Tap a card for the next space, or drag it to any scene. Tap a filled scene to return it; drag two scenes to swap them. The show finishes itself when the script fits.</p>`;
+  return `${readingAdventureSteps('Make the puppet do <b>the show the audience asks for</b>.', ['Look at the audience’s letter cards.', 'Tap the same letter cards, in the same order.'], a.slots.some(Boolean) ? 1 : 0)}<div class="ra-quest-line"><span>You direct the puppet show</span><span class="ra-cast" role="group" aria-label="Choose your puppet">${['bear', 'duck'].map(actor => `<button data-ra-actor="${actor}" aria-label="Choose ${actor} puppet" aria-pressed="${a.actor === actor}">${readingAdventureAnimal(actor)}</button>`).join('')}</span></div>${readingPuppetStage(a.action, a.actor)}<div class="ra-script"><span>The audience asks:</span><div>${target.map((v, i) => `<span><b>${v}</b><small>${readingPuppetActions[v]}</small></span>`).join('<i aria-hidden="true">→</i>')}</div></div><p class="ra-instruction">Build their show. Each card makes your puppet do something!</p><div class="ra-show-slots" aria-label="Your show, in order">${a.slots.map((v, i) => `<button data-ra-show-slot="${i}" class="${v ? 'filled' : ''}" aria-label="Scene ${i + 1}${v ? ': ' + v + ', ' + readingPuppetActions[v] + '. Tap to return card.' : ': empty. Drop a command here.'}">${v ? `<b>${v}</b><small>${readingPuppetActions[v]}</small>` : `<span>${i + 1}</span>`}</button>`).join('')}</div><div class="ra-command-bank" aria-label="Puppet commands">${['b', 'd', 'p', 'q'].map(v => `<button data-ra-command="${v}" aria-label="Command ${v}: ${readingPuppetActions[v]}"><b>${v}</b><small>${readingPuppetActions[v]}</small></button>`).join('')}</div><p class="reading-small">Tap a card for the next space, or drag it to any scene. Tap a filled scene to return it; drag two scenes to swap them. The show finishes itself when the script fits.</p>`;
 }
 function readingAdventureChallenge() {
   const mode = readingGame(readingState.id).mode;
   if (!readingAdventureModes.has(mode)) return null;
   const titles = {
-    'delivery-route': 'Three parcels. One tiny van. Your route!',
-    'clue-rebuild': 'A mystery is waiting in the woods…',
-    'puppet-program': 'Lights up! You are the director.'
+    'delivery-route': 'Deliver the parcels',
+    'clue-rebuild': 'Find the lost thing',
+    'puppet-program': 'Make the puppet show'
   };
   return `<div class="reading-adventure"><h2 class="reading-invitation" tabindex="-1">${titles[mode]}</h2>${mode === 'delivery-route' ? readingDeliveryView() : mode === 'clue-rebuild' ? readingMysteryView() : readingPuppetView()}</div>`;
 }
@@ -214,9 +258,9 @@ function readingAdventureMessage() {
   const s = readingState,
     mode = readingGame(s.id).mode;
   return mode === 'delivery-route'
-    ? 'Special delivery! Everyone is ready for the adventure.'
+    ? 'All parcels delivered! Every picture found its letter house.'
     : mode === 'clue-rebuild'
-      ? `Mystery solved! You repaired the ${readingMysteries[s.round].letter} tag.`
+      ? `You made ${readingMysteries[s.round].letter}! The ${readingMysteries[s.round].object === 'banana' ? 'snack' : readingMysteries[s.round].object} is found.`
       : mode === 'puppet-program'
         ? 'Bravo! Your letters brought the puppet show to life.'
         : null;
@@ -268,16 +312,16 @@ function readingMysterySearch(place) {
     if (!a.found.includes(part)) a.found.push(part);
     s.message =
       a.found.length === 2
-        ? 'Both clues found! Repair the tag in the notebook below.'
+        ? 'You found both pieces! Now make the letter.'
         : part === 'stem'
-          ? 'A long descending stem! It goes into your notebook.'
-          : 'A rounded bowl! Keep it with the other clue.';
+          ? 'You found the stick! One more piece to find.'
+          : 'You found the circle! One more piece to find.';
   } else {
     a.gag = !a.gag;
     s.message =
       place === 'pond'
-        ? 'Duck is practising a very wobbly water ballet. No clue here!'
-        : 'That “rock” just snored. Better let the tortoise sleep.';
+        ? 'Only Duck splashing here. No piece. Try another place!'
+        : 'Nothing here. Try another place!';
   }
   readingAdventureRefresh(a.found.length === 2 ? '[data-ra-stem]' : `[data-ra-search="${place}"]`);
 }
@@ -290,7 +334,7 @@ function readingMysteryStem(side) {
   a.stem = side;
   const correct = m.letter === 'p' ? 'left' : 'right';
   if (side !== correct) {
-    s.message = `That makes ${side === 'left' ? 'p' : 'q'}. Compare the long stem with the ${m.letter} tag. You can move it.`;
+    s.message = `That makes ${side === 'left' ? 'p' : 'q'}. We need ${m.letter}. Try the other side.`;
     readingAdventureRefresh(`[data-ra-stem="${correct}"]`);
     return;
   }

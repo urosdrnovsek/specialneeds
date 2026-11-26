@@ -206,7 +206,9 @@ for (const access of ['tap', 'drag']) {
       if (access === 'drag') drop('#raMagnifier', `[data-ra-search="${place}"]`);
       else click(`[data-ra-search="${place}"]`);
       const n = state().mystery.found.length;
-      click(`[data-ra-search="${place}"]`);
+      // Once both pieces are found the search scene is replaced by the build step.
+      if (n < 2) click(`[data-ra-search="${place}"]`);
+      else assert(!document.querySelector('[data-ra-search]') && document.querySelector('.ra-build'));
       assert.equal(state().mystery.found.length, n);
     }
     assert.equal(state().mystery.found.length, 2);
